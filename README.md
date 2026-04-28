@@ -1,2 +1,1 @@
-# computational-skepticism-for-ai2
- Computational Skepticism for AI
+#  Computational Skepticism for AI
