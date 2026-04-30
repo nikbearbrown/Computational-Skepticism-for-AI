@@ -11,6 +11,9 @@ The classifier looks at the second picture and reports, with even higher confide
 
 <!-- → [IMAGE: Side-by-side comparison of the original panda image and the adversarially perturbed version. A third panel shows the perturbation itself (amplified for visibility) — noise that looks like random static to the human eye. Labels: "Model: panda (99%)" / "Model: gibbon (98%)" / "Perturbation (×50 amplified)." Student should see that the visual difference is imperceptible while the model's output has flipped completely.] -->
 
+![Figure 8.1 — Side-by-side comparison of the original panda image and the adversarially perturbed version. A third panel shows the perturbation itself (amplified for visibility)](images/08-robustness-what-understanding-means-when-a-pixel-can-break-the-model-fig-01.jpg)
+
+
 I want you to sit with this for a moment, because the natural reaction is the wrong reaction. The natural reaction is to think *the model is broken*, or *the model is brittle*, or *we need to add more training data*. None of those reactions is exactly wrong, but all of them miss the size of what just happened. What happened is that a system which the engineers thought was looking at images of pandas and identifying pandas turned out to be looking at *something else* — something which, on the training set, correlated very nicely with images of pandas, but which can be flipped to "gibbon" by a perturbation that leaves the panda completely untouched.
 
 The model and you were not making the same kind of judgment in the first place. You just thought you were.
@@ -39,6 +42,9 @@ Adversarial perturbations are a kind of distribution shift, but a peculiar one. 
 
 <!-- → [DIAGRAM: Three overlapping distributions shown as ovals — "Training distribution" (blue), "Natural deployment distribution" (orange, partially overlapping with blue), "Adversarial distribution" (red, constructed to sit outside both). Arrows show: distribution shift moves you from blue to orange; adversarial attack moves you from blue to red. Annotation: "Both reveal the gap between learned representation and world structure — via different axes."] -->
 
+![Figure 8.2 — Three overlapping distributions shown as ovals](images/08-robustness-what-understanding-means-when-a-pixel-can-break-the-model-fig-02.jpg)
+
+
 Now: how related is the model's behavior on these worst-case adversarial inputs to its behavior on naturally occurring distribution shifts? You might hope they are tightly related — that an adversarially robust model is robust generally, and that natural distribution shifts are a kind of mild adversarial attack. The honest answer is *somewhat, but not as much as you'd like*. A model can be highly robust against constructed perturbations and still brittle when the world's distribution drifts naturally. A model can be brittle against constructed perturbations and survive certain natural shifts gracefully. They do not collapse onto a single number.
 
 What they have in common — and this is the lesson I want you to take from the comparison — is that they both reveal the gap between the model's learned representation and the world's actual structure. Adversarial perturbations reveal it along the axis of *worst-case input perturbation*. Natural distribution shift reveals it along the axis of *actual changes in the input distribution over time and context*. Both are informative. Neither is sufficient.
@@ -52,6 +58,21 @@ Now, the question you've been waiting for: what do you do about it?
 There is a robustness toolkit, and I want to walk through it briefly, because each of its tools has a use and a limit, and the limits add up to the picture I'm trying to draw.
 
 <!-- → [TABLE: Robustness toolkit — columns: Tool | What it does | What it costs | What it cannot do. Rows: Adversarial training, Certified defenses (randomized smoothing), Detection-based defenses, Input preprocessing, Architecture changes (Lipschitz constraints), Formal verification. Students should see at a glance that every tool has a bounded scope and an honest cost.] -->
+
+*Figure 8.3*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **Adversarial training** | _fill in_ | _fill in_ |
+| **Certified defenses (randomized smoothing)** | _fill in_ | _fill in_ |
+| **Detection-based defenses** | _fill in_ | _fill in_ |
+| **Input preprocessing** | _fill in_ | _fill in_ |
+| **Architecture changes (Lipschitz constraints)** | _fill in_ | _fill in_ |
+| **Formal verification. Students should see at a glance that every tool has a bounded scope** | _fill in_ | _fill in_ |
+| **An honest cost.** | _fill in_ | _fill in_ |
+
+: {.comparison-table}
+
 
 The most direct tool is *adversarial training* — train the model on adversarial examples computed against earlier versions of itself. The model sees these worst-case inputs during training and it learns to handle them. This works, in the sense that the model becomes more robust against the specific attack that was used during training. The limit is that robustness transfers imperfectly to other attacks; you make the model robust against the attacks you anticipated and leave it brittle against the ones you didn't. There's also a cost: clean accuracy often drops. You buy robustness by giving up a little correctness on inputs no attacker has touched.
 
@@ -92,6 +113,9 @@ Consider an autonomous agent operating in a system with multiple users. Ownershi
 These signals are *proxies* for the legitimate underlying ownership. The proxies are attackable. A non-owner with the right display name, the right conversational style, the right signals, presents to the agent as the owner. The agent treats them as the owner. The non-owner now has access to the owner's resources, through the agent, by spoofing identity at the proxy layer.
 
 <!-- → [DIAGRAM: Two parallel attack diagrams showing structural equivalence. Left: image classifier — input (panda image) → perturbation layer → flipped output (gibbon). Right: identity-verification agent — input (owner's profile) → proxy spoofing layer → flipped classification (imposter treated as owner). Common label between the two: "Same structure: proxy learned, proxy attacked, human-relevant feature untouched."] -->
+
+![Figure 8.4 — Two parallel attack diagrams showing structural equivalence. Left: image classifier](images/08-robustness-what-understanding-means-when-a-pixel-can-break-the-model-fig-04.jpg)
+
 
 This is the same structural failure as the panda-gibbon. The agent learned a proxy for a concept. The proxy was attackable by a perturbation that left the human-relevant feature — actual social-and-legal ownership — completely untouched. The perturbation flipped the agent's classification of "owner" from the actual owner to the imposter. Pixels in one case; display names in the other; the structure is the same.
 

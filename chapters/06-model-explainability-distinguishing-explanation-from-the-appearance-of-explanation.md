@@ -15,6 +15,9 @@ We have to talk about how this happens. We have to talk about it in particular c
 
 <!-- → [DIAGRAM: Two-path decision flow — show the same prediction arriving at the same radiologist twice in parallel columns: (left) prediction alone, no explanation; (right) prediction with SHAP attribution. Trace the epistemic work each path does. The left ends in "one input among several / uncertain." The right ends in "confident concurrence / explanation launders the shortcut." Student should see how the explanation adds epistemic weight it cannot warrant.] -->
 
+![Figure 6.1 — Two-path decision flow](images/06-model-explainability-distinguishing-explanation-from-the-appearance-of-explanation-fig-01.jpg)
+
+
 ## What SHAP is, and what SHAP isn't
 
 SHAP is the dominant feature-attribution method in deployed machine learning. ([verify] Lundberg & Lee 2017.) It comes from cooperative game theory. The trick: for each feature, you compute the marginal contribution that feature makes to the prediction, averaged over all possible orderings in which features could have been added to the model's calculation. The output is a number per feature, and the numbers add up — across features — to the model's deviation from a baseline.
@@ -33,6 +36,17 @@ For a practitioner reading SHAP output, the operational risk is to treat the att
 
 <!-- → [TABLE: SHAP capability matrix — rows: what SHAP shows vs. what SHAP does not show. Columns: claim, whether SHAP can support it (yes/no/partial), Pearl rung the claim lives on, what you would need instead. Specific rows: additive feature contribution (yes, Rung 1, nothing needed); causal relationship (no, needs Rung 2 analysis); whether model is correct on this case (no, needs ground truth); what would happen if feature X changed (no, needs counterfactual or intervention). Student should be able to use this as a reference when reading SHAP output in practice.] -->
 
+*Figure 6.2*
+
+| | **SHAP capability matrix — rows: what SHAP shows** | **What SHAP does not show. Columns: claim, whether SHAP can support it (yes/no/partial), Pearl rung the claim lives on, what you would need instead. Specific rows: additive feature contribution (yes, Rung 1, nothing needed); causal relationship (no, needs Rung 2 analysis); whether model is correct on this case (no, needs ground truth); what would happen if feature X changed (no, needs counterfactual or intervention). Student should be able to use this as a reference when reading SHAP output in practice.** |
+|---|---|---|
+| **Additive feature contribution (yes** | _fill in_ | _fill in_ |
+| **Rung 1** | _fill in_ | _fill in_ |
+| **Nothing needed)** | _fill in_ | _fill in_ |
+
+: {.infographic-table}
+
+
 ## LIME, in a different shape
 
 LIME is the other big name. ([verify] Ribeiro et al. 2016.) The trick is different. Instead of attributing contributions through a game-theoretic accounting, LIME fits a simple, interpretable model — usually a linear regression — to the *local neighborhood* of the prediction. You perturb the input slightly, watch how the model's output changes, and fit a line to the local pattern. The line's coefficients are the explanation.
@@ -50,6 +64,9 @@ And — this is the awkward one — LIME is not stable across runs. Run the same
 The structural critique applies to both methods. *They explain the model, not the world.* If the model is well-aligned with the world, the explanation is useful. If the model is misaligned — and the case where we most need the explanation is exactly the case where the model is misaligned — the explanation is a description of the misalignment, presented in a format that looks like a description of the world.
 
 <!-- → [DIAGRAM: SHAP vs. LIME side-by-side structural comparison — for each method, show the same input passing through: (SHAP) all feature orderings → marginal contributions → attribution bar chart; (LIME) original input → perturbation cloud → local linear fit → coefficient output. Both paths should end at the same label: "model's internal accounting / Rung 1 only." Student should see that despite their different mechanics, both methods stop at the same epistemic ceiling.] -->
+
+![Figure 6.3 — SHAP vs. LIME side-by-side structural comparison](images/06-model-explainability-distinguishing-explanation-from-the-appearance-of-explanation-fig-03.jpg)
+
 
 ## Counterfactuals are closer to what you actually want
 
@@ -79,6 +96,21 @@ If you take one operational thing from this section, take that. When somebody te
 
 <!-- → [TABLE: Transparency / explainability / interpretability disambiguation — three rows, one per term. Columns: term, what it is a property of, binary or graded, can exist without the others (examples), what it does not guarantee, who needs it. Final row should be a "failure mode" row showing a system that has all three properties in one audience and none in another.] -->
 
+*Figure 6.4*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **Term** | _fill in_ | _fill in_ |
+| **What it is a property of** | _fill in_ | _fill in_ |
+| **Binary or graded** | _fill in_ | _fill in_ |
+| **Can exist without the others (examples)** | _fill in_ | _fill in_ |
+| **What it does not guarantee** | _fill in_ | _fill in_ |
+| **Who needs it. Final row should be a "failure mode" row showing a system that has all three properties in one audience** | _fill in_ | _fill in_ |
+| **None in another.** | _fill in_ | _fill in_ |
+
+: {.comparison-table}
+
+
 ## A short detour through Wittgenstein
 
 I am going to take you on a short philosophical detour. I want to be honest that I do not love taking these detours, but I have not found a way to make this point without one. Bear with me.
@@ -94,6 +126,9 @@ This is the structural critique of explanation methods generalized. SHAP operate
 The supervisory move, then, is a question. *Who is the audience for this explanation, what language game are they operating in, and does the explanation method serve that game?* If the explanation was generated for one audience and is being read by another, the explanation may be doing the wrong work, even when it is technically correct.
 
 <!-- → [DIAGRAM: Language-game mismatch — two overlapping circles (Venn-style but not quite overlapping). Left circle: "model's language game" — words it uses and what they mean in the model's operational scope. Right circle: "user's language game" — same words, different operations. The overlap region is "correctly interpreted explanations." The non-overlapping zones are "technically correct, practically misleading." Show "deleted" as the example word sitting in the left circle, and trace what the user hears in the right circle. Student should see the structural mechanism, not just the example.] -->
+
+![Figure 6.5 — Language-game mismatch](images/06-model-explainability-distinguishing-explanation-from-the-appearance-of-explanation-fig-05.jpg)
+
 
 ## Back to Ash
 

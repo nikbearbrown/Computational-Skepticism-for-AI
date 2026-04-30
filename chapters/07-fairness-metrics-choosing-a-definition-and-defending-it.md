@@ -31,6 +31,16 @@ These three look like they should all be compatible. They are not.
 
 <!-- → [TABLE: Three-column definition reference — columns: metric name (with alias), what it measures (one sentence), what it is a statement about (outputs / errors / probability honesty), and what satisfying it feels like as a fairness value. Designed for student reference during the arithmetic section that follows.] -->
 
+*Figure 7.1*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **Row 1** | _fill in_ | _fill in_ |
+| **Row 2** | _fill in_ | _fill in_ |
+
+: {.data-table}
+
+
 ---
 
 Let me show you why.
@@ -55,7 +65,26 @@ I want you to sit with this for a moment. The three definitions all sound reason
 
 <!-- → [DIAGRAM: Three nodes (demographic parity, equalized odds, calibration parity) arranged in a triangle. Between each pair of nodes, an arrow labeled with what breaks when both are required simultaneously given differing base rates. At the center: "base rates differ." Caption: "You can satisfy any two. The third breaks. The triangle is the theorem."] -->
 
+![Figure 7.2 — Three nodes (demographic parity, equalized odds, calibration parity) arranged...](images/07-fairness-metrics-choosing-a-definition-and-defending-it-fig-02.jpg)
+
+
 <!-- → [TABLE: Worked arithmetic with base rates 0.6 / 0.3 — rows: base rate, threshold, true-positive rate, false-positive rate, precision, positive prediction rate. Two columns: group A, group B. One version satisfying calibration (and showing equalized odds violation). One version satisfying equalized odds (and showing calibration violation). Student should see the numbers, not just the argument.] -->
+
+*Figure 7.3*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **Base rate** | _fill in_ | _fill in_ |
+| **Threshold** | _fill in_ | _fill in_ |
+| **True-positive rate** | _fill in_ | _fill in_ |
+| **False-positive rate** | _fill in_ | _fill in_ |
+| **Precision** | _fill in_ | _fill in_ |
+| **Positive prediction rate. Two columns: group A** | _fill in_ | _fill in_ |
+| **Group B. One version satisfying calibration (and showing equalized odds violation). One version satisfying equalized odds (and showing calibration violation). Student should see the numbers** | _fill in_ | _fill in_ |
+| **Not just the argument.** | _fill in_ | _fill in_ |
+
+: {.data-table}
+
 
 ---
 
@@ -87,6 +116,20 @@ This is the argument. There is no technical resolution. The argument has to be m
 
 <!-- → [TABLE: COMPAS case mapped to the three metrics — rows: metric name, what ProPublica measured, what Northpointe measured, what each claimed, whether each claim was factually accurate, what each embeds as a values claim. Caption: "Both sides were right about the numbers. The disagreement was about which numbers should matter."] -->
 
+*Figure 7.4*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **Metric name** | _fill in_ | _fill in_ |
+| **What ProPublica measured** | _fill in_ | _fill in_ |
+| **What Northpointe measured** | _fill in_ | _fill in_ |
+| **What each claimed** | _fill in_ | _fill in_ |
+| **Whether each claim was factually accurate** | _fill in_ | _fill in_ |
+| **What each embeds as a values claim. Caption: "Both sides were right about the numbers. The disagreement was about which numbers should matter."** | _fill in_ | _fill in_ |
+
+: {.data-table}
+
+
 ---
 
 A note on tools, because the field has a substantial toolkit for adjusting models to satisfy fairness metrics. The methods generally come in three families. *Pre-processing* modifies the training data — reweighting, resampling, transforming features — so that the model trains on data that already approximates the desired property. *In-processing* modifies the training objective, adding fairness penalties to the loss or using adversarial methods where one network tries to fool another into not being able to predict the protected attribute from the model's representations. *Post-processing* modifies the predictions after the fact — adjusting thresholds, calibrating per group.
@@ -106,6 +149,9 @@ You specify the deployment. Who is using the prediction. What decisions are bein
 This is not a familiar deliverable in engineering training. It looks, on the surface, like an essay. It is not. It is the form of an *engineering decision under value pluralism*, and producing it is the supervisory capacity at work. Engineers will defend choices like this in adoption committees, regulatory submissions, and internal review processes for the rest of their careers. The defense is the deliverable not because we are simulating a paper. The deliverable is what the job requires.
 
 <!-- → [INFOGRAPHIC: The defended-choice structure as a checklist template — six labeled sections: (1) deployment specification, (2) base-rate distribution and provenance, (3) candidate metrics computed and shown, (4) where metrics disagree and what each embeds, (5) stated choice with justification, (6) what would change your mind. Designed as a reusable scaffold — the kind of thing students fill in on each assignment.] -->
+
+![Figure 7.5 — The defended-choice structure as a checklist template](images/07-fairness-metrics-choosing-a-definition-and-defending-it-fig-05.jpg)
+
 
 ---
 

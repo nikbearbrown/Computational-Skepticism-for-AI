@@ -31,6 +31,9 @@ For a few years, faculty have been treating this as a temporary anomaly to be pa
 
 <!-- → [DIAGRAM: A timeline in two rows — "Before AI" shows artifact ↔ work tightly coupled with bidirectional arrow; "AI era" shows artifact and work as disconnected nodes with a severed link, and AI floating between them as the new producer of artifacts. Caption: "The Decoupling Problem is structural. The artifact is no longer evidence of the work."] -->
 
+![Figure 4.1 — A timeline in two rows](images/04-the-frictional-method-evidence-of-learning-when-ai-can-generate-the-artifact-fig-01.jpg)
+
+
 ---
 
 To redesign assessment around AI, you have to know what assessment was measuring in the first place. And the answer is more interesting than people usually realize.
@@ -50,6 +53,9 @@ For our problem — and this is the hinge of the chapter — AI use in education
 The Frictional method is the inversion. It deliberately introduces conditions that produce some friction — small, structural, persistent — because those conditions track learning in the Bjorkian sense, and they leave a *trace* that the AI cannot manufacture after the fact.
 
 <!-- → [CHART: Two-axis plot — horizontal axis "friction in learning conditions" (low to high), vertical axis "outcome" with two lines: one for immediate performance (declining as friction increases) and one for long-term retention (rising as friction increases). The lines cross in the middle. Caption: "Bjork's desirable difficulties finding. The conditions that feel productive are often the ones that teach the least."] -->
+
+![Figure 4.2 — Two-axis plot](images/04-the-frictional-method-evidence-of-learning-when-ai-can-generate-the-artifact-fig-02.jpg)
+
 
 ---
 
@@ -73,6 +79,9 @@ Together, these seven moves produce what I call the Genuine Learning Probability
 
 <!-- → [INFOGRAPHIC: The seven moves as a circular flow — predict → lock → work → observe → reflect → trace → calibrate → (back to predict). Each node has a one-line description and a failure mode. The lock node is visually emphasized — heavier border, different color — with a caption: "This is the load-bearing element. Everything else depends on it."] -->
 
+![Figure 4.3 — The seven moves as a circular flow](images/04-the-frictional-method-evidence-of-learning-when-ai-can-generate-the-artifact-fig-03.jpg)
+
+
 ---
 
 The instrument is a journal. Every student in this course keeps one. It is a single ongoing document — markdown, plain text, or a Claude Project — with a strict format: date and time, context, prediction (locked, before observation), observation, reflection. The journal is reviewed twice in the semester, and a sample of entries is graded against the seven-move procedure. The grade is on the discipline, not the brilliance of the predictions.
@@ -86,6 +95,19 @@ The second is the *performative journal*. The student writes elaborate, well-for
 The Frictional method works under one condition: the entries are written in the moment, before observation, and the gap is allowed to stand. The method falls apart when either the prediction or the reflection is faked. We are explicit with students about this. The failure modes are identifiable. The grade is on whether the journal traces a real cognitive process — not whether the cognitive process was always correct.
 
 <!-- → [TABLE: Two-column comparison of failure modes — columns: "Retrospective Journal" and "Performative Journal." Rows: how it looks on the surface, the diagnostic tell, what the timestamps show, what the gap analysis shows, how to grade it. A third column optionally: "Authentic Journal — what it actually looks like." Useful for faculty calibration as well as student self-diagnosis.] -->
+
+*Figure 4.4*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **How it looks on the surface** | _fill in_ | _fill in_ |
+| **The diagnostic tell** | _fill in_ | _fill in_ |
+| **What the timestamps show** | _fill in_ | _fill in_ |
+| **What the gap analysis shows** | _fill in_ | _fill in_ |
+| **How to grade it. A third column optionally: "Authentic Journal — what it actually looks like." Useful for faculty calibration as well as student self-diagnosis.** | _fill in_ | _fill in_ |
+
+: {.infographic-table}
+
 
 ---
 
@@ -168,4 +190,3 @@ The next chapter pivots from method to content. We have the apparatus for eviden
 
 ---
 
-*Tags: frictional-method, decoupling-problem, glp, prospective-capture, ai-era-pedagogy*

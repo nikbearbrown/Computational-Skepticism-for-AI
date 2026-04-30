@@ -13,6 +13,15 @@ Now: the EDA report had every plot it was supposed to have. The histograms were 
 
 <!-- → [INFOGRAPHIC: Two-panel diagram. Left panel: "What EDA sees" — a clean dataset with no missing rows, histograms, distributions. Right panel: "What actually happened" — three source systems connected by join arrows, with a 4% drop shown as a gap between the merged result and the full expected population. Annotation: "EDA tools cannot detect rows that were never written."] -->
 
+*Figure 5.1*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **"EDA tools cannot detect rows that were never written."** | _fill in_ | _fill in_ |
+
+: {.infographic-table}
+
+
 So I want to ask you a question that I think is the question of this whole chapter. *Why are there exactly N rows in this dataset?* What was N supposed to be? What is the difference between what was supposed to be there and what is there?
 
 That single question, taken seriously, would have surfaced this entire failure mode in the first hour of working with the data. Nobody asked it. Why didn't they ask it? Because the procedure they had been taught for EDA didn't include it. The procedure was: histograms, correlations, missing-value analysis, summary statistics, outliers. Nothing about the row count. Nothing about the join. Nothing about *what came in versus what was supposed to come in*.
@@ -26,6 +35,20 @@ Here is the move I am asking you to make. Treat every dataset as a recording mad
 Once you start asking these questions, a list of structural failures begins to emerge — failures that, in my experience, almost never get surfaced by procedural EDA, and almost always show up in deployment. Let me walk through some of them, because each one is the source of at least one production disaster I have either witnessed or read a post-mortem on.
 
 <!-- → [TABLE: Six structural failure modes — columns: Failure Mode | What it is | Why procedural EDA misses it | Deployment consequence. Rows: Sampling assumption, Time-window assumption, Label assumption, Missing-data assumption, Feature-engineering assumption, Access/boundary assumption. Students should see at a glance that every failure mode has a structural reason procedural EDA is blind to it.] -->
+
+*Figure 5.2*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **Sampling assumption** | _fill in_ | _fill in_ |
+| **Time-window assumption** | _fill in_ | _fill in_ |
+| **Label assumption** | _fill in_ | _fill in_ |
+| **Missing-data assumption** | _fill in_ | _fill in_ |
+| **Feature-engineering assumption** | _fill in_ | _fill in_ |
+| **Access/boundary assumption. Students should see at a glance that every failure mode has a structural reason procedural EDA is blind to it.** | _fill in_ | _fill in_ |
+
+: {.data-table}
+
 
 There is the *sampling* assumption. Was this sample drawn from the population the model is going to be deployed against? Often, no. The sample is *available* data — meaning the data that was easiest to collect, which means it skews toward the easy-to-reach end of every distribution it was drawn from. You train on convenience samples and you deploy against the world. The world is wider than the convenience sample, and you find this out slowly.
 
@@ -53,6 +76,9 @@ This is not a model failure. This is a data-validation failure. The team thought
 
 <!-- → [DIAGRAM: A schema boundary shown as a solid circle labeled "What the team validated." Outside it, a dotted-line boundary labeled "Actual data universe." Arrows from inside the schema point outward to: referenced documents, phone numbers, third-party identities, conversation history of non-consenting parties. The gap between the two circles is labeled "The validation blind spot."] -->
 
+![Figure 5.3 — A schema boundary shown as a solid circle labeled "What the team validated." ...](images/05-data-validation-reconstructing-the-epistemic-frame-behind-a-dataset-fig-03.jpg)
+
+
 This is the deep version of the access assumption. When you ask "who could generate this data, and who could not?", you are asking a question that goes beyond the row count and the missingness pattern. You are asking what universe the dataset is *implicitly drawing on*, and whether that universe contains anything that has consent, or scope, or boundary problems you have not noticed.
 
 The validation move that catches this — the move I want you to make on every dataset you ingest, for the rest of your career — is to ask, *what is the boundary of this data, and how do I know?* And to insist on an answer that is more rigorous than "the schema." The boundary is rarely the schema. The boundary is the union of the schema and everything the schema's contents reference, link to, or imply.
@@ -76,6 +102,9 @@ Then you identify the riskiest single assumption — the one that, if violated, 
 And then, finally, you write the epistemic frame as you now understand it, and you compare to your initial prediction. The gap between what you thought before and what you found is the learning. Without the prediction-lock at the start, the gap doesn't exist; you only ever see what you finally arrived at, which feels obvious in retrospect, and you don't notice that you have learned anything. The gap is how you know the work happened.
 
 <!-- → [INFOGRAPHIC: A linear workflow diagram showing the six interrogation steps in sequence — (1) Read metadata, lock prediction; (2) Run procedural EDA; (3) Test metadata against data; (4) Ask what is NOT in the data; (5) Trace one row end-to-end; (6) Write epistemic frame, compare to prediction. Each step has a one-line annotation of what it catches that the previous step misses. Students should keep this as a checklist.] -->
+
+![Figure 5.4 — A linear workflow diagram showing the six interrogation steps in sequence](images/05-data-validation-reconstructing-the-epistemic-frame-behind-a-dataset-fig-04.jpg)
+
 
 This is more work than procedural EDA. It is also, for any dataset you intend to base a deployed system on, the work that determines whether the deployment will fail in production for reasons that look invisible from inside the data.
 

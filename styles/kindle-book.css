@@ -1,0 +1,116 @@
+
+/* ── graphs.sh run: 2026-04-30 14:40 ── */
+
+/* Figure 1.1 (01-the-skeptics-toolkit): image — replace 01-the-skeptics-toolkit-fig-01.jpg */
+/* Figure 1.2 (01-the-skeptics-toolkit): image — replace 01-the-skeptics-toolkit-fig-02.jpg */
+/* Figure 1.3 (01-the-skeptics-toolkit): .data-table */
+/* Figure 1.4 (01-the-skeptics-toolkit): .comparison-table */
+/* Figure 1.5 (01-the-skeptics-toolkit): image — replace 01-the-skeptics-toolkit-fig-05.jpg */
+/* Figure 2.1 (02-probability-uncertainty-and-the-confidence-illusion): image — replace 02-probability-uncertainty-and-the-confidence-illusion-fig-01.jpg */
+/* Figure 2.2 (02-probability-uncertainty-and-the-confidence-illusion): .data-table */
+/* Figure 2.3 (02-probability-uncertainty-and-the-confidence-illusion): image — replace 02-probability-uncertainty-and-the-confidence-illusion-fig-03.jpg */
+/* Figure 2.4 (02-probability-uncertainty-and-the-confidence-illusion): image — replace 02-probability-uncertainty-and-the-confidence-illusion-fig-04.jpg */
+/* Figure 2.5 (02-probability-uncertainty-and-the-confidence-illusion): image — replace 02-probability-uncertainty-and-the-confidence-illusion-fig-05.jpg */
+/* Figure 3.1 (03-bias-where-it-enters-and-who-is-responsible): .infographic-table */
+/* Figure 3.2 (03-bias-where-it-enters-and-who-is-responsible): .infographic-table */
+/* Figure 3.3 (03-bias-where-it-enters-and-who-is-responsible): image — replace 03-bias-where-it-enters-and-who-is-responsible-fig-03.jpg */
+/* Figure 3.4 (03-bias-where-it-enters-and-who-is-responsible): image — replace 03-bias-where-it-enters-and-who-is-responsible-fig-04.jpg */
+/* Figure 4.1 (04-the-frictional-method-evidence-of-learning-when-ai-can-generate-the-artifact): image — replace 04-the-frictional-method-evidence-of-learning-when-ai-can-generate-the-artifact-fig-01.jpg */
+/* Figure 4.2 (04-the-frictional-method-evidence-of-learning-when-ai-can-generate-the-artifact): image — replace 04-the-frictional-method-evidence-of-learning-when-ai-can-generate-the-artifact-fig-02.jpg */
+/* Figure 4.3 (04-the-frictional-method-evidence-of-learning-when-ai-can-generate-the-artifact): image — replace 04-the-frictional-method-evidence-of-learning-when-ai-can-generate-the-artifact-fig-03.jpg */
+/* Figure 4.4 (04-the-frictional-method-evidence-of-learning-when-ai-can-generate-the-artifact): .infographic-table */
+/* Figure 5.1 (05-data-validation-reconstructing-the-epistemic-frame-behind-a-dataset): .infographic-table */
+/* Figure 5.2 (05-data-validation-reconstructing-the-epistemic-frame-behind-a-dataset): .data-table */
+/* Figure 5.3 (05-data-validation-reconstructing-the-epistemic-frame-behind-a-dataset): image — replace 05-data-validation-reconstructing-the-epistemic-frame-behind-a-dataset-fig-03.jpg */
+/* Figure 5.4 (05-data-validation-reconstructing-the-epistemic-frame-behind-a-dataset): image — replace 05-data-validation-reconstructing-the-epistemic-frame-behind-a-dataset-fig-04.jpg */
+/* Figure 6.1 (06-model-explainability-distinguishing-explanation-from-the-appearance-of-explanation): image — replace 06-model-explainability-distinguishing-explanation-from-the-appearance-of-explanation-fig-01.jpg */
+/* Figure 6.2 (06-model-explainability-distinguishing-explanation-from-the-appearance-of-explanation): .infographic-table */
+/* Figure 6.3 (06-model-explainability-distinguishing-explanation-from-the-appearance-of-explanation): image — replace 06-model-explainability-distinguishing-explanation-from-the-appearance-of-explanation-fig-03.jpg */
+/* Figure 6.4 (06-model-explainability-distinguishing-explanation-from-the-appearance-of-explanation): .comparison-table */
+/* Figure 6.5 (06-model-explainability-distinguishing-explanation-from-the-appearance-of-explanation): image — replace 06-model-explainability-distinguishing-explanation-from-the-appearance-of-explanation-fig-05.jpg */
+/* Figure 7.1 (07-fairness-metrics-choosing-a-definition-and-defending-it): .data-table */
+/* Figure 7.2 (07-fairness-metrics-choosing-a-definition-and-defending-it): image — replace 07-fairness-metrics-choosing-a-definition-and-defending-it-fig-02.jpg */
+/* Figure 7.3 (07-fairness-metrics-choosing-a-definition-and-defending-it): .data-table */
+/* Figure 7.4 (07-fairness-metrics-choosing-a-definition-and-defending-it): .data-table */
+/* Figure 7.5 (07-fairness-metrics-choosing-a-definition-and-defending-it): image — replace 07-fairness-metrics-choosing-a-definition-and-defending-it-fig-05.jpg */
+/* Figure 8.1 (08-robustness-what-understanding-means-when-a-pixel-can-break-the-model): image — replace 08-robustness-what-understanding-means-when-a-pixel-can-break-the-model-fig-01.jpg */
+/* Figure 8.2 (08-robustness-what-understanding-means-when-a-pixel-can-break-the-model): image — replace 08-robustness-what-understanding-means-when-a-pixel-can-break-the-model-fig-02.jpg */
+/* Figure 8.3 (08-robustness-what-understanding-means-when-a-pixel-can-break-the-model): .comparison-table */
+/* Figure 8.4 (08-robustness-what-understanding-means-when-a-pixel-can-break-the-model): image — replace 08-robustness-what-understanding-means-when-a-pixel-can-break-the-model-fig-04.jpg */
+/* Figure 9.1 (09-validating-agentic-ai-when-autonomous-systems-misbehave): image — replace 09-validating-agentic-ai-when-autonomous-systems-misbehave-fig-01.jpg */
+/* Figure 9.2 (09-validating-agentic-ai-when-autonomous-systems-misbehave): .data-table */
+/* Figure 9.3 (09-validating-agentic-ai-when-autonomous-systems-misbehave): .data-table */
+/* Figure 9.4 (09-validating-agentic-ai-when-autonomous-systems-misbehave): image — replace 09-validating-agentic-ai-when-autonomous-systems-misbehave-fig-04.jpg */
+/* Figure 10.1 (10-delegation-trust-and-the-supervisory-role): .infographic-table */
+/* Figure 10.2 (10-delegation-trust-and-the-supervisory-role): .comparison-table */
+/* Figure 10.3 (10-delegation-trust-and-the-supervisory-role): .data-table */
+/* Figure 10.4 (10-delegation-trust-and-the-supervisory-role): .data-table */
+/* Figure 11.1 (11-visualization-under-validation-honest-misleading-and-the-choices-between): .comparison-table */
+/* Figure 11.2 (11-visualization-under-validation-honest-misleading-and-the-choices-between): image — replace 11-visualization-under-validation-honest-misleading-and-the-choices-between-fig-02.jpg */
+/* Figure 12.1 (12-communicating-uncertainty-calibrating-claims-to-evidence): .data-table */
+/* Figure 12.2 (12-communicating-uncertainty-calibrating-claims-to-evidence): image — replace 12-communicating-uncertainty-calibrating-claims-to-evidence-fig-02.jpg */
+/* Figure 12.3 (12-communicating-uncertainty-calibrating-claims-to-evidence): image — replace 12-communicating-uncertainty-calibrating-claims-to-evidence-fig-03.jpg */
+/* Figure 13.1 (13-accountability-who-is-responsible-when-the-system-fails): image — replace 13-accountability-who-is-responsible-when-the-system-fails-fig-01.jpg */
+/* Figure 13.2 (13-accountability-who-is-responsible-when-the-system-fails): .data-table */
+/* Figure 13.3 (13-accountability-who-is-responsible-when-the-system-fails): .data-table */
+/* Figure 13.4 (13-accountability-who-is-responsible-when-the-system-fails): image — replace 13-accountability-who-is-responsible-when-the-system-fails-fig-04.jpg */
+/* Figure 14.1 (14-the-limits-of-ai-what-the-tools-cannot-do): .data-table */
+/* Figure 14.2 (14-the-limits-of-ai-what-the-tools-cannot-do): .infographic-table */
+
+/* ── graphs.sh run: 2026-04-30 14:46 ── */
+
+/* Figure 1.1 (01-the-skeptics-toolkit): image — replace 01-the-skeptics-toolkit-fig-01.jpg */
+/* Figure 1.2 (01-the-skeptics-toolkit): image — replace 01-the-skeptics-toolkit-fig-02.jpg */
+/* Figure 1.3 (01-the-skeptics-toolkit): .data-table */
+/* Figure 1.4 (01-the-skeptics-toolkit): .comparison-table */
+/* Figure 1.5 (01-the-skeptics-toolkit): image — replace 01-the-skeptics-toolkit-fig-05.jpg */
+/* Figure 2.1 (02-probability-uncertainty-and-the-confidence-illusion): image — replace 02-probability-uncertainty-and-the-confidence-illusion-fig-01.jpg */
+/* Figure 2.2 (02-probability-uncertainty-and-the-confidence-illusion): .data-table */
+/* Figure 2.3 (02-probability-uncertainty-and-the-confidence-illusion): image — replace 02-probability-uncertainty-and-the-confidence-illusion-fig-03.jpg */
+/* Figure 2.4 (02-probability-uncertainty-and-the-confidence-illusion): image — replace 02-probability-uncertainty-and-the-confidence-illusion-fig-04.jpg */
+/* Figure 2.5 (02-probability-uncertainty-and-the-confidence-illusion): image — replace 02-probability-uncertainty-and-the-confidence-illusion-fig-05.jpg */
+/* Figure 3.1 (03-bias-where-it-enters-and-who-is-responsible): .infographic-table */
+/* Figure 3.2 (03-bias-where-it-enters-and-who-is-responsible): .infographic-table */
+/* Figure 3.3 (03-bias-where-it-enters-and-who-is-responsible): image — replace 03-bias-where-it-enters-and-who-is-responsible-fig-03.jpg */
+/* Figure 3.4 (03-bias-where-it-enters-and-who-is-responsible): image — replace 03-bias-where-it-enters-and-who-is-responsible-fig-04.jpg */
+/* Figure 4.1 (04-the-frictional-method-evidence-of-learning-when-ai-can-generate-the-artifact): image — replace 04-the-frictional-method-evidence-of-learning-when-ai-can-generate-the-artifact-fig-01.jpg */
+/* Figure 4.2 (04-the-frictional-method-evidence-of-learning-when-ai-can-generate-the-artifact): image — replace 04-the-frictional-method-evidence-of-learning-when-ai-can-generate-the-artifact-fig-02.jpg */
+/* Figure 4.3 (04-the-frictional-method-evidence-of-learning-when-ai-can-generate-the-artifact): image — replace 04-the-frictional-method-evidence-of-learning-when-ai-can-generate-the-artifact-fig-03.jpg */
+/* Figure 4.4 (04-the-frictional-method-evidence-of-learning-when-ai-can-generate-the-artifact): .infographic-table */
+/* Figure 5.1 (05-data-validation-reconstructing-the-epistemic-frame-behind-a-dataset): .infographic-table */
+/* Figure 5.2 (05-data-validation-reconstructing-the-epistemic-frame-behind-a-dataset): .data-table */
+/* Figure 5.3 (05-data-validation-reconstructing-the-epistemic-frame-behind-a-dataset): image — replace 05-data-validation-reconstructing-the-epistemic-frame-behind-a-dataset-fig-03.jpg */
+/* Figure 5.4 (05-data-validation-reconstructing-the-epistemic-frame-behind-a-dataset): image — replace 05-data-validation-reconstructing-the-epistemic-frame-behind-a-dataset-fig-04.jpg */
+/* Figure 6.1 (06-model-explainability-distinguishing-explanation-from-the-appearance-of-explanation): image — replace 06-model-explainability-distinguishing-explanation-from-the-appearance-of-explanation-fig-01.jpg */
+/* Figure 6.2 (06-model-explainability-distinguishing-explanation-from-the-appearance-of-explanation): .infographic-table */
+/* Figure 6.3 (06-model-explainability-distinguishing-explanation-from-the-appearance-of-explanation): image — replace 06-model-explainability-distinguishing-explanation-from-the-appearance-of-explanation-fig-03.jpg */
+/* Figure 6.4 (06-model-explainability-distinguishing-explanation-from-the-appearance-of-explanation): .comparison-table */
+/* Figure 6.5 (06-model-explainability-distinguishing-explanation-from-the-appearance-of-explanation): image — replace 06-model-explainability-distinguishing-explanation-from-the-appearance-of-explanation-fig-05.jpg */
+/* Figure 7.1 (07-fairness-metrics-choosing-a-definition-and-defending-it): .data-table */
+/* Figure 7.2 (07-fairness-metrics-choosing-a-definition-and-defending-it): image — replace 07-fairness-metrics-choosing-a-definition-and-defending-it-fig-02.jpg */
+/* Figure 7.3 (07-fairness-metrics-choosing-a-definition-and-defending-it): .data-table */
+/* Figure 7.4 (07-fairness-metrics-choosing-a-definition-and-defending-it): .data-table */
+/* Figure 7.5 (07-fairness-metrics-choosing-a-definition-and-defending-it): image — replace 07-fairness-metrics-choosing-a-definition-and-defending-it-fig-05.jpg */
+/* Figure 8.1 (08-robustness-what-understanding-means-when-a-pixel-can-break-the-model): image — replace 08-robustness-what-understanding-means-when-a-pixel-can-break-the-model-fig-01.jpg */
+/* Figure 8.2 (08-robustness-what-understanding-means-when-a-pixel-can-break-the-model): image — replace 08-robustness-what-understanding-means-when-a-pixel-can-break-the-model-fig-02.jpg */
+/* Figure 8.3 (08-robustness-what-understanding-means-when-a-pixel-can-break-the-model): .comparison-table */
+/* Figure 8.4 (08-robustness-what-understanding-means-when-a-pixel-can-break-the-model): image — replace 08-robustness-what-understanding-means-when-a-pixel-can-break-the-model-fig-04.jpg */
+/* Figure 9.1 (09-validating-agentic-ai-when-autonomous-systems-misbehave): image — replace 09-validating-agentic-ai-when-autonomous-systems-misbehave-fig-01.jpg */
+/* Figure 9.2 (09-validating-agentic-ai-when-autonomous-systems-misbehave): .data-table */
+/* Figure 9.3 (09-validating-agentic-ai-when-autonomous-systems-misbehave): .data-table */
+/* Figure 9.4 (09-validating-agentic-ai-when-autonomous-systems-misbehave): image — replace 09-validating-agentic-ai-when-autonomous-systems-misbehave-fig-04.jpg */
+/* Figure 10.1 (10-delegation-trust-and-the-supervisory-role): .infographic-table */
+/* Figure 10.2 (10-delegation-trust-and-the-supervisory-role): .comparison-table */
+/* Figure 10.3 (10-delegation-trust-and-the-supervisory-role): .data-table */
+/* Figure 10.4 (10-delegation-trust-and-the-supervisory-role): .data-table */
+/* Figure 11.1 (11-visualization-under-validation-honest-misleading-and-the-choices-between): .comparison-table */
+/* Figure 11.2 (11-visualization-under-validation-honest-misleading-and-the-choices-between): image — replace 11-visualization-under-validation-honest-misleading-and-the-choices-between-fig-02.jpg */
+/* Figure 12.1 (12-communicating-uncertainty-calibrating-claims-to-evidence): .data-table */
+/* Figure 12.2 (12-communicating-uncertainty-calibrating-claims-to-evidence): image — replace 12-communicating-uncertainty-calibrating-claims-to-evidence-fig-02.jpg */
+/* Figure 12.3 (12-communicating-uncertainty-calibrating-claims-to-evidence): image — replace 12-communicating-uncertainty-calibrating-claims-to-evidence-fig-03.jpg */
+/* Figure 13.1 (13-accountability-who-is-responsible-when-the-system-fails): image — replace 13-accountability-who-is-responsible-when-the-system-fails-fig-01.jpg */
+/* Figure 13.2 (13-accountability-who-is-responsible-when-the-system-fails): .data-table */
+/* Figure 13.3 (13-accountability-who-is-responsible-when-the-system-fails): .data-table */
+/* Figure 13.4 (13-accountability-who-is-responsible-when-the-system-fails): image — replace 13-accountability-who-is-responsible-when-the-system-fails-fig-04.jpg */
+/* Figure 14.1 (14-the-limits-of-ai-what-the-tools-cannot-do): .data-table */
+/* Figure 14.2 (14-the-limits-of-ai-what-the-tools-cannot-do): .infographic-table */

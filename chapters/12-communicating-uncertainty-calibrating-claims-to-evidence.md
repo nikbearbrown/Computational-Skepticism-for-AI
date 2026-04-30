@@ -39,6 +39,26 @@ The taxonomy is not exhaustive — *characterize*, *report*, *describe*, *quanti
 
 <!-- → [TABLE: Verb taxonomy reference card — rows: hypothesize, suggest, observe, find, show, demonstrate, conclude, prove. Columns: verb, epistemic posture (one sentence), minimum evidence required, example sentence using the verb correctly, common misuse (example of a writer using the verb when the evidence only supports a weaker one). Designed for students to keep open while editing their own writing.] -->
 
+*Figure 12.1*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **Hypothesize** | _fill in_ | _fill in_ |
+| **Suggest** | _fill in_ | _fill in_ |
+| **Observe** | _fill in_ | _fill in_ |
+| **Find** | _fill in_ | _fill in_ |
+| **Show** | _fill in_ | _fill in_ |
+| **Demonstrate** | _fill in_ | _fill in_ |
+| **Conclude** | _fill in_ | _fill in_ |
+| **Prove. Columns: verb** | _fill in_ | _fill in_ |
+| **Epistemic posture (one sentence)** | _fill in_ | _fill in_ |
+| **Minimum evidence required** | _fill in_ | _fill in_ |
+| **Example sentence using the verb correctly** | _fill in_ | _fill in_ |
+| **Common misuse (example of a writer using the verb when the evidence only supports a weaker one). Designed for students to keep open while editing their own writing.** | _fill in_ | _fill in_ |
+
+: {.data-table}
+
+
 This is unromantic editing. There is no inspiration in it. You are downgrading verbs because the evidence does not warrant the original verb, and the prose loses some of the punch you put into it. I want to tell you that this is also the most operationally important single skill in technical communication of validation findings. The careful engineer's writing reads, at first, as quieter than the careless engineer's. It also survives reading.
 
 ## Two readers, one document
@@ -62,6 +82,9 @@ The layered approach is harder to write than two separate documents. It is easie
 I want to pause on something. Layer 1 is not "dumbed down." Dumbing down is condescending and loses information. Layer 1 is a specific, careful, accurate summary in plain English. Plain English is *harder* to write than jargon. The technical reader benefits from Layer 1 as much as the non-technical reader does — it forces the writer to articulate what the section is really doing, which is sometimes a useful discovery for the writer.
 
 <!-- → [DIAGRAM: Layered document structure — a single document shown as a vertical stack. Three clearly labeled bands: Layer 1 (plain English summary, executive reader enters here), Layer 2 (technical detail, peer reviewer enters here), Layer 3 (appendix / reproducibility detail, auditor enters here). Three reader-type icons or labels on the right, each with an arrow pointing to the layer they primarily use. A key callout: "all three layers live in the same document — no translation required." Student should see the structure and be able to replicate it in their own drafts.] -->
+
+![Figure 12.2 — Layered document structure](images/12-communicating-uncertainty-calibrating-claims-to-evidence-fig-02.jpg)
+
 
 ## Saying you do not know in writing
 
@@ -110,6 +133,9 @@ In practice, downgrading verbs in AI output is one of the highest-leverage editi
 Try this on the next AI-generated paragraph you read. Mark every verb. Ask, of each verb, what evidence the verb requires and whether that evidence has been produced. The exercise is uncomfortable the first few times. It gets faster. After enough repetitions, you will find that you read AI output with the verb-check running automatically, and that the output stops feeling as confident as it sounded on first read. This is the desirable end state.
 
 <!-- → [IMAGE: Annotated AI-generated paragraph — a realistic example paragraph (four to six sentences) with each strong-verb usage circled or highlighted in one color, and the appropriate downgraded verb written above it in another color. Margin annotations show the evidentiary gap that motivates each downgrade. Student should be able to use this as a model when annotating their own AI-output review exercises.] -->
+
+![Figure 12.3 — Annotated AI-generated paragraph](images/12-communicating-uncertainty-calibrating-claims-to-evidence-fig-03.jpg)
+
 
 ## What survives review
 

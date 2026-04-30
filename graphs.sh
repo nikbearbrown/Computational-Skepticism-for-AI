@@ -17,11 +17,9 @@
 #   - DIAGRAM / IMAGE / non-tabular INFOGRAPHIC / spatial CHART
 #       → placeholder .jpg written to images/, image reference inserted
 #
-# Writes chapters/BASENAME-updated.md — originals untouched.
-# Promote when ready:
-#   for f in chapters/*-updated.md; do mv "$f" "${f/-updated/}"; done
+# Edits chapter files in place — originals are overwritten.
 #
-# Dependencies: ImageMagick (convert)
+# Dependencies: ImageMagick v7+ (magick)
 # ─────────────────────────────────────────────────────────────────────────────
 set -e
 
@@ -29,6 +27,16 @@ CHAPTERS_DIR="chapters"
 IMAGES_DIR="images"
 STYLES_DIR="styles"
 KINDLE_BOOK_CSS="$STYLES_DIR/kindle-book.css"
+
+# ── Cleanup trap ──────────────────────────────────────────────────────────────
+CURRENT_TMP=""
+cleanup() {
+  if [[ -n "$CURRENT_TMP" && -f "$CURRENT_TMP" ]]; then
+    rm -f "$CURRENT_TMP"
+    echo "Cleaned up incomplete tmp: $CURRENT_TMP" >&2
+  fi
+}
+trap cleanup EXIT
 
 # ── Sanity check ─────────────────────────────────────────────────────────────
 for dir in "$CHAPTERS_DIR" "$IMAGES_DIR" "$STYLES_DIR"; do
@@ -39,7 +47,6 @@ for dir in "$CHAPTERS_DIR" "$IMAGES_DIR" "$STYLES_DIR"; do
   fi
 done
 
-# Ensure kindle-book.css exists
 touch "$KINDLE_BOOK_CSS"
 
 # ── Collect files ─────────────────────────────────────────────────────────────
@@ -54,7 +61,7 @@ if [[ -n "$1" ]]; then
 else
   while IFS= read -r -d '' f; do
     FILES+=("$f")
-  done < <(find "$CHAPTERS_DIR" -maxdepth 1 -name "*.md" -print0 | sort -z)
+  done < <(find "$CHAPTERS_DIR" -maxdepth 1 -name "*.md" ! -name "*-updated*" -print0 | sort -z)
 fi
 
 if [[ ${#FILES[@]} -eq 0 ]]; then
@@ -86,21 +93,11 @@ make_placeholder() {
   local fig_label="$2"
   local type_tag="$3"
   local short_desc="$4"
-  local wrapped
-  wrapped=$(echo "$short_desc" | fold -s -w 40)
 
-  convert \
-    -size ${IMG_W}x${IMG_H} xc:"$IMG_BG" \
-    -font "Helvetica" \
-    -pointsize 28 -fill "$IMG_ACCENT" -gravity North \
-    -annotate +0+80 "${fig_label} — PLACEHOLDER" \
-    -pointsize 18 -fill "$IMG_FG" -gravity North \
-    -annotate +0+140 "$type_tag" \
-    -pointsize 22 -fill "$IMG_FG" -gravity Center \
-    -annotate +0-40 "$wrapped" \
-    -strokewidth 3 -stroke "$IMG_ACCENT" -fill none \
-    -draw "rectangle 40,40 $((IMG_W-40)),$((IMG_H-40))" \
-    "$filepath" 2>/dev/null
+  magick -size ${IMG_W}x${IMG_H} xc:"$IMG_BG" "$filepath" 2>/dev/null || {
+    echo "    → WARNING: ImageMagick failed for $(basename "$filepath") — skipping image" >&2
+    return
+  }
 
   echo "    → image: $(basename "$filepath")" >&2
 }
@@ -108,7 +105,9 @@ make_placeholder() {
 classify() {
   local type_tag="$1"
   local description="$2"
-  case "${type_tag^^}" in
+  local type_upper
+  type_upper=$(echo "$type_tag" | tr '[:lower:]' '[:upper:]')
+  case "$type_upper" in
     TABLE)
       if echo "$description" | grep -qi "contrast\|vs\|versus\|comparison"; then
         echo "infographic-table"
@@ -147,8 +146,8 @@ render_table() {
   if echo "$description" | grep -qi " vs\.* "; then
     col1=$(echo "$description" | sed 's/.*contrast of //i' | sed 's/ vs\.* .*//i' | sed 's/^ *//;s/ *$//')
     col2=$(echo "$description" | sed 's/.* vs\.* //i' | sed 's/ —.*//;s/ -.*//' | sed 's/^ *//;s/ *$//')
-    col1="$(tr '[:lower:]' '[:upper:]' <<< "${col1:0:1}")${col1:1}"
-    col2="$(tr '[:lower:]' '[:upper:]' <<< "${col2:0:1}")${col2:1}"
+    col1="$(echo "${col1:0:1}" | tr '[:lower:]' '[:upper:]')${col1:1}"
+    col2="$(echo "${col2:0:1}" | tr '[:lower:]' '[:upper:]')${col2:1}"
   fi
 
   local rows_hint=""
@@ -166,7 +165,7 @@ render_table() {
     IFS=',' read -ra ROW_NAMES <<< "$rows_hint"
     for row in "${ROW_NAMES[@]}"; do
       row=$(echo "$row" | sed 's/^ *//;s/ *$//')
-      row="$(tr '[:lower:]' '[:upper:]' <<< "${row:0:1}")${row:1}"
+      row="$(echo "${row:0:1}" | tr '[:lower:]' '[:upper:]')${row:1}"
       echo "| **${row}** | _fill in_ | _fill in_ |"
     done
   else
@@ -193,7 +192,7 @@ for CHAPTER_FILE in "${FILES[@]}"; do
   CHAPTER_NUM=$(echo "$CHAPTER_SLUG" | grep -oE '^[0-9]+' | sed 's/^0*//')
   [[ -z "$CHAPTER_NUM" ]] && CHAPTER_NUM="0"
 
-  OUT_FILE="${CHAPTERS_DIR}/${BASENAME}-updated.md"
+  CURRENT_TMP="${CHAPTER_FILE}.tmp"
   FIG_COUNT=0
 
   echo "" >&2
@@ -213,11 +212,12 @@ for CHAPTER_FILE in "${FILES[@]}"; do
 
       RENDER_AS=$(classify "$TYPE_TAG" "$DESCRIPTION")
       SHORT_DESC=$(truncate_desc "$DESCRIPTION")
+      TYPE_TAG_UPPER=$(echo "$TYPE_TAG" | tr '[:lower:]' '[:upper:]')
 
       if [[ "$RENDER_AS" == "image" ]]; then
         IMG_FILENAME="${CHAPTER_SLUG}-fig-${FIG_NUM}.jpg"
         make_placeholder "${IMAGES_DIR}/${IMG_FILENAME}" \
-          "$FIG_LABEL" "${TYPE_TAG^^}" "$SHORT_DESC"
+          "$FIG_LABEL" "$TYPE_TAG_UPPER" "$SHORT_DESC"
         TOTAL_IMAGES=$((TOTAL_IMAGES + 1))
 
         echo "$line"
@@ -238,9 +238,11 @@ for CHAPTER_FILE in "${FILES[@]}"; do
       echo "$line"
     fi
 
-  done < "$CHAPTER_FILE" > "$OUT_FILE"
+  done < "$CHAPTER_FILE" > "$CURRENT_TMP"
 
-  echo "  Written: $OUT_FILE" >&2
+  mv "$CURRENT_TMP" "$CHAPTER_FILE"
+  CURRENT_TMP=""
+  echo "  Updated: $CHAPTER_FILE" >&2
 
 done
 
@@ -262,7 +264,4 @@ echo "Done." >&2
 echo "  Chapters processed : ${#FILES[@]}" >&2
 echo "  Tables rendered    : $TOTAL_TABLES" >&2
 echo "  Images generated   : $TOTAL_IMAGES" >&2
-echo "" >&2
-echo "Review -updated.md files, then promote:" >&2
-echo '  for f in chapters/*-updated.md; do mv "$f" "${f/-updated/}"; done' >&2
 echo "────────────────────────────────────────────" >&2

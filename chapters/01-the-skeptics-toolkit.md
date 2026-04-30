@@ -25,6 +25,9 @@ I want to be clear about something. You do not have to think Descartes was right
 
 <!-- → [INFOGRAPHIC: The three moves as a portable checklist — Cartesian doubt (what would make this wrong?), Humean induction limit (what if the distribution shifted?), Popperian falsifiability (what would failure look like, specified). Designed for margin reference or pull-quote treatment — the kind of thing students photograph and tape to monitors.] -->
 
+![Figure 1.1 — The three moves as a portable checklist](images/01-the-skeptics-toolkit-fig-01.jpg)
+
+
 ## The cave
 
 There is one more move I want to give you, and it is the one engineers most often skip, and everything in this book depends on it.
@@ -41,6 +44,9 @@ The Swedish triage system produced a score. The score was the artifact. The pati
 
 <!-- → [DIAGRAM: Two-column split — left column labeled "The Artifact" (model, score, validation metrics, deployment review), right column labeled "The World" (patient, clot, waiting room, outcome). A dotted line connects them labeled "statistical relationship." A bold caption beneath: "The engineers reviewed the left column. The patient was in the right column."] -->
 
+![Figure 1.2 — Two-column split](images/01-the-skeptics-toolkit-fig-02.jpg)
+
+
 ## A funny inversion about verification
 
 There is a piece of folklore in computer science that says verifying a solution is easier than producing one. If I give you a very large number, it is hard to factor it. If I hand you the factors, it is easy to multiply them and check. Most of cryptography is built on this asymmetry. It is real and it is beautiful and you should know about it.
@@ -56,6 +62,16 @@ I will tell you about the email later. It is one of the better stories.
 Most of this book is about how to verify cheaply enough that verification scales. The answer is *never* "automate the verification" — because that is just another model, with the same problem, sitting one layer up. The answer is always: design the system so that the verification a human can perform tells you what you need to know.
 
 <!-- → [CHART: Cost asymmetry diagram — horizontal axis: "AI task type" (triage scoring, loan decisioning, email management, medical imaging), vertical axis: "relative cost." Two bars per task: production cost (near-zero) vs. verification cost (variable, always higher). Student should see that the gap is not uniform — verification cost varies by domain, but production cost does not.] -->
+
+*Figure 1.3*
+
+| | **Cost asymmetry diagram — horizontal axis: "AI task type" (triage scoring, loan decisioning, email management, medical imaging), vertical axis: "relative cost." Two bars per task: production cost (near-zero)** | **Verification cost (variable, always higher). Student should see that the gap is not uniform** |
+|---|---|---|
+| **Row 1** | _fill in_ | _fill in_ |
+| **Row 2** | _fill in_ | _fill in_ |
+
+: {.data-table}
+
 
 ## The five things a supervisor does
 
@@ -77,6 +93,19 @@ These five are vocabulary for now. By the end of the book you will be able to lo
 
 <!-- → [TABLE: The five supervisory capacities — columns: capacity name, what it is, what failure looks like, which chapter develops it. Rows: plausibility auditing, problem formulation, tool orchestration, interpretive judgment, executive integration. Use this as the navigational spine of the book — students should return to it at the start of each chapter.] -->
 
+*Figure 1.4*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **Plausibility auditing** | _fill in_ | _fill in_ |
+| **Problem formulation** | _fill in_ | _fill in_ |
+| **Tool orchestration** | _fill in_ | _fill in_ |
+| **Interpretive judgment** | _fill in_ | _fill in_ |
+| **Executive integration. Use this as the navigational spine of the book — students should return to it at the start of each chapter.** | _fill in_ | _fill in_ |
+
+: {.comparison-table}
+
+
 ## The fluency trap
 
 There is an adjacent vocabulary, developed in the Botspeak framework, that I will deal with in detail in Appendix A. It names nine pillars of AI fluency, and it is useful, and I commend it to you. For now I want to take exactly one idea out of it, because it is the single most operationally important concept in this chapter.
@@ -92,6 +121,9 @@ The agent did not deceive Ash. The agent could not have deceived a non-fluent re
 The point is not to distrust fluent outputs. Fluent outputs are, on average, more useful than non-fluent ones. The point is to *not let fluency do epistemic work.* When you find yourself accepting an output because it sounds right, stop. Ask what would have to be true for it to be wrong. Run Descartes's move. Run Popper's. Look at the artifact and look at the world and ask what the relationship is.
 
 <!-- → [INFOGRAPHIC: The fluency trap as a two-stage mechanism — Stage 1: fluent output → elevated confidence in output. Stage 2: elevated confidence in output → elevated confidence in own evaluation. Caption: "Fluency boosts wrong evaluations as readily as right ones. The shape of a sentence is not evidence about its truth."] -->
+
+![Figure 1.5 — The fluency trap as a two-stage mechanism](images/01-the-skeptics-toolkit-fig-05.jpg)
+
 
 ## The shape of the rest
 

@@ -55,6 +55,23 @@ And there is *selective uncertainty visualization*. Showing confidence intervals
 
 <!-- → [TABLE: Catalog of nine misleading visualization choices — columns: Move | Honest use | Dishonest use | How to tell the difference. Rows: Truncated axis, Inconsistent axes across panels, Aggregation hiding distribution, Color asymmetry, Cherry-picked time windows, Scale trickery, Chartjunk/3D effects, Missing baseline, Selective uncertainty visualization. Students should be able to use this as a checklist when reviewing their own dashboards.] -->
 
+*Figure 11.1*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **Truncated axis** | _fill in_ | _fill in_ |
+| **Inconsistent axes across panels** | _fill in_ | _fill in_ |
+| **Aggregation hiding distribution** | _fill in_ | _fill in_ |
+| **Color asymmetry** | _fill in_ | _fill in_ |
+| **Cherry-picked time windows** | _fill in_ | _fill in_ |
+| **Scale trickery** | _fill in_ | _fill in_ |
+| **Chartjunk/3D effects** | _fill in_ | _fill in_ |
+| **Missing baseline** | _fill in_ | _fill in_ |
+| **Selective uncertainty visualization. Students should be able to use this as a checklist when reviewing their own dashboards.** | _fill in_ | _fill in_ |
+
+: {.comparison-table}
+
+
 This is not a complete list. Tufte and Cairo each have longer ones, and I recommend reading them. The pattern across all the choices is consistent. Each move is a *choice* that shifts the reader's interpretation. The engineer's job is to know which choices are being made and why.
 
 ---
@@ -70,6 +87,9 @@ A few things help. First, where you can, show *more than one* representation of 
 Second — and this is the practical heart of it — make the uncertainty *visually equal* in weight to the central estimate. A small error bar on a big bold number says one thing. A central estimate displayed at the same visual weight as the uncertainty range says another. The first communicates "this is the answer, with a quibble." The second communicates "the uncertainty is part of the finding."
 
 <!-- → [IMAGE: Side-by-side comparison of two uncertainty visualizations for the same data. Left: large bold central estimate with a thin error bar — headline reads "94.3% accuracy." Right: a range chart showing the full confidence interval at equal visual weight to the point estimate — headline reads "91–97% accuracy (95% CI)." Student should see how the visual hierarchy in the left version demotes the uncertainty to decoration.] -->
+
+![Figure 11.2 — Side-by-side comparison of two uncertainty visualizations for the same data. Left: large bold central estimate with a thin error bar](images/11-visualization-under-validation-honest-misleading-and-the-choices-between-fig-02.jpg)
+
 
 Third, avoid false precision. A reported metric of 0.847291 with a confidence interval of plus or minus 0.05 is not a 0.847291 metric. It is a 0.85 metric. Round the central estimate to a precision the uncertainty actually supports. Reporting more digits than the data justifies is itself a small dishonest move, the way a witness who claims to have seen something at exactly 7:23:14 PM is making a claim of precision the human eye cannot actually deliver.
 

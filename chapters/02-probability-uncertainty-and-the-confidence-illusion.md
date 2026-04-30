@@ -17,6 +17,9 @@ I want to walk you through why, because the calculation is simple enough that yo
 
 <!-- → [INFOGRAPHIC: A population of 10,000 people shown as a grid of dots — one red (true positive), ~100 orange (false positives), ~9,899 gray (true negatives). Arrow shows: "you pull one positive result from the red + orange pool — 1 in 101 is red." Puts the arithmetic viscerally before the student.] -->
 
+![Figure 2.1 — A population of 10,000 people shown as a grid of dots](images/02-probability-uncertainty-and-the-confidence-illusion-fig-01.jpg)
+
+
 Now, isn't that something? The test is doing exactly what its specification said it would do. The number on the box is honest. Nothing is broken. And yet your intuition was off by two orders of magnitude.
 
 I want to slow down here, because most of this chapter is just unpacking what went wrong in your head. You weren't dumb. The math you were doing in your head was a perfectly reasonable calculation — for a different question. You were computing something like *given the disease, how often does the test get it right?* And the answer to that is indeed ninety-nine percent. But the question being asked was *given a positive test, how often is the disease there?* Those are not the same question, and you cannot get from one to the other without one extra ingredient.
@@ -49,6 +52,15 @@ $$P(\text{disease} \mid \text{positive}) = \frac{P(\text{positive} \mid \text{di
 
 <!-- → [TABLE: Three-column breakdown of Bayes' theorem ingredients — Term | Plain English Name | Value in the Disease Example. Rows: P(positive | disease) = sensitivity = 0.99; P(disease) = base rate / prior = 0.0001; P(positive) = total positive rate = ~0.0101; P(disease | positive) = posterior = ~0.0099. Students should see that the prior is an equal ingredient, not an afterthought.] -->
 
+*Figure 2.2*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **P(positive | disease) = sensitivity = 0.99** | _fill in_ | _fill in_ |
+
+: {.data-table}
+
+
 I am not going to make a fuss over this. It is just the bookkeeping for what we already did. The vertical bar means "given." On the left, what we want — probability of disease, given that the test came back positive. On the right, the ingredients — how often the test is right when the disease is there, how often the disease is there in the first place, and how often the test comes back positive at all (which we got from adding up the true and false positives). Plug in our numbers: 0.99 times 0.0001, divided by about 0.01. You get a hair under one percent. Same answer.
 
 The reason this little equation matters is that it tells you, exactly, where your intuition went off the rails. The posterior — what you believe after seeing the evidence — depends on the prior — what you believed before. Ignore the prior and you have thrown away half the equation. The most common error in interpreting any probabilistic output, in any field I have ever looked at, is forgetting the prior.
@@ -69,6 +81,9 @@ There is a famous case from the early pandemic. Models trained on pre-2020 medic
 
 <!-- → [IMAGE: Conceptual diagram showing two distributions — training distribution (blue, labeled "World the model learned") and deployment distribution (orange, shifted right, labeled "World the model operates in"). The overlap is partial; the gap is labeled "distribution shift." A confidence curve sits atop both, staying identical — showing the model does not know it has drifted.] -->
 
+![Figure 2.3 — Conceptual diagram showing two distributions](images/02-probability-uncertainty-and-the-confidence-illusion-fig-03.jpg)
+
+
 You will not, in general, be able to detect this kind of drift just by watching the model's outputs. That is the whole point. The model continues to look confident through the shift; the shape of its outputs stays similar; the dashboards stay green. Detection requires watching the inputs, watching the outputs, and — most of all — watching the actual outcomes the model was supposed to predict, when those outcomes eventually become observable. Most deployments do not budget for that. Most deployments find out about distribution shift through the harm.
 
 Hume on the page, then, in our register: the model's track record tells you about the past. It does not guarantee the future. The honest question is *what would have to remain true about the deployment for the track record to keep being informative?* If you cannot answer that, you do not actually trust the track record. You just have not noticed yet.
@@ -82,6 +97,9 @@ A model is calibrated when its stated probabilities match what actually happens.
 You can see this in a picture. Put the model's stated probability on the horizontal axis. Put the actual frequency of positives, in cases where the model said that, on the vertical axis. A perfectly calibrated model traces the diagonal — the line where stated and actual are equal. A miscalibrated model peels off the diagonal, and the *shape* of how it peels off tells you something about how the model is wrong.
 
 <!-- → [CHART: Calibration curve — x-axis "Model's stated probability (0 to 1.0)," y-axis "Observed frequency of positive outcomes (0 to 1.0)." Diagonal reference line labeled "Perfect calibration." A second curve shown bowing above the diagonal at high confidence values, labeled "Typical deep learning overconfidence." Student should notice: the model is close to calibrated in the 0.3–0.7 range, then peels off badly toward 0.9–1.0.] -->
+
+![Figure 2.4 — Calibration curve](images/02-probability-uncertainty-and-the-confidence-illusion-fig-04.jpg)
+
 
 Here is a pattern that turns up everywhere in modern deep learning. The model is reasonably calibrated in the middle of its range — when it says "sixty percent" it is about right. But at the extremes, especially toward the high end, it is badly overconfident. It says "ninety-nine percent" when it should be saying "eighty-five." The mathematics of how these models are trained — the use of softmax outputs and certain loss functions — actively rewards extreme confidence even when the underlying decision is not really that confident. You get models that have learned to *sound* sure of themselves regardless of whether they should be.
 
@@ -100,6 +118,9 @@ The theorem has two requirements buried in it that I want you to notice. *Indepe
 When either requirement fails, the theorem fails, and the failure is usually quiet. Independence breaks down in network-structured data, in time series with autocorrelation, in any system where one event's outcome shifts the probability of subsequent events. Finite variance breaks down in heavy-tailed distributions — distributions where extreme events are not rare enough for averaging to dampen them. The Cauchy distribution is the textbook example, the freak that mathematicians use to scare you, but it is not just a freak. Power-law distributions are common in real systems. Wealth. File sizes. Network connection counts. Earthquake magnitudes. Training-loss spikes during model fitting. The cost of a deployed AI system being wrong about a single decision.
 
 <!-- → [CHART: Two distributions overlaid — a Gaussian (thin tails, labeled "CLT applies") and a power-law distribution (fat tail extending right, labeled "Heavy-tailed — CLT does not apply"). Vertical line at some large x-value shows: the Gaussian probability is near zero; the power-law probability is still non-trivial. Annotation: "This is where your confidence intervals lie to you."] -->
+
+![Figure 2.5 — Two distributions overlaid](images/02-probability-uncertainty-and-the-confidence-illusion-fig-05.jpg)
+
 
 In a heavy-tailed regime, the sample mean does not settle down as you collect more data. You compute the average of a thousand observations and the next observation moves the average by a lot. The ten-thousand-observation average is still a hostage to the next outlier. Confidence intervals computed under Gaussian assumptions are nonsense here, but they look exactly like normal confidence intervals, so you have to know to be suspicious.
 

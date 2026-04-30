@@ -41,6 +41,16 @@ This is documentation work. It is not glamorous. It is the difference between a 
 
 <!-- → [TABLE: Side-by-side comparison of untestable vs. testable handoff conditions — three pairs of examples across different pipeline types (loan scoring, medical triage, content moderation). Columns: domain, untestable version, testable version, what interpretation was pinned down. Students should use this as a template for the rewrite exercise.] -->
 
+*Figure 10.1*
+
+| | **Side-by-side comparison of untestable** | **Testable handoff conditions** |
+|---|---|---|
+| **Row 1** | _fill in_ | _fill in_ |
+| **Row 2** | _fill in_ | _fill in_ |
+
+: {.infographic-table}
+
+
 ---
 
 There are five supervisory capacities I introduced in Chapter 1, and this is the chapter where each becomes a concrete job in the pipeline rather than a personality trait. Engineers sometimes hear "supervisory capacity" and reach for words like *judgment* and *experience* — words that describe a person rather than a task. The reframe of this chapter is that each capacity has an operational form, and the operational form is something the pipeline either has or does not.
@@ -59,6 +69,19 @@ Each of these is a *job* in a pipeline, with a documented operational form. The 
 
 <!-- → [TABLE: The five supervisory capacities as pipeline jobs — columns: capacity name, operational form in a pipeline, what artifact documents it, failure mode if absent. Rows: plausibility auditing, problem formulation, tool orchestration, interpretive judgment, executive integration. This is the Chapter 1 vocabulary re-stated as engineering deliverables — students should be able to audit a pipeline against this table.] -->
 
+*Figure 10.2*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **Plausibility auditing** | _fill in_ | _fill in_ |
+| **Problem formulation** | _fill in_ | _fill in_ |
+| **Tool orchestration** | _fill in_ | _fill in_ |
+| **Interpretive judgment** | _fill in_ | _fill in_ |
+| **Executive integration. This is the Chapter 1 vocabulary re-stated as engineering deliverables — students should be able to audit a pipeline against this table.** | _fill in_ | _fill in_ |
+
+: {.comparison-table}
+
+
 ---
 
 Now the question that comes before the map: which sub-tasks in your pipeline should the AI do, and which should it not? This is not an aesthetic decision. It is a structured assessment with five questions you ask of each sub-task. I call the assessment the Boondoggle Score, and it sits inside one of the tools that accompanies this textbook. The score is less important than the questions, so let me walk through the questions.
@@ -76,6 +99,22 @@ The fifth question is audit trail clarity. Does the AI's action leave a trail th
 The five questions, taken together, sort sub-tasks into three buckets. Some are appropriate for AI execution. Some should not be delegated. Some are hybrids — AI-assisted with human verification at specified handoff conditions. The output of the assessment is not a recommendation per se. It is *a documented justification for the delegation choice*, which becomes part of the pipeline documentation. The justification is what the adoption committee, the regulator, and the future engineer reviewing the pipeline will read.
 
 <!-- → [TABLE: The Boondoggle Score as a decision matrix — rows: the five questions (verification cost, stakes, distribution match, reversibility, audit trail clarity). Columns: question, what low risk looks like, what high risk looks like, which of the three delegation buckets a high-risk answer pushes toward. Designed as a worksheet — students fill it in for each sub-task they are assessing.] -->
+
+*Figure 10.3*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **The five questions (verification cost** | _fill in_ | _fill in_ |
+| **Stakes** | _fill in_ | _fill in_ |
+| **Distribution match** | _fill in_ | _fill in_ |
+| **Reversibility** | _fill in_ | _fill in_ |
+| **Audit trail clarity). Columns: question** | _fill in_ | _fill in_ |
+| **What low risk looks like** | _fill in_ | _fill in_ |
+| **What high risk looks like** | _fill in_ | _fill in_ |
+| **Which of the three delegation buckets a high-risk answer pushes toward. Designed as a worksheet — students fill it in for each sub-task they are assessing.** | _fill in_ | _fill in_ |
+
+: {.data-table}
+
 
 ---
 
@@ -96,6 +135,16 @@ Now here is the part that is monitorable. Over the last fifty AI outputs in the 
 This is data that is sitting in the audit trail. Every accept-override-escalate event is recorded; the AI's error rate can be estimated from sampled ground-truth checks. The analysis that compares the two distributions is not technically difficult. It is just rarely done. It is one of the cleanest gaps between what current deployments could be measuring and what they actually measure.
 
 <!-- → [CHART: Three panels showing trust calibration — panel 1: overtrust (supervisor accept rate 95%, AI error rate 10% — the gap is visible); panel 2: undertrust (supervisor override rate 60%, AI error rate 5%); panel 3: calibrated trust (override rate tracks error rate, overrides concentrated on cases where AI was wrong). Horizontal axis: cases in deployment order. Vertical axis: accept/override rate vs. AI error rate. Student should see the shape of the three failure modes.] -->
+
+*Figure 10.4*
+
+| | **Three panels showing trust calibration — panel 1: overtrust (supervisor accept rate 95%, AI error rate 10% — the gap is visible); panel 2: undertrust (supervisor override rate 60%, AI error rate 5%); panel 3: calibrated trust (override rate tracks error rate, overrides concentrated on cases where AI was wrong). Horizontal axis: cases in deployment order. Vertical axis: accept/override rate** | **AI error rate. Student should see the shape of the three failure modes.** |
+|---|---|---|
+| **Row 1** | _fill in_ | _fill in_ |
+| **Row 2** | _fill in_ | _fill in_ |
+
+: {.data-table}
+
 
 ---
 

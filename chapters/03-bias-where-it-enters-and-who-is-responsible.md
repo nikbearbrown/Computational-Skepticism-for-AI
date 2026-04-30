@@ -31,6 +31,16 @@ And sometimes — this is the hardest case — they mean that the data is fine, 
 
 <!-- → [TABLE: Three-column comparison of bias types — columns: type (dataset / label / structural), definition, where it lives in the pipeline, canonical example, what a fix looks like, what a fix cannot do. Student should use this as a diagnostic checklist before selecting an intervention.] -->
 
+*Figure 3.1*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **Row 1** | _fill in_ | _fill in_ |
+| **Row 2** | _fill in_ | _fill in_ |
+
+: {.infographic-table}
+
+
 I want you to feel the difference between these three. Dataset bias is a sampling problem. Label bias is a measurement problem. Structural bias is a question about the world the model lives in. They live at different points in the chain from "world" to "decision," and they respond to interventions at different points. If you have structural bias and you treat it as a dataset problem, you will spend a lot of effort and not move the disparity at all. This happens constantly. It is the most common failure in this whole field.
 
 So before we touch any tool, we have to do diagnostic work. *Which kind of bias do we actually have?* The answer requires looking past the model and past the data and into the social process that generated both.
@@ -51,6 +61,16 @@ It turns out — I will show you the math when we get to Chapter 7 — that when
 
 <!-- → [INFOGRAPHIC: Visual proof sketch of the fairness impossibility — show two groups with different base rates (e.g. 30% vs 50%), and demonstrate with concrete numbers why achieving equal false positive rates forces calibration disparity and vice versa. Student should see the arithmetic contradiction, not just be told it exists.] -->
 
+*Figure 3.2*
+
+| | **Visual proof sketch of the fairness impossibility — show two groups with different base rates (e.g. 30%** | **50%), and demonstrate with concrete numbers why achieving equal false positive rates forces calibration disparity and vice versa. Student should see the arithmetic contradiction, not just be told it exists.** |
+|---|---|---|
+| **Row 1** | _fill in_ | _fill in_ |
+| **Row 2** | _fill in_ | _fill in_ |
+
+: {.infographic-table}
+
+
 But there is something even deeper here, and it is the reason I am using COMPAS as the example. The data being analyzed was not "did this person commit another crime." It was "was this person re-arrested." Those are not the same. Re-arrest is a function of crime *and* policing. If policing is unevenly distributed across populations, then re-arrest is an uneven measurement of crime. And every model trained on that data inherits the unevenness.
 
 This is what I mean by reading the dataset like a historian. The deepest dataset bugs are not data-quality issues in the QA sense. They are mismatches between what the data is and what the modeler thinks it is. The modeler thinks they are predicting recidivism. They are actually predicting re-arrest given recidivism given policing given everything that shapes both. A model trained on that data, deployed without that frame, makes the unevenness invisible by laundering it through an algorithm.
@@ -69,6 +89,9 @@ The classical illustration is the rooster and the sun. If you observe roosters a
 
 <!-- → [DIAGRAM: Pearl's ladder of causal reasoning — a three-rung ladder with Rung 1 (association / seeing), Rung 2 (intervention / doing), Rung 3 (counterfactual / imagining). Each rung should show: the question it asks, the formal notation, the canonical example, and the kind of AI fairness question it can answer. Rung 3 should be visibly "coming soon" — grayed out, labeled "Chapter 8." Student should be able to glance at this to orient themselves in the chapter and return to it in Chapter 8.] -->
 
+![Figure 3.3 — Pearl's ladder of causal reasoning](images/03-bias-where-it-enters-and-who-is-responsible-fig-03.jpg)
+
+
 For our problem: P of loan denial given applicant race equals X is the *observational* quantity. This is what the model sees in training data. It is what most fairness metrics measure. P of loan denial given do-of-applicant-race-equals-X is the *interventional* quantity. It asks the causal question: would the decision change if we changed only this variable, holding everything else fixed?
 
 These two can come apart in ways that matter. A model can show no observed disparity on Rung 1, equal outputs across groups, while having a Rung 2 disparity — meaning, if you intervened on race-correlated features, the outputs would diverge. It can also show a Rung 1 disparity that *vanishes* on Rung 2 — meaning, the disparity in the data is mediated entirely through legitimate features, and the underlying decision is causally race-neutral. Without a way to distinguish the two, you cannot tell the difference between a model that is fair and a model that has merely been smoothed.
@@ -84,6 +107,9 @@ Each team intervened. They intervened at different points in the causal chain fr
 But the doings had different leverage. Imagine the causal graph for how the bias appears in the deployed outcome. The protected attribute sits at the top. Below it are proxies — features in the data that correlate with the protected attribute. Below those, the features the model uses. Below those, the model's output. Below that, the deployment context — the reviewer, the threshold, the appeal process. Below that, the final outcome that lands on a real person's life.
 
 <!-- → [DIAGRAM: Causal graph of a biased deployment pipeline — layered flow from top to bottom: Protected attribute → Proxies (features correlated with the attribute) → Model input features → Model parameters → Model output → Deployment context (reviewer / threshold / appeals) → Final outcome. Show three colored overlays: where Team A's intervention (loss rewrite) acts, where Team B's (data rebalancing) acts, where Team C's (review process change) acts. The diagram should make visually clear why Team A and B leave the deployment-context path open. Student should be able to trace each team's intervention path on this graph.] -->
+
+![Figure 3.4 — Causal graph of a biased deployment pipeline](images/03-bias-where-it-enters-and-who-is-responsible-fig-04.jpg)
+
 
 Now ask: from the protected attribute at the top to the outcome at the bottom, how many paths are there? Some paths run through the model — through its features and its parameters. Some paths *bypass* the model — they run through the proxies into the deployment context directly. Some paths are mediated by the reviewer, by the way the score is read, by what gets appealed and what does not.
 

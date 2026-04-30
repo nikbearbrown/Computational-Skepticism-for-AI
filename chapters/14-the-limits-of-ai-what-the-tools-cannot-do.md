@@ -45,6 +45,18 @@ You have met this limit before, in different clothes. It was Hume's induction pr
 
 <!-- → [TABLE: Three structural limits — columns: Limit | What it means | Why capability scaling doesn't fix it | Operational consequence for the supervisor. Rows: Meaning, Intentionality, Data-world gap. Students should be able to use this as a quick-reference summary of the chapter's core argument and connect each limit to earlier chapters.] -->
 
+*Figure 14.1*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **Meaning** | _fill in_ | _fill in_ |
+| **Intentionality** | _fill in_ | _fill in_ |
+| **Data-world gap. Students should be able to use this as a quick-reference summary of the chapter's core argument** | _fill in_ | _fill in_ |
+| **Connect each limit to earlier chapters.** | _fill in_ | _fill in_ |
+
+: {.data-table}
+
+
 Three limits. Meaning. Intentionality. The data-world gap. They bound what the tools can do, and they bound them in a way that does not yield to capability scaling.
 
 ---
@@ -60,6 +72,17 @@ The second argument is Searle's. He offered a thought experiment in 1980 — the
 The argument settles a conceptual question: behavior consistent with understanding does not entail understanding. What it does not settle is whether contemporary systems are doing only symbol manipulation, or whether the embedding structures, the attention patterns, the multimodal grounding constitute something more. Searle's argument is a strong constraint on shallow accounts of meaning. It is not a deep constraint on what current architectures might be. People who cite Searle as having shown that AI systems *cannot* understand are giving him credit for a stronger claim than he made.
 
 <!-- → [TABLE: Two-argument comparison — columns: Argument | What it actually claims | What it does NOT claim | Common misreading. Rows: Turing (1950) / Imitation Game, Searle (1980) / Chinese Room. Students should be able to cite either argument correctly and identify the overclaim when they encounter it.] -->
+
+*Figure 14.2*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **Turing (1950) / Imitation Game** | _fill in_ | _fill in_ |
+| **Searle (1980) / Chinese Room. Students should be able to cite either argument correctly** | _fill in_ | _fill in_ |
+| **Identify the overclaim when they encounter it.** | _fill in_ | _fill in_ |
+
+: {.infographic-table}
+
 
 The two arguments together produce a useful operational stance, and I want to state it as plainly as I can. *Behavior is testable evidence and should be taken seriously. And behavior is not the whole of what we mean by understanding, meaning, or intentionality.* Both moves at once. The validator who only tests behavior misses the limits. The validator who only invokes the limits skips the testing. The job is to do both.
 

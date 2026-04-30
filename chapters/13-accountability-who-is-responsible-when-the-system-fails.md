@@ -27,6 +27,9 @@ I want you to hold onto this finding because most of our legal and regulatory th
 
 <!-- → [DIAGRAM: The mail-server case as a responsibility-attribution map — five nodes (non-owner, agent, owner, framework developers, model provider) arranged vertically by distance from the proximate event, with labeled arrows showing causal contribution and duty for each party. Caption: "None of these nodes, in isolation, produced the failure. Each was necessary. None was sufficient."] -->
 
+![Figure 13.1 — The mail-server case as a responsibility-attribution map](images/13-accountability-who-is-responsible-when-the-system-fails-fig-01.jpg)
+
+
 ---
 
 Let me run this through two ethics frameworks. Not because I want to defer to them — they are instruments, not authorities — but because they tell us something useful when we use them as instruments.
@@ -46,6 +49,25 @@ Each accountability target has different leverage. The utilitarian calculation p
 Two frameworks. Different bases. Same topology. Responsibility distributes, and the distribution is the finding.
 
 <!-- → [TABLE: The two frameworks applied to the mail-server case — rows: each responsible party (non-owner, agent, owner, framework developers, model provider). Columns: Kantian basis (capacity to act otherwise, duty imposed, relative magnitude), utilitarian basis (leverage of accountability, downstream effects on engineering practice). Caption: "Two frameworks, different bases, same topology. The distribution is the finding."] -->
+
+*Figure 13.2*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **Each responsible party (non-owner** | _fill in_ | _fill in_ |
+| **Agent** | _fill in_ | _fill in_ |
+| **Owner** | _fill in_ | _fill in_ |
+| **Framework developers** | _fill in_ | _fill in_ |
+| **Model provider). Columns: Kantian basis (capacity to act otherwise** | _fill in_ | _fill in_ |
+| **Duty imposed** | _fill in_ | _fill in_ |
+| **Relative magnitude)** | _fill in_ | _fill in_ |
+| **Utilitarian basis (leverage of accountability** | _fill in_ | _fill in_ |
+| **Downstream effects on engineering practice). Caption: "Two frameworks** | _fill in_ | _fill in_ |
+| **Different bases** | _fill in_ | _fill in_ |
+| **Same topology. The distribution is the finding."** | _fill in_ | _fill in_ |
+
+: {.data-table}
+
 
 ---
 
@@ -68,6 +90,16 @@ Specifications, audit trails, recourse, independent review, sanctions. A deploym
 Most deployed AI systems are missing two or more.
 
 <!-- → [TABLE: The five accountability requirements as a deployment audit checklist — columns: requirement, what it consists of, failure mode if absent, how to verify it is present. Designed as a reusable audit instrument: an external reviewer should be able to go through a deployed system and check each row.] -->
+
+*Figure 13.3*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **Row 1** | _fill in_ | _fill in_ |
+| **Row 2** | _fill in_ | _fill in_ |
+
+: {.data-table}
+
 
 ---
 
@@ -92,6 +124,9 @@ This is what Rung 3 looks like in its governance form. The counterfactual lives 
 For a working engineer, this is liberating. *Most catastrophic AI failures are not algorithmic failures*. They are regime failures, and the regime is changeable in ways the algorithm often is not. The supervisory work — the work this book has been training — extends through the regime. This is the chapter where that extension becomes explicit.
 
 <!-- → [DIAGRAM: Pearl's Ladder with the governance extension — three rungs labeled: Rung 1 (association / the data), Rung 2 (intervention / the model), Rung 3 (counterfactual / the regime). Below Rung 3, an annotation: "The governance counterfactual — what regime, if implemented earlier, would have produced a different system?" Caption: "The standard treatment stops at Rung 2. The closure of this book is at Rung 3."] -->
+
+![Figure 13.4 — Pearl's Ladder with the governance extension](images/13-accountability-who-is-responsible-when-the-system-fails-fig-04.jpg)
+
 
 ---
 

@@ -29,6 +29,9 @@ Most validation of deployed agents I have seen is — I am being charitable — 
 
 <!-- → [DIAGRAM: Prediction system vs. consequence system — two parallel columns. Left column: prediction pipeline (input → model → output statement → bounded loss). Right column: agentic pipeline (goal → agent → state change → open-ended loss bounded only by access scope). Three labeled callout lines pointing to the right column: (1) "loss = f(access scope)"; (2) "audit trail must be captured during action, not reconstructed after"; (3) "failure modes not always distinguishable from success at action level." Student should feel the categorical shift, not just see it labeled.] -->
 
+![Figure 9.1 — Prediction system vs. consequence system](images/09-validating-agentic-ai-when-autonomous-systems-misbehave-fig-01.jpg)
+
+
 ## A taxonomy of how agents go wrong
 
 *Agents of Chaos* proposes a taxonomy in §16. I am going to paraphrase it and reorganize it slightly for our use. Faithful to the paper, but compressed.
@@ -45,6 +48,23 @@ These four are not exhaustive. They are the load-bearing categories for the case
 
 <!-- → [TABLE: Four-category failure taxonomy — rows: social coherence failure, no stakeholder model, no self-model, no deliberation surface. Columns: category name, what the agent lacks, canonical case from Agents of Chaos, what the failure looks like from outside (observable symptom), which validation lens is primary, what a validator would look for in the audit trail. Student should use this as a diagnostic checklist when encountering a new agent failure.] -->
 
+*Figure 9.2*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **Social coherence failure** | _fill in_ | _fill in_ |
+| **No stakeholder model** | _fill in_ | _fill in_ |
+| **No self-model** | _fill in_ | _fill in_ |
+| **No deliberation surface. Columns: category name** | _fill in_ | _fill in_ |
+| **What the agent lacks** | _fill in_ | _fill in_ |
+| **Canonical case from Agents of Chaos** | _fill in_ | _fill in_ |
+| **What the failure looks like from outside (observable symptom)** | _fill in_ | _fill in_ |
+| **Which validation lens is primary** | _fill in_ | _fill in_ |
+| **What a validator would look for in the audit trail. Student should use this as a diagnostic checklist when encountering a new agent failure.** | _fill in_ | _fill in_ |
+
+: {.data-table}
+
+
 ## The lenses, applied to agents
 
 Each of the validation lenses we built up over the last four chapters has a specific application here. Same shape, different use.
@@ -60,6 +80,21 @@ Each of the validation lenses we built up over the last four chapters has a spec
 Now here is the thing I want you to notice. The four lenses are not independent. A single agent failure usually touches multiple lenses. Case #1 is primarily an explainability failure, but it has roots in data validation (the agent's data scope did not match the user's expectation) and in self-model (the agent did not represent its own limits). When you validate, you apply all four. You specify which lens caught what. You do not say "this is a fairness problem" and stop.
 
 <!-- → [TABLE: Four lenses applied to agents — rows: data validation, explainability, fairness, robustness. Columns: lens, what it becomes for agents (the agentic form of the question), primary case from Agents of Chaos, what it does NOT catch on its own. Final row or sidebar: note that lenses interact — Case #1 touches three of the four.] -->
+
+*Figure 9.3*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **Data validation** | _fill in_ | _fill in_ |
+| **Explainability** | _fill in_ | _fill in_ |
+| **Fairness** | _fill in_ | _fill in_ |
+| **Robustness. Columns: lens** | _fill in_ | _fill in_ |
+| **What it becomes for agents (the agentic form of the question)** | _fill in_ | _fill in_ |
+| **Primary case from Agents of Chaos** | _fill in_ | _fill in_ |
+| **What it does NOT catch on its own. Final row or sidebar: note that lenses interact — Case #1 touches three of the four.** | _fill in_ | _fill in_ |
+
+: {.data-table}
+
 
 ## When agents talk to each other
 
@@ -78,6 +113,9 @@ A few patterns worth knowing.
 The supervisory move for multi-agent systems is to validate the *interaction patterns*, not just the individual agents. Specify which interactions are permitted. Specify which are not. Specify what monitoring is in place. Specify what triggers escalation. This is closer to systems engineering than to ML validation, and the discipline is at an early stage. I am being honest with you about that. We are not yet very good at this.
 
 <!-- → [DIAGRAM: Three multi-agent failure modes — three small panels side by side. Panel 1 (cascading hallucination): three agents in a chain, each node labeled with an accumulating error rate (1% → ~10% → ~30%). Panel 2 (resource exhaustion loop): two agents in a cycle, a resource counter incrementing. Panel 3 (authority laundering): Agent A reaching across a dotted "access boundary" line, passing data to Agent B whose access channel is legitimate — the boundary is crossed once, then laundered. Each panel should show what single-agent validation would miss.] -->
+
+![Figure 9.4 — Three multi-agent failure modes](images/09-validating-agentic-ai-when-autonomous-systems-misbehave-fig-04.jpg)
+
 
 ## A boundary worth defending
 
