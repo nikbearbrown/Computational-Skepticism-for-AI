@@ -1,5 +1,31 @@
+
 # Chapter 11 — Visualization Under Validation: Honest, Misleading, and the Choices Between
 *The dashboard is an argument. The design choices are yours.*
+
+## Learning objectives
+
+By the end of this chapter, you will be able to:
+
+- Explain why visualization is an argument made through structural choices, not a transparent transmission of facts
+- Identify the nine misleading visualization choices in the catalog, distinguish honest from dishonest uses of each, and apply the catalog to audit your own dashboards
+- Design an uncertainty visualization that makes the uncertainty visually equal in weight to the central estimate
+- Build both an honest and a deliberately misleading version of a dashboard from the same data, and identify which design choices did the misleading work
+- Explain why a dashboard that visualizes findings unfaithfully is a validation failure at the output layer, not merely a communication problem
+- Apply the living-deck principle to communicate provisional analysis honestly
+
+## Prerequisites
+
+Chapters 2–10. Chapter 2's calibration material returns — calibration visualization is one of the cases examined. The validation methodology built across the book is what this chapter asks you to communicate faithfully.
+
+---
+
+## Why this chapter
+
+Every prior chapter in this book has asked you to produce honest analysis. This chapter asks how you communicate it — and establishes that the communication is itself part of the validation. A dashboard that misrepresents valid findings is not a downstream problem. It is a validation failure at the output layer, and it is the supervisor's responsibility.
+
+---
+
+## Two dashboards built from one CSV
 
 I want to tell you about two dashboards.
 
@@ -13,11 +39,13 @@ The second dashboard opens with a panel showing performance on the overall user 
 
 Same data. Same CSV. The first dashboard is misleading. The second is honest. And — here is the part you have to feel in your bones to understand the rest of this chapter — the deployment partner's response to the two dashboards is *predictably different*. They will leave the first dashboard reassured. They will leave the second dashboard with questions. The questions are appropriate. The reassurance is not.
 
-I want to spend this chapter on what is happening between those two dashboards, because I think most engineers do not realize they are making this choice every time they build one.
+I want to spend this chapter on what is happening between those two dashboards, because most engineers do not realize they are making this choice every time they build one.
 
 ---
 
-There is a famous claim from Marshall McLuhan that gets quoted constantly and understood rarely: *the medium is the message*. McLuhan's idea, in working form, was that the *form* of a communication shapes its meaning before any specific content arrives. A spoken story is not a written story is not a televised story, and the differences are not because the words have changed but because the medium structures the encounter. The reader of a written story holds it at a different distance, paces it differently, returns to passages, sets it down. The viewer of a televised story does none of those things.
+## The medium is the message — McLuhan applied to the dashboard
+
+There is a famous claim from Marshall McLuhan that gets quoted constantly and understood rarely: *the medium is the message*. [Verify: McLuhan 1964, *Understanding Media.*] McLuhan's idea, in working form, was that the *form* of a communication shapes its meaning before any specific content arrives. A spoken story is not a written story is not a televised story, and the differences are not because the words have changed but because the medium structures the encounter.
 
 A dashboard is a medium. Its structure shapes what the reader takes from the data before the reader reads any specific number.
 
@@ -27,121 +55,141 @@ A dashboard that opens with a panel of equally weighted views communicates, by i
 
 These are different arguments. The data is identical. The choice between forms is a choice about which argument to make.
 
-This is the most important conceptual move in the chapter, and I want to put it as plainly as I can. *Visualization is not transparent communication of facts.* It is an argument, made through structural choices, about what the facts mean and how the reader should weight them. Engineers, in my experience, undercredit this. Engineers also produce many of the most misleading dashboards I see in deployment — often without intending to mislead, often building exactly the kind of dashboard their training would predict — because they do not realize that their structural choices are arguments.
-
-Let me try to make the catalog of choices visible, because once you see them named you will not unsee them.
+This is the most important conceptual move in the chapter. *Visualization is not transparent communication of facts.* It is an argument, made through structural choices, about what the facts mean and how the reader should weight them. Engineers undercredit this. Engineers also produce many of the most misleading dashboards in deployment — often without intending to mislead, often building exactly the kind of dashboard their training would predict — because they do not realize that their structural choices are arguments.
 
 ---
 
-The most familiar move is the *truncated axis*. A bar chart with the y-axis starting at 80 instead of 0 makes a small difference look big. There are perfectly legitimate uses of this — when the relevant range really is narrow, when zero is not meaningful for the quantity being displayed, when the comparison the reader needs to make is fine-grained. There are also illegitimate uses, where the visual amplification implies a larger effect than the data supports. The chart looks the same in both cases. The choice is the difference.
+## The deceptive visualization catalog
 
-There is *inconsistent axes across panels*. You put two charts side by side. They look comparable. They are not — because their y-axis ranges are different, and the reader's visual comparison is invalid. This is one of the most common mistakes I see in honest dashboards, by which I mean dashboards built by engineers who would never deliberately deceive but who did not stop to ask whether the visual comparison their layout was inviting was a valid one.
+Let me make the catalog of choices visible, because once you see them named you will not unsee them.
 
-There is *aggregation that hides distribution*. A single number — a mean, a median — that obscures a heavy-tailed or multimodal distribution. *"Median performance is good"* communicates the median and hides the tail. If the tail contains the catastrophic cases, hiding it is not summarization. It is concealment. The aggregation is doing rhetorical work.
+<!-- FIGURE 11.1: Table — columns: Move | Honest use | Dishonest use | How to tell the difference. Rows: Truncated axis, Inconsistent axes across panels, Aggregation hiding distribution, Color asymmetry, Cherry-picked time windows, Scale trickery, Chartjunk/3D effects, Missing baseline, Selective uncertainty visualization. Students should use this as a checklist when auditing dashboards. Insert via Datawrapper or image after authoring table content. -->
 
-There is *color asymmetry*. Categorical data displayed with colors of unequal salience — bright red for one category, muted gray for another — guides the eye to where the designer wants attention, away from where the designer does not. The data has not changed. The salience has. The reader's gaze, and therefore the reader's attention, has been directed.
+**Truncated axes.** A bar chart with the y-axis starting at 80 instead of 0 makes a small difference look large. There are legitimate uses — when the relevant range really is narrow, when zero is not meaningful for the quantity being displayed. There are also illegitimate uses, where the visual amplification implies a larger effect than the data supports. The chart looks the same in both cases. The choice is the difference.
 
-There is *cherry-picked time windows*. A trend chart over a window that begins at a local minimum and ends at a local maximum exaggerates the trend. The same data over a longer window may show a different story, or no story at all.
+**Inconsistent axes across panels.** Two charts side by side look comparable. They are not — because their y-axis ranges differ and the reader's visual comparison is invalid. This is one of the most common mistakes in honest dashboards, by which I mean dashboards built by engineers who would never deliberately deceive but who did not ask whether the visual comparison their layout was inviting was a valid one.
 
-There is *scale trickery*. Linear axes for data that is naturally logarithmic; log axes for data that is naturally linear. Each compresses or expands different regions of the data. The choice can serve clarity or it can serve the opposite.
+**Aggregation that hides distribution.** A single number — a mean, a median — that obscures a heavy-tailed or multimodal distribution. *"Median performance is good"* communicates the median and hides the tail. If the tail contains the catastrophic cases, hiding it is not summarization. It is concealment. The aggregation is doing rhetorical work.
 
-There is *chartjunk and 3D effects*. Decorative elements that distort the perception of magnitude. 3D bar charts whose foreshortening makes near bars look bigger than far ones; pie charts with exploded slices that change the apparent area; backgrounds that interfere with reading the data. These are often introduced for aesthetic reasons; their effect is often to obscure.
+**Color asymmetry.** Categorical data displayed with colors of unequal salience guides the eye to where the designer wants attention, away from where the designer does not. The data has not changed. The salience has. The reader's gaze has been directed.
 
-There is *missing baselines*. A chart showing a metric without showing the comparison metric — accuracy without random-baseline accuracy, performance without prior-system performance, a finding without the null. The reader cannot tell if the finding is large or small. Without the baseline, every finding looks like a finding.
+**Cherry-picked time windows.** A trend chart over a window that begins at a local minimum and ends at a local maximum exaggerates the trend. The same data over a longer window may show a different story, or no story at all.
 
-There is *labels that prejudge*. Axis labels, legend entries, and headlines that frame the interpretation before the reader sees the data. *"Accuracy boost from new model"* on a chart comparing two models is a label that prejudges. *"Accuracy: model A vs model B"* is a label that does not.
+**Scale trickery.** Linear axes for data that is naturally logarithmic; log axes for data that is naturally linear. Each compresses or expands different regions of the data. The choice can serve clarity or it can serve the opposite.
 
-And there is *selective uncertainty visualization*. Showing confidence intervals where they support the argument and omitting them where they would weaken it. This one is common, hard to detect, and structurally the most dishonest of the bunch — because the data on uncertainty exists, and the choice to display it in some places and not in others is precisely the rhetorical move the engineer is making while telling themselves they are merely presenting "the data."
+**Chartjunk and 3D effects.** Decorative elements that distort the perception of magnitude. 3D bar charts whose foreshortening makes near bars look bigger than far ones; pie charts with exploded slices; backgrounds that interfere with reading. Often introduced for aesthetic reasons; their effect is often to obscure.
 
-<!-- → [TABLE: Catalog of nine misleading visualization choices — columns: Move | Honest use | Dishonest use | How to tell the difference. Rows: Truncated axis, Inconsistent axes across panels, Aggregation hiding distribution, Color asymmetry, Cherry-picked time windows, Scale trickery, Chartjunk/3D effects, Missing baseline, Selective uncertainty visualization. Students should be able to use this as a checklist when reviewing their own dashboards.] -->
+**Missing baselines.** A chart showing a metric without showing the comparison metric — accuracy without random-baseline accuracy, performance without prior-system performance, a finding without the null. The reader cannot tell if the finding is large or small. Without the baseline, every finding looks like a finding.
 
-*Figure 11.1*
+**Labels that prejudge.** Axis labels, legend entries, and headlines that frame the interpretation before the reader sees the data. *"Accuracy boost from new model"* on a chart comparing two models is a label that prejudges. *"Accuracy: model A vs model B"* is a label that does not.
 
-| | **Property** | **Value** |
-|---|---|---|
-| **Truncated axis** | _fill in_ | _fill in_ |
-| **Inconsistent axes across panels** | _fill in_ | _fill in_ |
-| **Aggregation hiding distribution** | _fill in_ | _fill in_ |
-| **Color asymmetry** | _fill in_ | _fill in_ |
-| **Cherry-picked time windows** | _fill in_ | _fill in_ |
-| **Scale trickery** | _fill in_ | _fill in_ |
-| **Chartjunk/3D effects** | _fill in_ | _fill in_ |
-| **Missing baseline** | _fill in_ | _fill in_ |
-| **Selective uncertainty visualization. Students should be able to use this as a checklist when reviewing their own dashboards.** | _fill in_ | _fill in_ |
+**Selective uncertainty visualization.** Showing confidence intervals where they support the argument and omitting them where they would weaken it. Common, hard to detect, structurally the most dishonest of the bunch — because the data on uncertainty exists, and the choice to display it selectively is precisely the rhetorical move the engineer is making while telling themselves they are merely presenting "the data."
 
-: {.comparison-table}
-
-
-This is not a complete list. Tufte and Cairo each have longer ones, and I recommend reading them. The pattern across all the choices is consistent. Each move is a *choice* that shifts the reader's interpretation. The engineer's job is to know which choices are being made and why.
+This is not a complete list. Tufte and Cairo each have longer ones, and both are worth reading. [Verify: Tufte 2001, *The Visual Display of Quantitative Information*; Cairo 2019, *How Charts Lie*.] The pattern across all these choices is consistent. Each is a *choice* that shifts the reader's interpretation. The engineer's job is to know which choices are being made and why.
 
 ---
+
+## Uncertainty visualization — the hardest part
 
 I want to spend a moment on uncertainty, because this is where engineers most often skip the work.
 
-The numerical apparatus for uncertainty is well-developed. Confidence intervals, posterior distributions, prediction intervals — the math is there, the libraries are there, you can compute them in a line of code. The visual apparatus for uncertainty is less developed and more often skipped. People who are punctilious about computing the right interval will display it as a small error bar dwarfed by a bold central estimate, communicating, by the visual hierarchy, *the central estimate is the answer; the bar is decorative*.
+The numerical apparatus for uncertainty is well-developed. Confidence intervals, posterior distributions, prediction intervals — the math is there, the libraries are there, you can compute them in a line of code. The visual apparatus is less developed and more often skipped. People who are punctilious about computing the right interval will display it as a small error bar dwarfed by a bold central estimate — communicating, by the visual hierarchy, *the central estimate is the answer; the bar is decorative*.
 
-Why this matters: a finding without uncertainty is an unfalsifiable claim. A finding with badly-visualized uncertainty is one the reader will misread. And here is a sobering finding from the research literature: most readers do not interpret confidence intervals correctly even when they are shown clearly. Showing them badly compounds an already-difficult communication problem.
+Why this matters: a finding without uncertainty is an unfalsifiable claim. A finding with badly-visualized uncertainty is one the reader will misread. Here is a sobering finding from the research literature: most readers do not interpret confidence intervals correctly even when they are shown clearly. Showing them badly compounds an already-difficult communication problem. [Verify: Hullman 2020 review on uncertainty visualization.]
 
-A few things help. First, where you can, show *more than one* representation of uncertainty — confidence intervals plus a fan chart, for instance, or an error bar plus a hypothetical-outcome plot that shows what individual draws from the posterior look like. A single representation favors one reading. Showing two together can correct biases that either alone introduces.
+A few things help.
 
-Second — and this is the practical heart of it — make the uncertainty *visually equal* in weight to the central estimate. A small error bar on a big bold number says one thing. A central estimate displayed at the same visual weight as the uncertainty range says another. The first communicates "this is the answer, with a quibble." The second communicates "the uncertainty is part of the finding."
+**Use more than one representation of uncertainty where you can.** A single representation favors one reading. Confidence intervals plus a fan chart, or an error bar plus a hypothetical-outcome plot showing what individual draws from the posterior look like — showing two together can correct biases that either alone introduces.
 
-<!-- → [IMAGE: Side-by-side comparison of two uncertainty visualizations for the same data. Left: large bold central estimate with a thin error bar — headline reads "94.3% accuracy." Right: a range chart showing the full confidence interval at equal visual weight to the point estimate — headline reads "91–97% accuracy (95% CI)." Student should see how the visual hierarchy in the left version demotes the uncertainty to decoration.] -->
+**Make the uncertainty visually equal in weight to the central estimate.** A small error bar on a big bold number says one thing. A central estimate displayed at the same visual weight as the uncertainty range says another. The first communicates "this is the answer, with a quibble." The second communicates "the uncertainty is part of the finding."
 
-![Figure 11.2 — Side-by-side comparison of two uncertainty visualizations for the same data. Left: large bold central estimate with a thin error bar](images/11-visualization-under-validation-honest-misleading-and-the-choices-between-fig-02.jpg)
+<!-- FIGURE 11.2: Side-by-side comparison of two uncertainty visualizations for the same data. Left: large bold central estimate with a thin error bar — headline reads "94.3% accuracy." Right: a range chart showing the full confidence interval at equal visual weight to the point estimate — headline reads "91–97% accuracy (95% CI)." Student should see how the visual hierarchy in the left version demotes the uncertainty to decoration. -->
 
+**Avoid false precision.** A reported metric of 0.847291 with a confidence interval of ±0.05 is not a 0.847291 metric. It is a 0.85 metric. Round the central estimate to a precision the uncertainty actually supports. Reporting more digits than the data justifies is itself a small dishonest move.
 
-Third, avoid false precision. A reported metric of 0.847291 with a confidence interval of plus or minus 0.05 is not a 0.847291 metric. It is a 0.85 metric. Round the central estimate to a precision the uncertainty actually supports. Reporting more digits than the data justifies is itself a small dishonest move, the way a witness who claims to have seen something at exactly 7:23:14 PM is making a claim of precision the human eye cannot actually deliver.
-
-Fourth, and most practical of all — *test the visualization on a non-author reader*. Show the chart to somebody who did not produce it. Ask them what they think it says. If their interpretation does not match the data, the visualization is not yet doing its job, no matter how much you like the design. This step is almost always skipped, because it is uncomfortable. It is also the single most useful thing on this list.
-
----
-
-I want to mention one more device, which is more institutional than visual but operates in the same register.
-
-Validation analyses are usually presented as if they were finished. The dashboard, the deck, the report — they look polished, single-version, authoritative. This finished-looking form is itself a structural argument: *the analysis is complete; what you are reading is the answer*. Most validation analyses are not, in fact, complete. They are the current state of an ongoing process. The argument made by the polished form misrepresents the analysis it presents.
-
-A more honest form is what I will call a *living deck* — a presentation that exposes its own version history. Each version dated. Each version with a changelog slide documenting what changed since the prior version and why. Old slides that have been superseded are retained, in a "previously" section, with a note about what they used to claim and what changed.
-
-The structural argument the living deck makes, by form, is: *this analysis is provisional, the version you are reading is the latest state of an ongoing process, and the changes are themselves part of the work*.
-
-This argument is not always welcome. Some adoption committees and procurement processes prefer the polished single artifact, the one that hides the work. They are arguably wrong about what they prefer, because the polished artifact looks finished and is therefore harder to revise as new evidence comes in. The living deck, by exposing its own changelog, makes revision easier and more honest. The medium of provisional analysis is provisional itself. A finished-looking artifact misrepresents the analysis.
-
-This is a small operational point with a large structural implication, and I want you to carry it forward: when the work is provisional, the form should say so.
+**Test the visualization on a non-author reader.** Show the chart to somebody who did not produce it. Ask them what they think it says. If their interpretation does not match the data, the visualization is not yet doing its job, no matter how much you like the design. This step is almost always skipped, because it is uncomfortable. It is also the single most useful thing on this list.
 
 ---
 
-Now I want to make a recommendation that some students find uncomfortable, and I want to make it anyway.
+## The Living Deck — provisionality as a visible argument
 
-Take a finding from your work — a real result you have produced and would communicate to a deployment partner. Build the *honest version* — a dashboard or static visualization that communicates the finding accurately, including uncertainty, including subgroup variation, including the limits of the analysis.
+Validation analyses are usually presented as if they were finished. The dashboard, the deck, the report — they look polished, single-version, authoritative. This finished-looking form is itself a structural argument: *the analysis is complete; what you are reading is the answer*. Most validation analyses are not, in fact, complete. They are the current state of an ongoing process. The polished form misrepresents the analysis it presents.
 
-Then, using only the same data — no fabricated numbers, nothing invented — build the *misleading version*. Make the finding look better than it is, or worse than it is, or different in shape than it is. Pick a direction. Lean into it. Use the choices from the catalog above. Truncate axes. Pick favorable color salience. Hide the calibration in a sub-tab. Make the central estimate bold and the error bars thin. Build it the way you'd build it if you were trying to mislead.
+A more honest form is the *living deck* — a presentation that exposes its own version history. Each version is dated. Each version has a changelog slide documenting what changed since the prior version and why. Old slides that have been superseded are retained, in a "previously" section, with a note about what they used to claim and what changed.
 
-Then put the two side by side and look at them.
+The structural argument the living deck makes, by form: *this analysis is provisional, the version you are reading is the latest state of an ongoing process, and the changes are themselves part of the work.*
 
-What you will see, if you do this honestly, is that the misleading version is *not difficult to build*. It is a small number of choices away from the honest one. Some of those choices you may have already made, unintentionally, in earlier work. The discomfort that comes when you recognize your own previous dashboards in the misleading version — that is the learning. Building a misleading dashboard with intent is the most efficient way I know to learn what your default dashboards have been doing without intent.
+This argument is not always welcome. Some adoption committees and procurement processes prefer the polished single artifact that hides the work. They are arguably wrong about what they prefer, because the polished artifact looks finished and is therefore harder to revise as new evidence comes in. The living deck, by exposing its own changelog, makes revision easier and more honest.
 
-A note about what the value of this exercise actually is. It is not in the technical skill of building either version. Both are easy. It is in identifying which design choices did the misleading work, which choices were the high-leverage ones, which choices a casual reader would not notice but which had large effects on the reader's interpretation. The goal is not to become better at deceiving. The goal is to become *unable to design without noticing what your design choices are doing*.
+The medium of provisional analysis is provisional itself. A finished-looking artifact misrepresents the analysis. This is a small operational point with a large structural implication: when the work is provisional, the form should say so.
 
-After you've done this once, you do not see dashboards the same way. You see the choices. You see the arguments the structures are making. You catch yourself, in your own work, about to truncate an axis for entirely defensible reasons, and you stop and ask whether the truncation is doing rhetorical work you did not intend. Most of the time it is. You decide whether you want it to.
+The course's research project uses the living deck format throughout. The final presentation includes the changelog as the second-to-last slide. The changelog is evidence of the work — the visible track of how the analysis evolved. Removing it before final submission would erase the supervisory log.
 
 ---
 
-I want to close on what I think is the load-bearing claim of this chapter, because I have seen this idea miss engineers and I do not want it to miss you.
+## Glimmer 11.1 — Build the honest version, build the misleading version
 
-A dashboard that visualizes findings unfaithfully is not a communication failure downstream of valid analysis. It is a *validation failure that happens at the output layer*. The validation methodology of this whole book — the prediction-locking, the gap analysis, the supervisory frame, the honest specification of what is robust and what isn't — extends through the visualization layer to the reader's interpretation. If the visualization unfaithfully represents the analysis, the analysis has not actually been validated for the audience it was made for. The analysis was validated; the communication was not; the deployment partner is acting on an interpretation that does not match the work.
+I want to make a recommendation that some students find uncomfortable, and I want to make it anyway.
 
-The supervisor's job extends to the visualization. The dashboard is part of the validation. The design choices are validation choices.
+Take a finding from your work — a real result you have produced and would communicate to a deployment partner. Build the *honest version* first: a dashboard or static visualization that communicates the finding accurately, including uncertainty, including subgroup variation, including the limits of the analysis.
 
-Make them on purpose. Document them. Invite revision. Build versions that test the boundaries of honesty by deliberately crossing them, so you know where the lines are. The medium structures the meaning, and the structuring is yours to do — well or badly, deliberately or by default, in the reader's interest or in your own. The choices are normative. There is no neutral.
+Then, using only the same data — no fabricated numbers, nothing invented — build the *misleading version*. Make the finding look better than it is, or worse than it is, or different in shape. Pick a direction. Lean into it. Use the choices from the catalog above. Truncate axes. Pick favorable color salience. Hide the calibration in a sub-tab. Make the central estimate bold and the error bars thin. Build it the way you'd build it if you were trying to mislead.
 
-The next chapter takes the same problem in writing. A dashboard tells a visual story. Validation findings also get communicated in writing, in proposals, in meetings, in conversations with people who will not look at any chart. There the question is harder, because there is no axis to truncate, no color to choose. The rhetorical work has to be done in language. How do you say what you don't know without losing the room? That is the next chapter.
+*Lock your prediction before building the misleading version:* (a) which design choices will you make to mislead? (b) which will be hardest, because the data refuses to be obscured? (c) which choices do you suspect you have already made unintentionally in earlier dashboards?
+
+Then put the two side by side.
+
+What you will see, if you do this honestly, is that the misleading version is *not difficult to build*. It is a small number of choices away from the honest one. Some of those choices you may have already made, unintentionally, in earlier work. The discomfort that comes when you recognize your own previous dashboards in the misleading version — that is the learning.
+
+The deliverable is both versions, the prediction, the design-choice documentation, and the reflection. The *grade is on the reflection*. Specifically: which choices were the high-leverage ones? Which choices were almost invisible to a casual reader but had large effects on interpretation? Which choices, if reversed, would substantially reduce the misleadingness? A student who builds technically excellent dashboards but cannot identify which design choices did the misleading work has done the easier half of the assignment. The structural recognition is the harder half.
+
+Building a misleading dashboard with intent is the most efficient way to learn what your default dashboards have been doing without intent. After you've done this once, you do not see dashboards the same way. You see the choices. You see the arguments the structures are making. You catch yourself about to truncate an axis for entirely defensible reasons, and you stop and ask whether the truncation is doing rhetorical work you did not intend.
+
+---
+
+## Why this chapter is load-bearing
+
+A note for the reader wondering whether this belongs in a curriculum that already includes a technical-writing course.
+
+Engineering programs typically train students to write and present clearly. They typically do not connect that training to the validation methodology the engineer is operating under. The connection is the load-bearing claim of this chapter.
+
+A technical-writing course teaches students to write clearly. A presentation course teaches students to present effectively. Neither typically teaches that the design choices in a dashboard are themselves arguments about what the data means, and that the validation methodology of this book extends through the visualization layer to the reader's interpretation.
+
+This chapter's contribution: *the visualization is part of the validation*. A dashboard that visualizes findings unfaithfully is not a communication failure downstream of valid analysis — it is a validation failure that happens at the output layer. The supervisor's job extends to the visualization. The student who has taken a technical-writing course and this chapter produces dashboards that survive validation review. The student who has only the writing course produces dashboards that look polished and may, undetectably, mislead.
+
+---
+
+## What would change my mind
+
+If a visualization standard emerged with strong empirical evidence that readers' interpretations matched the data — across diverse readers, audiences, and finding types — without bespoke-design work, the "every dashboard is an argument" framing would weaken to "most dashboards are arguments unless they conform to the standard." As of this writing, no such standard exists. The closest are domain-specific guidelines (e.g., FDA guidance for clinical trial visualizations), which are partial and not generalizable. [Verify current scope of domain-specific visualization standards before publication.]
+
+I do not have a clean way to automatically detect deceptive design choices in a dashboard the way accessibility tools detect contrast issues. Some patterns — truncated axes, inconsistent scales — are mechanical and could be checked. Others — color asymmetry, label prejudgment, selective uncertainty — require contextual judgment. The general detection problem is open.
+
+---
+
+## Synthesis — the design choices are validation choices
+
+*Every dashboard is making an argument, by structure, about what the data means.* The argument is made before any specific number is read. The choices that compose the argument are normative — they reflect a stance about what matters and how the reader should weight things. The engineer who pretends the choices are neutral is mistaken about what they are doing.
+
+This is not a counsel of despair. It is a counsel of *deliberation*. Make the choices on purpose. Document them. Invite revision. Build versions that test the boundaries of honesty by deliberately crossing them, so you know where the lines are.
+
+A dashboard that visualizes findings unfaithfully is not a communication failure downstream of valid analysis. It is a validation failure that happens at the output layer. The validation methodology of this whole book — the prediction-locking, the gap analysis, the supervisory frame, the honest specification of what is robust and what isn't — extends through the visualization layer to the reader's interpretation. The supervisor's job extends to the visualization. The design choices are validation choices. Make them on purpose.
+
+The choices are normative. There is no neutral.
+
+---
+
+## Connections forward
+
+The next chapter takes the same problem in writing. A dashboard tells a visual story. Validation findings also get communicated in writing, in proposals, in meetings, in conversations with people who will not look at any chart. There the question is harder, because there is no axis to truncate, no color to choose. How do you say what you don't know without losing the room? That is the next chapter's work.
+
+The living-deck format introduced here recurs in the research project throughout the course. Chapter 14 closes the calibration arc and the book's supervisory thread.
 
 ---
 
 ## Exercises
 
-### Warm-Up
+### Warm-up
 
 **1.** A colleague shows you a bar chart comparing two model versions. The y-axis runs from 91% to 96%. Model B's bar appears roughly three times the height of Model A's. The actual accuracy values are Model A: 92.1%, Model B: 94.3%. Calculate the ratio of the visual difference to the actual difference, and name the misleading choice in the catalog. What would the chart look like on a zero-baseline axis? *(Tests: truncated axis identification and quantification)*
 
@@ -153,7 +201,7 @@ The next chapter takes the same problem in writing. A dashboard tells a visual s
 
 **4.** You are handed a dashboard built by another team to support a deployment decision. Using the nine-item catalog from the chapter, conduct a structured audit. For each item: note whether it is present, assess whether its use is honest or misleading in this context, and flag the two highest-risk choices for the deployment partner's decision. Submit your audit as a structured table. *(Tests: full catalog application to a real artifact)*
 
-**5.** A model's accuracy on the majority subgroup is 93% ± 2% (95% CI). On the minority subgroup it is 81% ± 9%. Build — on paper or in a tool of your choice — two versions of a single chart that shows both results. Version 1: maximize the impression that the model performs consistently. Version 2: make the disparity and the uncertainty fully visible. Annotate each design choice you made in each version and identify which choices from the catalog each one corresponds to. *(Tests: deliberate honest/misleading construction exercise)*
+**5.** A model's accuracy on the majority subgroup is 93% ± 2% (95% CI). On the minority subgroup it is 81% ± 9%. Build — on paper or in a tool of your choice — two versions of a single chart that shows both results. Version 1: maximize the impression that the model performs consistently. Version 2: make the disparity and the uncertainty fully visible. Annotate each design choice you made in each version and identify which catalog item each one corresponds to. *(Tests: deliberate honest/misleading construction exercise)*
 
 **6.** You have presented a validation analysis to a deployment partner. They respond: "The 94% accuracy looks great — we're ready to proceed." You know from your analysis that the calibration is overconfident above 0.85 probability and that one subgroup underperforms by 12 points. The partner did not ask about either issue. Describe the visualization and communication changes you would make before the next meeting, and explain why the current dashboard, though factually accurate, has produced a misleading interpretation. *(Tests: visualization-as-validation-failure concept, practical redesign reasoning)*
 
@@ -172,3 +220,18 @@ The next chapter takes the same problem in writing. A dashboard tells a visual s
 **11.** Find a published data visualization — from a news outlet, a research paper, a company report, or a government publication — that uses at least three of the nine misleading choices from the catalog. Annotate it: identify each misleading choice, explain what a reader would infer versus what the underlying data supports (you may need to find the underlying data), and build a sketch of the honest version. This exercise is not about finding a dishonest actor; many misleading visualizations are built without intent to deceive. The goal is to identify the structural choices, not to assign blame. *(Research and analysis; tests catalog application to real-world artifacts)*
 
 **12.** The chapter ends by saying "the choices are normative — there is no neutral." Write a short essay (600–800 words) arguing either for or against this claim. If you argue for it, your essay should address the strongest objection: that some visualization choices are purely technical (e.g., choosing a bar chart over a pie chart for categorical data) and carry no normative content. If you argue against it, your essay should address the strongest evidence for the claim: that structural choices have predictable, measurable effects on reader interpretation regardless of intent. *(Open-ended; tests philosophical engagement with the chapter's central claim)*
+
+---
+
+## Chapter summary
+
+You can now do four things you could not do before this chapter.
+
+You can name the mechanism by which a dashboard makes an argument before any specific number is read — the McLuhan move applied to the dashboard as medium — and explain why structural choices are normative, not neutral. You can audit a dashboard using the nine-item catalog, identify which choices are being made, and distinguish honest uses from dishonest ones. You can design an uncertainty visualization that treats the uncertainty as equal in weight to the central estimate rather than demoting it to a decorative error bar. And you can build both an honest and a deliberately misleading version of a visualization from the same data, then identify the high-leverage choices that made the difference — the exercise that makes visible what your default dashboards have been doing without your awareness.
+
+The chapter's central claim: the dashboard is part of the validation. The design choices are validation choices. Make them on purpose.
+
+---
+
+*Tags: visualization, mcluhan, uncertainty-visualization, living-deck, dashboard-as-argument, deceptive-visualization*
+

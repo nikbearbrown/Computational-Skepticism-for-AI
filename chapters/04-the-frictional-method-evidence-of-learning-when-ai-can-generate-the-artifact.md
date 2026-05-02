@@ -1,5 +1,8 @@
-# Chapter 4 — The Frictional Method: Evidence of Learning When AI Can Generate the Artifact
+
+# Chapter 4 — The Frictional Method
 *Predict before you observe. Lock it. Let the gap teach you.*
+
+---
 
 I want to tell you about two students.
 
@@ -21,24 +24,38 @@ Let me start with what broke.
 
 ---
 
+**What you will be able to do after this chapter:**
+
+- Name and apply the seven moves of the Frictional method to any learning exercise
+- Identify the two failure modes of the Frictional journal and explain the diagnostic tell for each
+- Explain why the method is structurally robust to gaming in a way artifact-based detection is not
+- Produce a complete Frictional journal entry — prediction locked, gap observed, reflection structural
+
+**Prerequisites:** Chapter 1's fluency trap concept is directly relevant here — the same mechanism that makes AI outputs epistemically dangerous in deployment makes AI-assisted work epistemically dangerous in learning. No mathematics required.
+
+**Where this fits:** Chapters 1–3 gave you the supervisory vocabulary and the probabilistic language. This chapter is the methodological capstone of Act One. Chapters 5–14 are the application. The Frictional method is how you will evidence learning across all of them.
+
+---
+
+## What broke
+
 Across most of educational history, the artifact a student submits has been treated as evidence that the student did the work that produces such an artifact. This treatment was reasonable. The artifact and the work were tightly coupled. To produce the artifact, you had to do the work. There were edge cases — plagiarism, ghostwriting, paying someone else to take the exam — but the edge cases were edge cases. Most of the time, the essay demonstrated thinking because only thinking could produce the essay. The proof demonstrated mathematical understanding because only mathematical understanding could produce the proof.
 
 In the AI era, the artifact and the work are *decoupled*. An artifact can be produced without the work. The artifact is no longer evidence of the work. The artifact is evidence of an artifact.
 
-Call this the Decoupling Problem. I want to be careful about what kind of problem this is. It is not, primarily, a moral problem about cheating. It is a measurement problem about what assessment is measuring. The grade on the project, in the absence of supplementary evidence, is now a grade on the artifact, not a grade on the learning. Two students with identical artifacts can have radically different learning trajectories, and the grade does not distinguish them. That gap between the grade and the learning is what has opened up, and it is structural.
+Call this the Decoupling Problem. I want to be careful about what kind of problem this is. It is not, primarily, a moral problem about cheating. It is a measurement problem about what assessment is measuring. The grade on the project, in the absence of supplementary evidence, is now a grade on the artifact, not a grade on the learning. Two students with identical artifacts can have radically different learning trajectories, and the grade does not distinguish them.
 
 For a few years, faculty have been treating this as a temporary anomaly to be patched with detection tools, in-class examinations, and whispered hopes about "AI fingerprints." None of these patches has worked at scale. None is likely to. Detection tools are trained on yesterday's models and graded against tomorrow's. The arms race between generation and detection has a predictable winner. The Decoupling Problem is structural, not transient. It will not be patched. It must be redesigned around.
 
-<!-- → [DIAGRAM: A timeline in two rows — "Before AI" shows artifact ↔ work tightly coupled with bidirectional arrow; "AI era" shows artifact and work as disconnected nodes with a severed link, and AI floating between them as the new producer of artifacts. Caption: "The Decoupling Problem is structural. The artifact is no longer evidence of the work."] -->
-
-![Figure 4.1 — A timeline in two rows](images/04-the-frictional-method-evidence-of-learning-when-ai-can-generate-the-artifact-fig-01.jpg)
-
+<!-- FIGURE: Figure 4.1 — A timeline in two rows: "Before AI" shows artifact ↔ work tightly coupled with bidirectional arrow; "AI era" shows artifact and work as disconnected nodes with a severed link, and AI floating between them as the new producer of artifacts. Caption: "The Decoupling Problem is structural. The artifact is no longer evidence of the work." Insert image: images/04-the-frictional-method-evidence-of-learning-when-ai-can-generate-the-artifact-fig-01.jpg -->
 
 ---
 
+## Performance is not learning
+
 To redesign assessment around AI, you have to know what assessment was measuring in the first place. And the answer is more interesting than people usually realize.
 
-Robert Bjork — a psychologist who has spent forty years studying how people learn — made a distinction that the redesign turns on. The distinction is between *performance* and *learning*.
+Robert Bjork — a psychologist who has spent forty years studying how people learn — made a distinction that the redesign turns on. ([verify] Bjork & Bjork 2011, "Making Things Hard on Yourself, but in a Good Way"; Soderstrom & Bjork 2015, "Learning Versus Performance.") The distinction is between *performance* and *learning*.
 
 Performance is what a student can do right now, immediately after exposure, with the material fresh and the context intact. Performance is what most quizzes measure. It is what most projects measure when the project is graded the week it is submitted. It is what office-hours defenses measure.
 
@@ -46,18 +63,17 @@ Learning is what a student retains and can deploy in a different context after t
 
 Now here is the strange and important finding from Bjork's research program. *The conditions that produce the best performance in the moment are often the worst conditions for long-term learning.* Specifically: massed practice, immediate feedback, low-friction encoding, and conditions that match the learning situation produce strong performance and weak learning. Spaced practice, delayed feedback, retrieval effort, and varied conditions produce worse performance and stronger learning.
 
-I want you to pause on this. It is counterintuitive enough that most people, when they first hear it, do not believe it. The student who feels they are mastering the material under fluent conditions is often learning less than the student who feels confused under more friction. The fluency is the trap. The struggle is the trace of learning happening.
+I want you to pause on this. It is counterintuitive enough that most people, when they first hear it, do not believe it. The student who feels they are mastering the material under fluent conditions is often learning less than the student who feels confused under more friction. The fluency is the trap — the same trap Chapter 1 named in a different domain. The struggle is the trace of learning happening.
 
 For our problem — and this is the hinge of the chapter — AI use in education tends to produce the conditions that maximize performance. The artifact comes together quickly. The student can defend it in the moment. The work feels efficient. And the learning is much less than it appears.
 
 The Frictional method is the inversion. It deliberately introduces conditions that produce some friction — small, structural, persistent — because those conditions track learning in the Bjorkian sense, and they leave a *trace* that the AI cannot manufacture after the fact.
 
-<!-- → [CHART: Two-axis plot — horizontal axis "friction in learning conditions" (low to high), vertical axis "outcome" with two lines: one for immediate performance (declining as friction increases) and one for long-term retention (rising as friction increases). The lines cross in the middle. Caption: "Bjork's desirable difficulties finding. The conditions that feel productive are often the ones that teach the least."] -->
-
-![Figure 4.2 — Two-axis plot](images/04-the-frictional-method-evidence-of-learning-when-ai-can-generate-the-artifact-fig-02.jpg)
-
+<!-- FIGURE: Figure 4.2 — Two-axis plot: horizontal axis "friction in learning conditions" (low to high), vertical axis "outcome" with two lines: one for immediate performance (declining as friction increases) and one for long-term retention (rising as friction increases). The lines cross in the middle. Caption: "Bjork's desirable difficulties finding. The conditions that feel productive are often the ones that teach the least." Insert image: images/04-the-frictional-method-evidence-of-learning-when-ai-can-generate-the-artifact-fig-02.jpg -->
 
 ---
+
+## The seven moves
 
 Now the method itself. There are seven moves. I want to walk through them in order, because they form a procedure, not a list. Each one does something specific. Skip any one of them and the method does not work.
 
@@ -75,14 +91,13 @@ The sixth move is to *trace*. The full record of predictions, observations, and 
 
 The seventh move is to *calibrate*. Periodically — built into the course as a kind of meta-exercise — you compare your aggregated predictions to outcomes. You compute your own calibration curve as a learner. You see, in the data, whether your prediction-locks are getting better. The calibration is the closure. It is how you find out whether the trace shows learning, or whether it shows discipline without growth.
 
-Together, these seven moves produce what I call the Genuine Learning Probability — though the name matters less than the procedure. The procedure composes. A submission missing any of the seven moves is not a complete entry, and the grade is on completeness, honesty, and depth of reflection — not on whether the predictions were right.
+Together, these seven moves produce what I have been calling the Frictional record — the trace of genuine cognitive encounter with hard material. The seven moves compose. A submission missing any of them is not a complete entry, and the grade is on completeness, honesty, and depth of reflection — not on whether the predictions were right.
 
-<!-- → [INFOGRAPHIC: The seven moves as a circular flow — predict → lock → work → observe → reflect → trace → calibrate → (back to predict). Each node has a one-line description and a failure mode. The lock node is visually emphasized — heavier border, different color — with a caption: "This is the load-bearing element. Everything else depends on it."] -->
-
-![Figure 4.3 — The seven moves as a circular flow](images/04-the-frictional-method-evidence-of-learning-when-ai-can-generate-the-artifact-fig-03.jpg)
-
+<!-- FIGURE: Figure 4.3 — The seven moves as a circular flow: predict → lock → work → observe → reflect → trace → calibrate → (back to predict). Each node has a one-line description and a failure mode. The lock node is visually emphasized — heavier border, different color — with a caption: "This is the load-bearing element. Everything else depends on it." Insert image: images/04-the-frictional-method-evidence-of-learning-when-ai-can-generate-the-artifact-fig-03.jpg -->
 
 ---
+
+## The journal and its failure modes
 
 The instrument is a journal. Every student in this course keeps one. It is a single ongoing document — markdown, plain text, or a Claude Project — with a strict format: date and time, context, prediction (locked, before observation), observation, reflection. The journal is reviewed twice in the semester, and a sample of entries is graded against the seven-move procedure. The grade is on the discipline, not the brilliance of the predictions.
 
@@ -94,22 +109,11 @@ The second is the *performative journal*. The student writes elaborate, well-for
 
 The Frictional method works under one condition: the entries are written in the moment, before observation, and the gap is allowed to stand. The method falls apart when either the prediction or the reflection is faked. We are explicit with students about this. The failure modes are identifiable. The grade is on whether the journal traces a real cognitive process — not whether the cognitive process was always correct.
 
-<!-- → [TABLE: Two-column comparison of failure modes — columns: "Retrospective Journal" and "Performative Journal." Rows: how it looks on the surface, the diagnostic tell, what the timestamps show, what the gap analysis shows, how to grade it. A third column optionally: "Authentic Journal — what it actually looks like." Useful for faculty calibration as well as student self-diagnosis.] -->
-
-*Figure 4.4*
-
-| | **Property** | **Value** |
-|---|---|---|
-| **How it looks on the surface** | _fill in_ | _fill in_ |
-| **The diagnostic tell** | _fill in_ | _fill in_ |
-| **What the timestamps show** | _fill in_ | _fill in_ |
-| **What the gap analysis shows** | _fill in_ | _fill in_ |
-| **How to grade it. A third column optionally: "Authentic Journal — what it actually looks like." Useful for faculty calibration as well as student self-diagnosis.** | _fill in_ | _fill in_ |
-
-: {.infographic-table}
-
+<!-- FIGURE: Figure 4.4 — Three-column comparison table: "Retrospective journal" / "Performative journal" / "Authentic journal." Rows: how it looks on the surface, the diagnostic tell, what the timestamps show, what the gap analysis shows, how to grade it. Useful for faculty calibration as well as student self-diagnosis. [Empty placeholder table in Doc 3 — needs content before publication.] -->
 
 ---
+
+## Why gaming becomes learning
 
 Now let me come back to the line I flagged a moment ago. I said that faking forty entries with internal consistency, timestamp coherence, and structural reflection connecting to specific technical failures is, at the limit, indistinguishable from doing the work. This is the deepest property of the method, and it is worth being explicit about.
 
@@ -119,74 +123,110 @@ This is why the Frictional method does not have the same structural vulnerabilit
 
 ---
 
-A faculty member adopting this textbook for a different course — thermodynamics, literature, history — should know whether the Frictional method is general infrastructure or just our course's gimmick.
+## The AI Use Disclosure
+
+A small but operationally important convention threads through the method. Every assignment in this course requires an *AI Use Disclosure* — a brief, structured note of how AI was used in producing the submission, with which tools, on which steps, and what the student verified versus what the student delegated.
+
+This is not a compliance checkbox. It is a *supervisory log*. The format:
+
+- Tool used (e.g., Claude, ChatGPT, GitHub Copilot)
+- Step delegated (e.g., "first draft of EDA code")
+- What I asked for
+- What the tool produced
+- What I verified against (primary source, my own calculation, peer review)
+- What I changed and why
+
+Read on a single submission, the disclosure is evidence of which judgments the student made and on what basis. Read in aggregate over a semester, it is evidence of a supervisory process — the student's developing capacity to delegate intelligently and verify deliberately. It connects forward to the delegation map in Chapter 10 and to the research project documentation. It is part of the trace.
+
+The disclosure belongs alongside the Frictional journal, not in place of it. The journal records the cognitive encounter with the material. The disclosure records the tool decisions that shaped the work. Together they give the full picture: what was predicted, what was observed, what the gap revealed, and which parts of the pipeline were human and which were machine.
+
+---
+
+## Why this is general infrastructure, not our course's gimmick
+
+A faculty member adopting this textbook for a different course needs to know whether the Frictional method is general supervisory infrastructure for the AI era or the assessment scheme for one specific course. The honest answer matters.
 
 My claim is that it is general infrastructure. The structural argument: the Decoupling Problem affects every course in which artifact-based assessment was previously the dominant evidence channel. That is most courses. The mechanism that re-couples evidence to learning — prospective prediction-lock plus structural reflection on the gap — is not specific to validation pipelines, or to AI systems as objects of study. It is specific to the *epistemological situation* a learner is in when AI can produce any artifact they could produce.
 
-What is course-specific is the content the journal captures, not the apparatus. A literature course's Frictional journal will look different from a thermodynamics course's. The seven moves are constant. The substance varies. A faculty member adapting the method needs to identify the cognitive level the course operates at, match the journal demand to that level, build the prediction-lock into the assignment workflow with a timestamp the student cannot revise, and grade the journal twice in the semester. Sample, do not grade every entry. Sampling is sufficient for the discipline to take hold.
+What is course-specific is the content the journal captures, not the apparatus. A literature course's Frictional journal will look different from a thermodynamics course's. The seven moves are constant. The substance varies. A faculty member adapting the method needs to identify the cognitive level the course operates at, build the prediction-lock into the assignment workflow with a timestamp the student cannot revise, and grade the journal twice in the semester. Sample, do not grade every entry. Sampling is sufficient for the discipline to take hold.
 
 That is the portable form. It is, I think, more important than the validation methodology in the rest of this textbook. The validation methodology is one application of the supervisory framework. The Frictional method is the supervisory framework, applied to learning itself.
 
 ---
 
-Let me say where I am uncertain.
+## The shape of the rest
 
-What would change my mind: if a method existed that reliably distinguished AI-generated from human-generated artifacts at the level of finished engineering work — robust to obvious adversarial pressure, scalable to grading at university scale — the Decoupling framing would be less load-bearing, and the Frictional apparatus would be one option among several rather than a structural necessity. As of this writing, no such method exists at scale. Detection tools have a high false-positive rate and trail capability improvements within months. I am not optimistic about this changing.
+The chapter ends here, briefly. We have a vocabulary — the Decoupling Problem, the performance-versus-learning distinction. We have a method — predict, lock, work, observe, reflect, trace, calibrate. We have an instrument, the journal, with two failure modes we name and grade against. We have a supervisory log, the AI Use Disclosure, that makes the tool decisions visible. And we have a frank acknowledgment of where the method's edges are.
 
-What I am still puzzling about: I do not have a clean way to evaluate the *honesty* of a Frictional journal at scale. Sampling and pattern recognition work for now. They will not work indefinitely once students are using AI assistants to draft journal entries themselves. The escalation game is real. I am working on the next move and do not yet have it.
-
----
-
-The chapter ends here. We have a vocabulary — the Decoupling Problem, the performance-versus-learning distinction. We have a method — predict, lock, work, observe, reflect, trace, calibrate. We have an instrument, the journal, with two failure modes that we name and grade against. And we have a frank acknowledgment of where the method's edges are.
-
-The two students from the opening are no longer indistinguishable. The first one's trace exists. The second one's does not. The artifact never told us apart. The trace does.
+The two students from the opening are no longer indistinguishable. The first one's trace exists. The second one's does not. The artifact never told them apart. The trace does.
 
 The next chapter pivots from method to content. We have the apparatus for evidencing learning. The next four chapters apply the apparatus to specific technical artifacts. We start where every AI system starts: with the data.
 
 ---
 
+**What would change my mind.** If a method existed that reliably distinguished AI-generated from human-generated artifacts at the level of finished engineering work — robust to obvious adversarial pressure, scalable to grading at university scale — the Decoupling Problem framing would be less load-bearing, and the Frictional apparatus would be one option among several rather than a structural necessity. As of this writing, no such method exists at scale. Detection tools have a high false-positive rate and trail capability improvements within months. I am not optimistic about this changing.
+
+**Still puzzling.** I do not have a clean way to evaluate the *honesty* of a Frictional journal at scale. Sampling and pattern recognition work for now. They will not work indefinitely once students are using AI assistants to draft journal entries themselves. The escalation game is real. I am working on the next move and do not yet have it.
+
+---
+
 ## Exercises
+
+### Glimmers
+
+**Glimmer 4.1 — Your first complete GLP entry**
+
+1. Pick a piece of substantive work you completed earlier in your academic career — a major project, a technical paper, a dissertation chapter, anything you spent at least 20 hours on and remember in some detail.
+2. *Reconstruct* a Frictional entry for it: write what you would have predicted at the start, what you actually observed, what the gap was, and what the structural reason for the gap was.
+3. Be honest about which parts you can no longer reconstruct because the trace was never captured at the time. *Mark these as unrecoverable.*
+4. Submit the reconstruction along with a one-paragraph reflection on what the unrecoverable sections cost you, in retrospect.
+
+The deliverable is the reconstructed entry, with the unrecoverable sections honestly flagged. The grade is on the honesty about what is unrecoverable — because that honesty is what motivates prospective capture going forward.
+
+This Glimmer is the only one in the book that operates retrospectively. The rest operate prospectively. The first one is retrospective on purpose: to teach what was lost when the trace was not captured at the time.
+
+---
 
 ### Warm-Up
 
-**1.** In one paragraph, explain the Decoupling Problem in your own words. What specifically has decoupled from what? Why is this a measurement problem rather than, primarily, a moral one? *(Tests: understanding the structural framing of the chapter's central claim.)*
+**1.** In one paragraph, explain the Decoupling Problem in your own words. What specifically has decoupled from what? Why is this a measurement problem rather than, primarily, a moral one?
 
-**2.** The second move in the Frictional method — locking the prediction — is described as "the load-bearing element of the entire method." In two or three sentences, explain why. What exactly becomes uninformative if the lock is removed? *(Tests: understanding what makes a prediction evidentially valuable.)*
+**2.** The second move in the Frictional method — locking the prediction — is described as "the load-bearing element of the entire method." In two or three sentences, explain why. What exactly becomes uninformative if the lock is removed?
 
-**3.** According to Bjork's research program, what is the relationship between friction in learning conditions and long-term retention? Why does this relationship run counter to what most students expect? Give one example of a "desirable difficulty" that a course could introduce. *(Tests: understanding the performance-versus-learning distinction and its pedagogical implications.)*
+**3.** According to Bjork's research program, what is the relationship between friction in learning conditions and long-term retention? Why does this relationship run counter to what most students expect? Give one example of a "desirable difficulty" that a course could introduce.
 
 ---
 
 ### Application
 
-**4.** You are a faculty member in a literature course. Describe what a single Frictional journal entry would look like for a student who has just been assigned to analyze the narrative structure of a novel using an AI assistant. Apply all seven moves — what would each step produce concretely for this assignment? What would count as a "locked prediction" in a humanities context? *(Tests: generalizing the seven-move procedure beyond engineering; operationalizing each move for a different domain.)*
+**4.** You are a faculty member in a literature course. Describe what a single Frictional journal entry would look like for a student who has just been assigned to analyze the narrative structure of a novel using an AI assistant. Apply all seven moves — what would each step produce concretely for this assignment? What would count as a "locked prediction" in a humanities context?
 
 **5.** Read the following two journal entries and identify which failure mode each represents. For each one, name the specific diagnostic tell you used.
 
 - *Entry A:* "Predicted: the AI's summary would cover the three main themes I identified. Observed: the AI covered all three themes and added a fourth I had not considered. Reflection: AI systems often surface patterns humans miss. This shows AI can identify thematic structure."
 - *Entry B (submitted the evening before the course deadline):* "Predicted: the AI's summary would cover the three main themes I identified. Observed: confirmed — all three themes present. Reflection: as expected, the AI output matched my hypothesis."
 
-*(Tests: applying the failure-mode vocabulary to concrete examples; distinguishing performative from retrospective gaming.)*
+**6.** A colleague argues: "The Frictional method doesn't actually solve the AI problem — a student can just use AI to write their journal entries too." Using the chapter's own argument about what happens when gaming becomes indistinguishable from learning, write a response to this objection. Where does the argument succeed, and where does the chapter itself acknowledge that it doesn't fully answer it?
 
-**6.** A colleague argues: "The Frictional method doesn't actually solve the AI problem — a student can just use AI to write their journal entries too." Using the chapter's own argument about what happens when gaming becomes indistinguishable from learning, write a response to this objection. Where does the argument succeed, and where does the chapter itself acknowledge that it doesn't fully answer it? *(Tests: engaging with the chapter's deepest claim and its acknowledged limits.)*
-
-**7.** You are designing a Frictional journal protocol for a thermodynamics course. Identify three specific types of predictions a student in that course could lock before an exercise. For each, specify: what the student is predicting, what observation would confirm or disconfirm it, and what a strong gap-reflection would look like. *(Tests: operationalizing the method in a different technical domain.)*
+**7.** You are designing a Frictional journal protocol for a thermodynamics course. Identify three specific types of predictions a student in that course could lock before an exercise. For each, specify: what the student is predicting, what observation would confirm or disconfirm it, and what a strong gap-reflection would look like.
 
 ---
 
 ### Synthesis
 
-**8.** The chapter argues that the Frictional method is "the supervisory framework, applied to learning itself." Chapter 1 introduced five supervisory capacities: plausibility auditing, problem formulation, tool orchestration, interpretive judgment, and executive integration. Map the seven Frictional moves onto those five capacities. Which moves exercise which capacities? Are any capacities not exercised by the method? If so, is that a gap or is it intentional? *(Tests: connecting Chapter 4's method to Chapter 1's framework; synthesizing across chapters.)*
+**8.** The chapter argues that the Frictional method is "the supervisory framework, applied to learning itself." Chapter 1 introduced five supervisory capacities: plausibility auditing, problem formulation, tool orchestration, interpretive judgment, and executive integration. Map the seven Frictional moves onto those five capacities. Which moves exercise which capacities? Are any capacities not exercised by the method? If so, is that a gap or is it intentional?
 
-**9.** The chapter makes a distinction between two types of bad journals — the retrospective journal and the performative journal — but does not describe what an *authentic* journal entry looks like in positive terms. Using the seven moves and the failure-mode descriptions, construct a detailed portrait of what an authentic entry looks like: what signals in the timestamp, the prediction, the gap, and the reflection indicate that the trace is real. *(Tests: synthesizing the method and the failure modes into a positive diagnostic picture.)*
+**9.** The chapter makes a distinction between two types of bad journals — the retrospective journal and the performative journal — but does not describe what an *authentic* journal entry looks like in positive terms. Using the seven moves and the failure-mode descriptions, construct a detailed portrait of what an authentic entry looks like: what signals in the timestamp, the prediction, the gap, and the reflection indicate that the trace is real.
 
 ---
 
 ### Challenge
 
-**10.** The chapter closes with an acknowledged gap: "I do not have a clean way to evaluate the *honesty* of a Frictional journal at scale... once students are using AI assistants to draft journal entries themselves." This is an open engineering problem. Propose a next move. Your proposal should: (a) name the specific signal it uses to evaluate honesty, (b) explain why that signal is harder to manufacture than the current ones, and (c) identify honestly what would defeat your proposal in turn. *(Open-ended; the point is to extend the chapter's reasoning, not to find a final answer.)*
+**10.** The chapter closes with an acknowledged gap: "I do not have a clean way to evaluate the *honesty* of a Frictional journal at scale... once students are using AI assistants to draft journal entries themselves." This is an open engineering problem. Propose a next move. Your proposal should: (a) name the specific signal it uses to evaluate honesty, (b) explain why that signal is harder to manufacture than the current ones, and (c) identify honestly what would defeat your proposal in turn.
 
-**11.** The Decoupling Problem is framed here as specific to the AI era. But consider: in what sense was the artifact always an imperfect proxy for learning, even before AI? Were there pre-AI conditions under which the artifact-work coupling was weaker than the chapter implies? Does taking this seriously strengthen or weaken the chapter's argument for the Frictional method? *(Tests: critical engagement with the chapter's historical framing; forces examination of how much weight the "AI era" distinction is actually carrying.)*
+**11.** The Decoupling Problem is framed here as specific to the AI era. But consider: in what sense was the artifact always an imperfect proxy for learning, even before AI? Were there pre-AI conditions under which the artifact-work coupling was weaker than the chapter implies? Does taking this seriously strengthen or weaken the chapter's argument for the Frictional method?
 
 ---
+
+*Tags: frictional-method, decoupling-problem, prospective-capture, ai-era-pedagogy*
 
