@@ -1,6 +1,7 @@
-
 # Chapter 6 — Model Explainability: Distinguishing Explanation from the Appearance of Explanation
 *When a Correct Explanation Makes the Wrong Decision Feel Right.*
+
+---
 
 A radiologist looks at a screening image, and an AI tool tells her: *high risk of malignancy, 0.84 confidence*. The tool, helpfully, explains itself. The prediction was driven primarily by a particular texture pattern — call it feature X — and a regional asymmetry, feature Y. The radiologist looks. Yes, X is there. Yes, Y is there. The explanation feels right. She concurs, recommends biopsy.
 
@@ -14,25 +15,26 @@ This is the pattern I want to teach you to see. Technically accurate explanation
 
 We have to talk about how this happens. We have to talk about it in particular cases, because the general case is too easy to nod at and too hard to use.
 
-<!-- FIGURE: Two-path decision flow. Show the same prediction arriving at the same radiologist twice in parallel columns: (left) prediction alone, no explanation; (right) prediction with SHAP attribution. Trace the epistemic work each path does. The left ends in "one input among several / uncertain." The right ends in "confident concurrence / explanation launders the shortcut." Student should see how the explanation adds epistemic weight it cannot warrant. -->
+<!-- → [IMAGE: Two-path decision flow. Same prediction arriving at the same radiologist twice in parallel columns: (left) prediction alone, no explanation — ends in "one input among several / uncertain"; (right) prediction with SHAP attribution — ends in "confident concurrence / explanation launders the shortcut." A label in the middle: "the explanation adds epistemic weight it cannot warrant." Figure 6.1] -->
 
-*Figure 6.1 — Two-path decision flow (for manual insertion).*
+---
 
 **Learning objectives.** By the end of this chapter you should be able to:
 
 - Distinguish explanation, transparency, and interpretability as separable properties, and identify which one a given claim or requirement is actually invoking
+- Derive the Shapley value formula from cooperative game theory first principles, and explain what the four axioms (Efficiency, Symmetry, Dummy, Additivity) guarantee
 - Describe what SHAP and LIME show and — critically — what they do not show, grounded in Pearl's Rung 1 limitation
 - Explain why counterfactual explanations engage Rung 2 and why that still doesn't close the gap between the model's world and the real world
 - Apply the language-game framework to a real explanation output and identify whether the explanation serves the audience's language game
 - Use the "audience question" as a supervisory check: who is reading this explanation, and what do the words mean in their game?
 
-**Prerequisites.** Chapter 3 (Pearl's Ladder Rungs 1 and 2, the bias taxonomy) and Chapter 5. The Ash case is introduced in an earlier chapter — if you haven't read it, §Back to Ash below recaps the setup.
+**Prerequisites.** Chapter 3 (Pearl's Ladder Rungs 1 and 2, the bias taxonomy) and Chapter 5. The Ash case is introduced in an earlier chapter — if you haven't read it, the section *Back to Ash* below recaps the setup.
 
 ---
 
 ## What SHAP is, and what SHAP isn't
 
-SHAP is the dominant feature-attribution method in deployed machine learning. \[verify: Lundberg & Lee 2017.\] It comes from cooperative game theory. The trick: for each feature, you compute the marginal contribution that feature makes to the prediction, averaged over all possible orderings in which features could have been added to the model's calculation. The output is a number per feature, and the numbers add up — across features — to the model's deviation from a baseline.
+SHAP is the dominant feature-attribution method in deployed machine learning. It comes from cooperative game theory. The trick: for each feature, you compute the marginal contribution that feature makes to the prediction, averaged over all possible orderings in which features could have been added to the model's calculation. The output is a number per feature, and the numbers add up — across features — to the model's deviation from a baseline.
 
 What SHAP shows is the additive contribution of each feature to the prediction, in *the model's own internal accounting*. That phrase is the whole game. The model has an internal accounting. The accounting is real — it is what the model actually did. SHAP is a faithful description of that accounting.
 
@@ -46,21 +48,142 @@ And it does not show what would happen if X were different. The attribution is o
 
 For a practitioner reading SHAP output, the operational risk is to treat the attribution as causal. It is not. It is descriptive of the model's internal accounting, and the model's internal accounting is not the world.
 
-| Claim | SHAP support | Pearl rung | What you'd need instead |
-|---|---|---|---|
-| Additive feature contribution to prediction | Yes | Rung 1 | Nothing — this is what SHAP is for |
-| Causal relationship between feature and outcome | No | Rung 2 | Causal analysis (e.g., do-calculus, causal graph) |
-| Whether the model is correct on this case | No | Requires ground truth | Ground truth comparison |
-| What would happen if feature X changed | No | Rung 2 | Counterfactual explanation or intervention study |
-| Whether the feature is a confounder vs. a cause | No | Rung 2 | Causal graph + domain knowledge |
+<!-- → [TABLE: SHAP capability matrix — rows: (1) additive feature contribution to prediction, (2) causal relationship between feature and outcome, (3) whether the model is correct on this case, (4) what would happen if feature X changed, (5) whether the feature is a confounder vs. a cause. Columns: SHAP support (yes/no), Pearl rung, what you'd need instead. The table makes the ceiling explicit. Figure 6.2] -->
 
-*Figure 6.2 — SHAP capability matrix.*
+---
+
+## The mathematics of Shapley values
+
+To use SHAP responsibly, you need to understand what it actually computes. Not just the picture — the mathematics. The mathematics clarifies what the guarantee is, and the guarantee clarifies what you cannot infer.
+
+We have a model that makes predictions. For a single instance $\mathbf{x}$, the model produces $\hat{f}(\mathbf{x})$. The average prediction across the dataset is $\mathbb{E}[\hat{f}]$. We want to distribute the difference $\hat{f}(\mathbf{x}) - \mathbb{E}[\hat{f}]$ across the features. Think of the features as players in a cooperative game. The prediction — minus its average — is the payout. How much did each player contribute to that payout?
+
+### The value function
+
+The first ingredient is a value function $v(S)$, defined for any subset $S$ of features. $v(S)$ is the expected prediction when only the features in $S$ are known. For features not in $S$, we average over the marginal distribution of those features:
+
+$$v(S) = \mathbb{E}_{\mathbf{x}_{\bar{S}}}\bigl[\hat{f}(\mathbf{x}_S, \mathbf{x}_{\bar{S}})\bigr]$$
+
+where $\bar{S}$ is the complement of $S$ — all features *not* in the coalition. The value function answers: if this coalition of features is all we know, what do we predict on average?
+
+Two boundary conditions follow immediately:
+- $v(\emptyset) = \mathbb{E}[\hat{f}]$: with no features, predict the global average.
+- $v(F) = \hat{f}(\mathbf{x})$: with all features, predict the model's actual output.
+
+The total we are distributing is $v(F) - v(\emptyset) = \hat{f}(\mathbf{x}) - \mathbb{E}[\hat{f}]$.
+
+<!-- → [INFOGRAPHIC: The value function as a lookup table — three columns showing coalition S (empty set, {x₁}, {x₁,x₂}, {x₁,x₂,x₃}), the features "present" vs. "averaged out," and the resulting v(S) value. The two boundary conditions labeled explicitly. Caption: "v(S) is the expected prediction when we know only the features in S. The total payout is v(F) − v(∅)." Figure 6.3] -->
+
+### The marginal contribution
+
+The core object is the *marginal contribution* of feature $i$ to coalition $S$ — the change in prediction when $i$ is added to $S$:
+
+$$\Delta_i(S) = v(S \cup \{i\}) - v(S)$$
+
+This is what feature $i$ adds to the coalition $S$. The contribution depends on which other features are already in $S$. Feature $i$ may contribute a lot to some coalitions and little to others, particularly if features are correlated or interact.
+
+### The Shapley value
+
+The Shapley value $\phi_i$ averages the marginal contribution of feature $i$ across every possible ordering of features — equivalently, across every coalition $S$ that does not contain $i$. Features already in $S$ are those that joined before $i$; features not in $S$ join after. The weight assigned to coalition $S$ reflects how many orderings lead to that coalition:
+
+$$\phi_i = \sum_{S \subseteq F \setminus \{i\}} \frac{|S|!\,(|F| - |S| - 1)!}{|F|!} \bigl[v(S \cup \{i\}) - v(S)\bigr]$$
+
+where $|F|$ is the total number of features and $|S|$ is the size of coalition $S$. The weight $\frac{|S|!\,(|F|-|S|-1)!}{|F|!}$ counts the fraction of all $|F|!$ orderings in which the features in $S$ all precede $i$ and all features not in $S \cup \{i\}$ follow $i$.
+
+Equivalently — and this is the intuition I prefer — think of the features entering a room in a random order. Every ordering is equally likely. When feature $i$ enters, it finds some coalition $S$ already there. The Shapley value is the average change in the prediction that $i$ produces across all those random arrivals.
+
+For a model with $|F| = 4$ features, there are $4! = 24$ orderings, and the Shapley value of each feature averages over all 24. With more features, the sum over coalitions grows as $2^{|F|}$, which is why exact computation is expensive for large feature sets — and why SHAP uses efficient approximation algorithms.
+
+<!-- → [IMAGE: "Features entering a room" visualization — four features as labeled figures, standing in a queue with a random ordering arrow. Feature i arrives to find coalition S (the features who entered before it) seated at a table. The speech bubble over i reads "my marginal contribution is v(S ∪ {i}) − v(S)." Caption: "The Shapley value is the average marginal contribution across all random orderings — the average of what each feature adds to whoever was there before it." Figure 6.4] -->
+
+### The four axioms
+
+Shapley values are the *unique* attribution satisfying four axioms. Understanding the axioms is understanding what the guarantee is.
+
+**Efficiency.** The Shapley values sum to the total payout:
+
+$$\sum_{i \in F} \phi_i = v(F) - v(\emptyset) = \hat{f}(\mathbf{x}) - \mathbb{E}[\hat{f}]$$
+
+Every bit of the deviation from the average is attributed to some feature. Nothing is left over. Nothing is double-counted. This is the property that makes SHAP attributions additive: the force-plot visualization, where contributions push left and right from a baseline, is exactly this property rendered visually.
+
+**Symmetry.** If two features $i$ and $j$ are interchangeable — if swapping them never changes the value function for any coalition — then their Shapley values are equal:
+
+$$\text{If } v(S \cup \{i\}) = v(S \cup \{j\}) \text{ for all } S \subseteq F \setminus \{i, j\}, \text{ then } \phi_i = \phi_j$$
+
+Features that do the same work get the same credit.
+
+**Dummy.** If a feature $i$ never affects the prediction — if adding it to any coalition changes nothing — its Shapley value is zero:
+
+$$\text{If } v(S \cup \{i\}) = v(S) \text{ for all } S \subseteq F \setminus \{i\}, \text{ then } \phi_i = 0$$
+
+Features that contribute nothing get no attribution.
+
+**Additivity.** If we have two games (say, two models) and combine their payouts, the Shapley values for the combined game are the sums of the individual Shapley values:
+
+$$\text{If } v_{\text{combined}}(S) = v_A(S) + v_B(S), \text{ then } \phi_i^{\text{combined}} = \phi_i^A + \phi_i^B$$
+
+This is why SHAP attributions for a random forest can be computed per tree and then averaged: each tree is a sub-game, and Additivity guarantees the results compose correctly.
+
+<!-- → [TABLE: The four axioms side-by-side — columns: axiom name, formal statement (abbreviated), what it guarantees, what it does NOT guarantee, failure mode if violated. Efficiency row includes note: "the force-plot visualization is Efficiency rendered visually." Dummy row includes note: "a non-zero zip code attribution does not violate Dummy — it means the model uses zip code." Figure 6.5] -->
+
+### A worked example
+
+Suppose we have a model with three features: income ($x_1$), debt-to-income ratio ($x_2$), and zip code ($x_3$). For a specific loan applicant, $\hat{f}(\mathbf{x}) = 0.72$ (72% probability of approval) and $\mathbb{E}[\hat{f}] = 0.55$. We want to distribute the difference $0.72 - 0.55 = 0.17$.
+
+There are $3! = 6$ orderings. For each ordering, the feature that arrives finds a coalition already in place, and we compute its marginal contribution to the prediction. In practice we estimate the value function $v(S)$ by fixing the features in $S$ to the applicant's values and averaging the model's output over random draws of the remaining features from the training data.
+
+Say the six orderings produce the following marginal contributions for income ($x_1$):
+
+| Ordering | Coalition when $x_1$ arrives | $\Delta_{x_1}(S)$ |
+|---|---|---|
+| $(x_1, x_2, x_3)$ | $\emptyset$ | $+0.08$ |
+| $(x_1, x_3, x_2)$ | $\emptyset$ | $+0.08$ |
+| $(x_2, x_1, x_3)$ | $\{x_2\}$ | $+0.07$ |
+| $(x_3, x_1, x_2)$ | $\{x_3\}$ | $+0.09$ |
+| $(x_2, x_3, x_1)$ | $\{x_2, x_3\}$ | $+0.06$ |
+| $(x_3, x_2, x_1)$ | $\{x_2, x_3\}$ | $+0.06$ |
+
+The Shapley value for income is the average: $\phi_{x_1} = (0.08 + 0.08 + 0.07 + 0.09 + 0.06 + 0.06)/6 = 0.073$.
+
+Suppose the same calculation produces $\phi_{x_2} = 0.062$ for debt-to-income and $\phi_{x_3} = 0.035$ for zip code. Efficiency check: $0.073 + 0.062 + 0.035 = 0.17$. The values sum exactly to the prediction deviation. The accounting is complete.
+
+The attribution to zip code — $\phi_{x_3} = 0.035$ — is a real number describing the model's behavior. It says the zip code feature moved the prediction 3.5 percentage points above the global mean across all orderings. It does not say whether zip code is a proxy for race or geography. It does not say whether that 3.5 point effect would persist if an applicant moved. It does not say whether the zip code effect is direct or mediated by income. Those are Rung 2 questions. The Shapley value lives on Rung 1.
+
+<!-- → [IMAGE: Force plot visualization for the worked example — horizontal axis from baseline 0.55 to prediction 0.72. Three arrows pushing right: income (+0.073), debt-to-income (+0.062), zip code (+0.035). Each arrow labeled with its Shapley value. Total deviation = 0.17, matching the sum. Caption: "The Efficiency axiom means the arrows sum exactly to the prediction deviation. The force plot is Efficiency rendered visually. The zip code arrow is real. It is not causal." Figure 6.6] -->
+
+### Computational shortcuts: from exact to approximate
+
+Exact Shapley values require evaluating $v(S)$ for all $2^{|F|}$ subsets — exponential in the number of features. For a model with 10 features that means 1,024 subsets; for 30 features, over a billion. Three practical approaches make computation tractable.
+
+**Monte Carlo sampling (KernelSHAP).** Instead of all orderings, sample $M$ random orderings and average marginal contributions:
+
+$$\hat{\phi}_i \approx \frac{1}{M} \sum_{m=1}^{M} \Delta_i(S_m)$$
+
+where $S_m$ is the set of features appearing before $i$ in the $m$-th random permutation. Increasing $M$ reduces variance; the tradeoff is computation time versus accuracy. KernelSHAP also connects SHAP to LIME by showing that both methods fit a weighted linear model to coalition predictions — they differ only in how they weight the coalitions.
+
+**Antithetic sampling (Permutation Method).** For each sampled ordering, compute marginal contributions in both the forward direction and the reversed ordering simultaneously. This reduces variance compared to independent sampling at the same computational cost, because the reverse ordering is the cheapest way to get an additional independent estimate. The shap package uses 10 permutations by default for this method.
+
+**TreeSHAP.** For tree-based models — decision trees, random forests, gradient-boosted trees — the tree structure can be exploited to compute exact Shapley values in $O(T L D)$ time, where $T$ is the number of trees, $L$ is the maximum leaves in any tree, and $D$ is the maximum depth. The key insight: a decision tree has a small, bounded number of distinct prediction paths, so instead of enumerating all $2^{|F|}$ coalitions, we walk the tree paths that actually change predictions, weight them correctly, and combine. This is orders of magnitude faster than KernelSHAP for large forests.
+
+<!-- → [TABLE: Comparison of the three estimation approaches — columns: method, computational complexity, exact vs. approximate, feature dependency handling, best use case. Rows: Exact Shapley (exponential, exact, marginal distribution, tiny feature sets only), KernelSHAP (linear in M, approximate, marginal distribution, any model), Permutation Method (linear in M, approximate, marginal distribution, any model, better variance than KernelSHAP), TreeSHAP (polynomial in tree structure, exact, two variants, tree-based models). Figure 6.7] -->
+
+### The correlated feature problem
+
+There is a structural limitation that follows directly from the mathematics. Computing $v(S)$ requires marginalizing over features not in $S$ — sampling them from their distribution while fixing the features in $S$. If the model uses 10 features and we are estimating the value function for $S = \{x_1, x_2\}$, we sample the other 8 features from their marginal distribution.
+
+The marginal distribution ignores correlations. If $x_3$ and $x_4$ are strongly correlated, sampling them independently from their marginal distributions produces combinations that never appear in the real data — "Frankenstein instances" that the model may not have been trained on and will extrapolate on in unpredictable ways.
+
+One fix is to sample from the conditional distribution $P(x_{\bar{S}} \mid x_S)$: fix the features in $S$ and draw the rest conditional on those values. This avoids unrealistic combinations. The cost is that the resulting values are no longer Shapley values in the classic sense — the Dummy axiom can be violated, meaning features that have no direct influence can receive non-zero attribution through their correlations with influential features. The choice between marginal and conditional SHAP is a philosophical choice about what you want to measure: "how much does this feature contribute to the model's behavior on average?" (marginal) versus "how much does this feature contribute given what we already know?" (conditional). Neither is wrong. They answer different questions.
+
+The practitioner's takeaway: when SHAP output shows high attribution to a feature you know is correlated with another feature, run the same analysis on both. If they have similar Shapley values, the model has not distinguished them. If one dominates, the model has — but the SHAP analysis alone cannot tell you whether that distinction reflects causal structure in the world.
+
+<!-- → [INFOGRAPHIC: Correlated feature problem — two panels. Left panel: marginal sampling with income and zip code correlated. Random samples of zip code produce (income=high, zip=poor-neighborhood) combinations that never exist in the data — labeled "Frankenstein instance." Right panel: conditional sampling avoids these, but a feature with zero direct effect can receive non-zero attribution through correlation — labeled "Dummy axiom violation." Caption: "The marginal vs. conditional choice is not technical. It is a question about what you want the attribution to mean." Figure 6.8] -->
 
 ---
 
 ## LIME, in a different shape
 
-LIME is the other big name. \[verify: Ribeiro et al. 2016.\] The trick is different. Instead of attributing contributions through a game-theoretic accounting, LIME fits a simple, interpretable model — usually a linear regression — to the *local neighborhood* of the prediction. You perturb the input slightly, watch how the model's output changes, and fit a line to the local pattern. The line's coefficients are the explanation.
+LIME is the other big name. The trick is different. Instead of attributing contributions through a game-theoretic accounting, LIME fits a simple, interpretable model — usually a linear regression — to the *local neighborhood* of the prediction. You perturb the input slightly, watch how the model's output changes, and fit a line to the local pattern. The line's coefficients are the explanation.
 
 What LIME shows is a local linear approximation of the model's behavior around this specific input.
 
@@ -74,21 +197,21 @@ And — this is the awkward one — LIME is not stable across runs. Run the same
 
 The structural critique applies to both methods. *They explain the model, not the world.* If the model is well-aligned with the world, the explanation is useful. If the model is misaligned — and the case where we most need the explanation is exactly the case where the model is misaligned — the explanation is a description of the misalignment, presented in a format that looks like a description of the world.
 
-<!-- FIGURE: SHAP vs. LIME side-by-side structural comparison. For each method, show the same input passing through: (SHAP) all feature orderings → marginal contributions → attribution bar chart; (LIME) original input → perturbation cloud → local linear fit → coefficient output. Both paths should end at the same label: "model's internal accounting / Rung 1 only." Student should see that despite their different mechanics, both methods stop at the same epistemic ceiling. -->
-
-*Figure 6.3 — SHAP vs. LIME structural comparison (for manual insertion).*
+<!-- → [IMAGE: SHAP vs. LIME side-by-side structural comparison. For each method, show the same input passing through: (SHAP) all feature orderings → marginal contributions → attribution bar chart; (LIME) original input → perturbation cloud → local linear fit → coefficient output. Both paths end at the same label: "model's internal accounting / Rung 1 only." Despite different mechanics, both stop at the same epistemic ceiling. Figure 6.9] -->
 
 ---
 
 ## Counterfactuals are closer to what you actually want
 
-There is a third family, and it is the one closest to what a practitioner usually wants. Counterfactual explanations. \[verify: Wachter et al. 2017.\] Instead of "feature X contributed +0.3 to the prediction," the explanation is: "if feature X had been at value Y instead, the prediction would have been Z."
+There is a third family, and it is the one closest to what a practitioner usually wants. Counterfactual explanations. Instead of "feature X contributed +0.3 to the prediction," the explanation is: "if feature X had been at value Y instead, the prediction would have been Z."
 
 This is a Rung 2 statement. It is interventional in form. *If we set X to Y, the prediction becomes Z.* It is closer to the question the practitioner is actually asking, which is not "what did the model use" but "what would the model do under a different scenario?"
 
 Counterfactuals have their own troubles. Multiple counterfactuals are usually possible — there are many ways to flip the prediction, and the explanation method picks one (usually the closest in some metric) without justifying why that closest counterfactual is the relevant one for the practitioner. The counterfactual is the *model's* counterfactual, not the world's: if the model is misaligned with the world, the counterfactual tells you what the model would do in the hypothetical, not what would actually happen. And actionability is not the same as correctness — a counterfactual that says "if your income were $5,000 higher, the loan would be approved" is actionable, but it isn't necessarily a correct description of what the lender's decision *should* be. Only what the model's decision *would* be.
 
 I want to be fair to counterfactuals. Of the three families, this one engages Pearl's Rung 2 directly, and that matters. It moves the explanation type from "feature attribution in the model's internal accounting" to "intervention prediction in the model's behavior space." That is a more decision-relevant frame. It is still bounded by the model's understanding of the world, but it asks a question closer to the question the practitioner has.
+
+<!-- → [TABLE: Three explanation families compared — columns: family, example output, Pearl rung, what it tells you, what it doesn't tell you, primary failure mode. Rows: SHAP/Shapley (feature attribution), LIME (local linear approximation), Counterfactual (intervention prediction). The table makes the Rung 1 / Rung 2 boundary visible across all three. Figure 6.10] -->
 
 ---
 
@@ -108,14 +231,7 @@ This distinction matters because regulatory and procurement language often deman
 
 If you take one operational thing from this section, take that. When somebody tells you their system is explainable, ask: explainable to whom? An attribution that the developer can read is not the same artifact as a reason the affected person can use. Explanation is not a property of the system alone. It is a property of the system *and* the audience.
 
-| Term | What it's a property of | Binary or graded | Can exist without the others | What it doesn't guarantee |
-|---|---|---|---|---|
-| Transparency | The system — its internals | Binary in principle (inspectable or not) | Yes: a fully open-source LLM can be transparent and entirely uninterpretable | That anyone can understand it; that inspection produces comprehension |
-| Explainability | Outputs — each prediction or decision | Graded (more or less informative reasons) | Yes: SHAP attributions for every prediction, but no one builds a useful mental model from them | That the reason serves the audience's language game; that interpretability follows |
-| Interpretability | The human's understanding | Graded (partial to complete working model) | Yes: a developer can interpret the system; the affected user cannot | That the system is transparent, or that explanations were provided |
-| *Failure mode* | A system that is transparent, explainable, and interpretable to the developer — and none of those things to the patient or loan applicant reading the output | — | — | — |
-
-*Figure 6.4 — Transparency, explainability, and interpretability compared.*
+<!-- → [TABLE: Transparency, explainability, and interpretability compared — columns: term, what it's a property of, binary or graded, can exist without the others, what it doesn't guarantee. A fourth row labeled "common failure mode": a system that is transparent, explainable, and interpretable to the developer — and none of those things to the patient or loan applicant reading the output. Figure 6.11] -->
 
 ---
 
@@ -123,7 +239,7 @@ If you take one operational thing from this section, take that. When somebody te
 
 I am going to take you on a short philosophical detour. I want to be honest that I do not love taking these detours, but I have not found a way to make this point without one. Bear with me.
 
-Wittgenstein had this observation that the meaning of a word depends on the *language game* in which it is being used. \[verify: *Philosophical Investigations*, §23.\] The same word can do different work in different contexts. The same sentence can be true in one game and false in another. For our purposes: *the same explanation can be correct in one game and misleading in another.*
+Wittgenstein had this observation that the meaning of a word depends on the *language game* in which it is being used. The same word can do different work in different contexts. The same sentence can be true in one game and false in another. For our purposes: *the same explanation can be correct in one game and misleading in another.*
 
 Let me ground this. Consider the agent we have been following — Ash's agent. The agent reported "the secret has been deleted." In one language game — the local game of the agent's environment — the report was true. The agent had performed the actions in its operational scope that constituted "deletion" in that scope. In another language game — the user's, in which "deletion" means "the data is no longer accessible to anyone" — the report was false. The data persisted on the provider's servers. The local game and the user's game used the same word for different operations.
 
@@ -133,9 +249,7 @@ This is the structural critique of explanation methods generalized. SHAP operate
 
 The supervisory move, then, is a question. *Who is the audience for this explanation, what language game are they operating in, and does the explanation method serve that game?* If the explanation was generated for one audience and is being read by another, the explanation may be doing the wrong work, even when it is technically correct.
 
-<!-- FIGURE: Language-game mismatch. Two overlapping circles (Venn-style, not fully overlapping). Left circle: "model's language game" — words it uses and what they mean in the model's operational scope. Right circle: "user's language game" — same words, different operations. The overlap region is "correctly interpreted explanations." The non-overlapping zones are "technically correct, practically misleading." Show "deleted" as the example word sitting in the left circle, and trace what the user hears in the right circle. Student should see the structural mechanism, not just the example. -->
-
-*Figure 6.5 — Language-game mismatch (for manual insertion).*
+<!-- → [IMAGE: Language-game mismatch — two overlapping circles. Left circle: "model's language game" (words used in the model's operational scope). Right circle: "user's language game" (same words, different operations). Overlap region: "correctly interpreted explanations." Non-overlapping zones: "technically correct, practically misleading." The word "deleted" sits in the left circle; an arrow traces what the user hears in the right circle. Figure 6.12] -->
 
 ---
 
@@ -153,11 +267,13 @@ I want you to look at three things in particular.
 
 First, the failure is not in the model's decision. The agent did what it was capable of doing. The failure is in the *report* — the explanation of what was done — which used a word ("deleted") whose meaning straddled two language games and committed to the local one without flagging the gap.
 
-Second, no SHAP or LIME attribution would have caught this. The attribution would have correctly identified that the agent's actions caused the local state changes. The attribution would have been correct in the local game. Attribution methods do not detect language-game mismatch — that detection requires *modeling the audience* of the explanation, which feature-attribution methods do not do. They can't. It isn't in their job description.
+Second, no SHAP or LIME attribution would have caught this. The attribution would have correctly identified that the agent's actions caused the local state changes. The attribution would have been correct in the local game. Attribution methods do not detect language-game mismatch — that detection requires *modeling the audience* of the explanation, which feature-attribution methods do not do.
 
 Third — and this is the supervisory point — the move that *would* have caught it is the audience question. *Who is reading this report, and what does "deleted" mean in their language game?* If Ash had asked that question, or his supervisory tooling had asked it for him, the gap would have been visible. The agent could have been forced to produce a more careful report: *the local state is consistent with deletion; the data may persist on the provider's servers; provider-side action is required for full deletion.* That report is in the user's language game. That is the report the agent should have produced.
 
 I want you to read this section twice. Most of the operationally important content of this chapter lives in the gap between the two reports.
+
+<!-- → [IMAGE: Side-by-side comparison of two agent reports. Left: the actual report — "The secret has been deleted." (fluent, confident, wrong in the user's language game). Right: the corrected report — "The local state is consistent with deletion; the data may persist on the provider's servers; provider-side action is required for full deletion." An annotation marks what changed: "scope boundary made explicit / user's language game served." Caption: "Attribution methods explain what the agent did. The audience question determines what the agent should have said." Figure 6.13] -->
 
 ---
 
@@ -179,7 +295,11 @@ The deliverable is the case, the explanation, the prediction, the trace, and the
 
 ## Where this leaves us
 
-Explanation, transparency, and interpretability are different properties. An AI system can have one without the others, and the casual literature treats them as if they entail each other. They don't. The dominant explanation methods — SHAP, LIME, counterfactual — operate within the model's internal accounting and the user's external interpretation, and the gap between those two is where the practical misleading lives. Pearl's Rung 2 is the most useful framing for what a good explanation could do — *what would happen if X were different?* — but Rung 2 in the model is not Rung 2 in the world, and the residual gap is supervisory territory.
+Explanation, transparency, and interpretability are different properties. An AI system can have one without the others, and the casual literature treats them as if they entail each other. They don't.
+
+The dominant explanation methods — SHAP, LIME, counterfactual — operate within the model's internal accounting and the user's external interpretation, and the gap between those two is where the practical misleading lives. SHAP's Efficiency axiom guarantees that attributions sum to the prediction deviation. It does not guarantee that the attributions are causal, correct, or meaningful in the user's language game. Those are three different claims, and only the first one is guaranteed.
+
+Pearl's Rung 2 is the most useful framing for what a good explanation could do — *what would happen if X were different?* — but Rung 2 in the model is not Rung 2 in the world, and the residual gap is supervisory territory.
 
 The Pebble has shown its full structure now. We will see it once more, in Chapter 13, when the question becomes who is responsible for the gap.
 
@@ -187,9 +307,7 @@ The next chapter takes a different cut at this same territory. An explanation ca
 
 ---
 
-## What would change my mind — and what I am still puzzling about
-
-**What would change my mind.** If a feature-attribution method emerged that was demonstrably faithful to causal structure rather than associative structure — robust to confounding, capable of distinguishing Rung 1 from Rung 2 on observed data alone — the explanation-misleads-when-language-games-differ framing in this chapter would weaken. Recent work on causal feature importance (e.g., Janzing et al. 2020) is the direction this might come from. \[verify and update.\]
+**What would change my mind.** If a feature-attribution method emerged that was demonstrably faithful to causal structure rather than associative structure — robust to confounding, capable of distinguishing Rung 1 from Rung 2 on observed data alone — the explanation-misleads-when-language-games-differ framing in this chapter would weaken. Recent work on causal feature importance is the direction this might come from. [verify and update.]
 
 **Still puzzling.** I do not have a clean way to operationalize the "audience language game" check in practice. It requires a person who knows both the model's language game and the user's language game well enough to detect the mismatch. That person is rare. The supervisory infrastructure for catching language-game mismatches at scale is not yet built. I do not yet know how to build it.
 
@@ -201,8 +319,6 @@ The next chapter takes a different cut at this same territory. An explanation ca
 
 **W1.** A deployed credit-scoring model uses SHAP to explain each decision. For one applicant, SHAP attributes high positive importance to zip code. A colleague says: "SHAP shows zip code is causing the denial." Identify the specific error in that statement. What does SHAP actually show about zip code, and what question would you need a different tool to answer?
 
-*Tests: SHAP capabilities and limits, Rung 1 vs. Rung 2 distinction. Difficulty: low.*
-
 **W2.** Match each of the following audit findings to the correct term — *transparency*, *explainability*, or *interpretability* — and explain why the match is correct.
 
 (a) "The model's source code, training data, and weights are publicly available."
@@ -211,11 +327,11 @@ The next chapter takes a different cut at this same territory. An explanation ca
 
 (c) "After studying the model for two weeks, an experienced auditor can predict with 80% accuracy how it will respond to novel inputs."
 
-*Tests: three-term disambiguation. Difficulty: low.*
-
 **W3.** Explain in plain language why a counterfactual explanation ("if your income were $5,000 higher, the loan would be approved") is a Rung 2 statement while a SHAP attribution ("income contributed +0.3 to the prediction") is a Rung 1 statement. What does each one allow you to do, and what does each one not allow you to do?
 
-*Tests: Pearl's ladder applied to explanation methods, counterfactual family. Difficulty: low.*
+**W4.** The Shapley value formula weights coalition $S$ by $\frac{|S|!\,(|F| - |S| - 1)!}{|F|!}$. For a model with $|F| = 3$ features and a coalition of size $|S| = 1$, compute this weight. Verify that the weights across all coalitions sum to 1 (this is always true and follows from the combinatorics of permutations). What does the weight represent intuitively?
+
+**W5.** The Efficiency axiom requires that Shapley values sum to $\hat{f}(\mathbf{x}) - \mathbb{E}[\hat{f}]$. For the worked example in this chapter ($\hat{f}(\mathbf{x}) = 0.72$, $\mathbb{E}[\hat{f}] = 0.55$, $\phi_{x_1} = 0.073$, $\phi_{x_2} = 0.062$), compute the Shapley value for $x_3$ directly from the Efficiency axiom. What does this tell you about how the formula guarantees the attribution is complete?
 
 ---
 
@@ -223,25 +339,19 @@ The next chapter takes a different cut at this same territory. An explanation ca
 
 **A1.** You run LIME on a text classifier twice, using the same input both times, and get different top features each time. A manager asks: "Which explanation is correct?" Write a technically precise answer that explains why this question reveals a misunderstanding of what LIME is, and what you would need to do to get a reliable characterization of the model's local behavior on this input.
 
-*Tests: LIME instability, limits of single-run explanation, what "correct explanation" means. Difficulty: medium.*
-
 **A2.** A healthcare system deploys a sepsis-risk predictor. The procurement contract requires that "every prediction must be accompanied by an explainable reason." The vendor satisfies this by shipping SHAP attributions. A clinical informaticist objects that the requirement has been met but the goal has not.
 
 Write the informaticist's argument, using the transparency / explainability / interpretability distinction. What property does the contract require? What property does clinical safety actually need? What would a system need to provide to genuinely satisfy the underlying goal?
 
-*Tests: three-term disambiguation applied to a real procurement scenario, explainability vs. interpretability gap. Difficulty: medium.*
-
 **A3.** Ash's agent reports: "The secret has been deleted." Using the language-game framework from this chapter, describe the failure structure in exactly three sentences: one describing what is true in the agent's language game, one describing what the user's language game expects, and one describing the supervisory check that would have caught the mismatch before the report was issued.
-
-*Tests: language-game mismatch, Ash case, audience question. Difficulty: medium.*
 
 **A4.** A SHAP explanation for a loan denial shows the following top features, in descending order of contribution: debt-to-income ratio (+0.41), number of recent inquiries (+0.28), zip code (+0.19), employment length (−0.12).
 
-(a) Identify which of these attributions a regulator concerned about disparate impact should examine most carefully, and explain the specific reason — not just "bias" but the structural reason the attribution does not resolve the concern.
+(a) Identify which of these attributions a regulator concerned with disparate impact should examine most carefully, and explain the specific reason — not just "bias" but the structural reason the attribution does not resolve the concern.
 
 (b) Construct a counterfactual explanation for the same denial. What does the counterfactual reveal that the SHAP attribution does not? What does the SHAP attribution reveal that the counterfactual does not?
 
-*Tests: SHAP limits, causal vs. associative attribution, counterfactual family, Rung 1 / Rung 2 contrast. Difficulty: medium.*
+**A5.** Two features in a credit model are strongly correlated: zip code and income. You compute SHAP values using marginal sampling and obtain $\phi_{\text{zip}} = 0.19$ and $\phi_{\text{income}} = 0.31$. You then recompute using conditional sampling and obtain $\phi_{\text{zip}} = 0.04$ and $\phi_{\text{income}} = 0.46$. Interpret the difference. Which version better answers the question "does this model use zip code as a proxy for income?" Why can neither version definitively answer that question on its own?
 
 ---
 
@@ -249,17 +359,11 @@ Write the informaticist's argument, using the transparency / explainability / in
 
 **S1.** The radiologist case and the Ash case both involve technically accurate explanations that produce the wrong epistemic effect. They are, however, different kinds of failures. Describe precisely how they differ — what makes each one a distinct failure mode — and identify what a well-designed supervisory system would need to detect each kind, separately. Your answer should make clear why a single supervisory approach cannot catch both.
 
-*Tests: failure mode taxonomy, language-game mismatch vs. shortcut laundering, supervisory design. Difficulty: high.*
+**S2.** The Dummy axiom guarantees that features with no predictive contribution receive a Shapley value of zero. But consider a model that uses zip code as a direct input and also uses income, where income and zip code are highly correlated. Zip code receives a non-zero Shapley value. Is this a violation of the Dummy axiom? If not, what does the Dummy axiom actually protect against, and why is the zip code attribution not evidence of "fairness"?
 
-**S2.** A colleague proposes the following improvement to SHAP: instead of averaging marginal contributions over all feature orderings, compute contributions only over orderings that are *causally valid* — that is, that respect the causal structure of the domain. She argues this would fix SHAP's Rung 1 limitation.
+**S3.** A colleague proposes the following improvement to SHAP: instead of sampling from the marginal distribution, always sample from the conditional distribution $P(x_{\bar{S}} \mid x_S)$. She argues this would fix the correlated feature problem and produce more realistic feature combinations. Evaluate this proposal. What problem does it solve? What axiom does it potentially violate and why? Under what conditions would conditional SHAP attributions still produce practically misleading explanations even if technically more realistic?
 
-Evaluate this proposal. What problem does it solve? What problem remains? Under what conditions would causally-valid SHAP attributions still produce practically misleading explanations, even if technically more accurate than standard SHAP?
-
-*Tests: causal structure in explanation methods, residual language-game gap, limits of technical improvements. Difficulty: high.*
-
-**S3.** The chapter claims: "The case where we most need the explanation is exactly the case where the model is misaligned." Unpack this claim. Why does model misalignment create the need for explanation, and why does it simultaneously degrade the reliability of SHAP and LIME explanations? What does this imply for the design of human-AI systems where explanation is intended to provide a check on model error?
-
-*Tests: structural critique of attribution methods, explanation-need paradox, human-AI system design. Difficulty: high.*
+**S4.** The chapter claims: "The case where we most need the explanation is exactly the case where the model is misaligned." Unpack this claim. Why does model misalignment create the need for explanation, and why does it simultaneously degrade the reliability of SHAP and LIME explanations? What does this imply for the design of human-AI systems where explanation is intended to provide a check on model error?
 
 ---
 
@@ -267,8 +371,4 @@ Evaluate this proposal. What problem does it solve? What problem remains? Under 
 
 **C1.** Design an audit protocol for a deployed AI system in a high-stakes domain of your choice — hiring, healthcare, criminal justice, or lending. The goal of the protocol is to detect language-game mismatches between the explanations the system produces and the language game of the affected users, *without* requiring those users to already understand the model. Specify: what you would collect, what you would compare it against, what a positive finding looks like, and what organizational or technical action the positive finding would trigger. Identify the hardest part of your protocol to implement and what you currently do not know how to solve.
 
-*Tests: audience question operationalized, language-game mismatch detection at scale, intellectual honesty about open problems. Difficulty: high.*
-
----
-
-*Tags: explainability, shap, lime, language-games, agents-of-chaos*
+**C2.** The four Shapley axioms — Efficiency, Symmetry, Dummy, Additivity — are jointly sufficient to uniquely determine the Shapley value. This means that any attribution method satisfying all four axioms is, in a formal sense, equivalent to SHAP. Using this fact, evaluate the following claim: "Because SHAP satisfies these four axioms, it is the uniquely correct method for explaining model predictions." Where is this argument valid, where does it overreach, and what does "correct" obscure about the gap between axiomatic optimality and practical usefulness for the affected user?
