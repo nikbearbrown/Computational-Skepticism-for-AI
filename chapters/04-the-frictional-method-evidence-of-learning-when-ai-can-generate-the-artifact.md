@@ -59,9 +59,6 @@ For a few years, faculty have been treating this as a temporary anomaly to be pa
 
 <!-- → [IMAGE: Two-row timeline diagram. Row 1 labeled "Before AI": artifact ↔ work connected by a bidirectional arrow labeled "causally coupled." Row 2 labeled "AI era": artifact and work as disconnected nodes, with AI floating between them as the new producer of artifacts, a dotted line from AI to artifact. Caption: "The Decoupling Problem is structural. The artifact is no longer evidence of the work." Figure 4.1] -->
 
-![Figure 4.1 — Two-row timeline diagram. Row 1 labeled "Before AI": artifact ↔ work connecte...](images/04-the-frictional-method-evidence-of-learning-when-ai-can-generate-the-artifact-fig-01.jpg)
-
-
 ---
 
 ## Performance is not learning
@@ -84,9 +81,6 @@ BDNF — Brain-Derived Neurotrophic Factor — is upregulated during moderate co
 
 <!-- → [INFOGRAPHIC: The neurobiological chain of genuine learning — three stages: (1) prediction error triggers phasic dopamine release in midbrain, (2) dopamine initiates long-term potentiation and BDNF upregulation, (3) dendritic spine formation encodes the schema. A parallel track shows borrowed certainty: AI generates explanation → student processes fluently → none of the three stages fire. Caption: "AI can produce the artifact without triggering any of these events." Figure 4.3 (supplement to text).] -->
 
-![Figure 4.2 — The neurobiological chain of genuine learning](images/04-the-frictional-method-evidence-of-learning-when-ai-can-generate-the-artifact-fig-02.jpg)
-
-
 An AI can produce the artifact without triggering any of these events. It cannot produce the behavioral traces those events leave, because the events did not occur.
 
 For our problem — and this is the hinge of the chapter — AI use in education tends to produce the conditions that maximize performance while minimizing learning. The artifact comes together quickly. The student can defend it in the moment. The work feels efficient. And the learning is much less than it appears.
@@ -94,9 +88,6 @@ For our problem — and this is the hinge of the chapter — AI use in education
 The Frictional method is the inversion. It deliberately introduces conditions that produce structural friction because those conditions track learning in the Bjorkian sense, and they leave a *trace* that the AI cannot manufacture after the fact.
 
 <!-- → [CHART: Two-line chart. Horizontal axis: "friction in learning conditions" (low to high). Vertical axis: "outcome." Line 1: "immediate performance" — starts high at low friction, declines as friction increases. Line 2: "long-term retention" — starts low at low friction, rises as friction increases. The lines cross in the middle. Caption: "The conditions that feel productive are often the ones that teach the least. Bjork calls these desirable difficulties." Figure 4.2] -->
-
-![Figure 4.3 — Two-line chart. Horizontal axis: "friction in learning conditions" (low to high). Vertical axis: "outcome." Line 1: "immediate performance"](images/04-the-frictional-method-evidence-of-learning-when-ai-can-generate-the-artifact-fig-03.jpg)
-
 
 ---
 
@@ -122,9 +113,6 @@ Together, these seven moves produce what I call the Frictional record — the tr
 
 <!-- → [INFOGRAPHIC: The seven moves as a circular flow: predict → lock → work → observe → reflect → trace → calibrate → (back to predict). Each node has a one-line description and its primary failure mode. The lock node is visually emphasized — heavier border, different weight — with a caption: "This is the load-bearing element. Everything else depends on it." Figure 4.3] -->
 
-![Figure 4.4 — The seven moves as a circular flow: predict → lock → work → observe → reflect → trace → calibrate → (back to predict). Each node has a one-line description and its primary failure mode. The lock node is visually emphasized](images/04-the-frictional-method-evidence-of-learning-when-ai-can-generate-the-artifact-fig-04.jpg)
-
-
 ---
 
 ## The journal and its failure modes
@@ -140,19 +128,6 @@ The second is the **performative journal**. The student writes elaborate, well-f
 The Frictional method works under one condition: the entries are written in the moment, before observation, and the gap is allowed to stand. The method falls apart when either the prediction or the reflection is faked. We are explicit with students about this. The failure modes are identifiable. The grade is on whether the journal traces a real cognitive process — not whether the cognitive process was always correct.
 
 <!-- → [TABLE: Three-column comparison. Columns: "Retrospective journal" / "Performative journal" / "Authentic journal." Rows: surface appearance, timestamp pattern, prediction quality, gap analysis specificity, diagnostic tell for the grader. Useful for faculty calibration as well as student self-diagnosis. Figure 4.4] -->
-
-*Figure 4.5*
-
-| | **Property** | **Value** |
-|---|---|---|
-| **Surface appearance** | _fill in_ | _fill in_ |
-| **Timestamp pattern** | _fill in_ | _fill in_ |
-| **Prediction quality** | _fill in_ | _fill in_ |
-| **Gap analysis specificity** | _fill in_ | _fill in_ |
-| **Diagnostic tell for the grader. Useful for faculty calibration as well as student self-diagnosis. Figure 4.4** | _fill in_ | _fill in_ |
-
-: {.infographic-table}
-
 
 ---
 
@@ -184,9 +159,6 @@ The Frictional journal captures a coarser version of this signal: the timestamp 
 
 <!-- → [CHART: Scatter plot with two overlaid point clouds. Horizontal axis: item difficulty (1–5 scale). Vertical axis: time on task (minutes). Cloud 1, labeled "Genuine engagement": positive slope, moderate scatter. Cloud 2, labeled "Borrowed certainty": flat slope near zero, tight scatter. Caption: "Y₁ is the correlation between item difficulty and time on task. Genuine engagement produces a positive slope; borrowed certainty produces a flat one." Figure 4.5] -->
 
-![Figure 4.6 — Scatter plot with two overlaid point clouds. Horizontal axis: item difficulty (1–5 scale). Vertical axis: time on task (minutes). Cloud 1, labeled "Genuine engagement": positive slope, moderate scatter. Cloud 2, labeled "Borrowed certainty": flat slope near zero, tight scatter. Caption: "Y₁ is the correlation between item difficulty and time on task. Genuine engagement produces a positive slope](images/04-the-frictional-method-evidence-of-learning-when-ai-can-generate-the-artifact-fig-06.jpg)
-
-
 ### Y₂ — Error Trajectory Coherence (ETC)
 
 The dopamine prediction-error mechanism does not just fire at individual errors. It fires in a sequence that reflects the structure of the concept being learned. Each error is a prediction violation that updates the mental model. Because updates are cumulative, the error trajectory follows a path that mirrors the concept's internal structure. A student learning to debug a concurrent program makes errors about race conditions, then about locking strategies, then about deadlock avoidance — in a sequence that reflects how those ideas relate.
@@ -202,9 +174,6 @@ Genuine engagement produces elevated $Y_2$: errors follow conceptually meaningfu
 In the Frictional journal, the reflection move (move five) is the primary instrument for this signal. A structural reflection that identifies which specific assumption failed and why — as opposed to a generic "the AI surprised me" — is evidence of the conceptual adjacency structure being navigated in real time.
 
 <!-- → [IMAGE: Conceptual graph for a sample domain (e.g., Bayesian inference: nodes for prior, likelihood, posterior, base rate, Bayes' theorem). Two error trajectories overlaid: one that follows adjacency edges (genuine — labeled in one color), one that jumps randomly between non-adjacent nodes (borrowed — labeled in another color). Caption: "Y₂ measures whether a student's error sequence follows the graph structure of the domain." Figure 4.6] -->
-
-![Figure 4.7 — Conceptual graph for a sample domain (e.g., Bayesian inference: nodes for prior, likelihood, posterior, base rate, Bayes' theorem). Two error trajectories overlaid: one that follows adjacency edges (genuine](images/04-the-frictional-method-evidence-of-learning-when-ai-can-generate-the-artifact-fig-07.jpg)
-
 
 ### Y₃ — Cross-Context Transfer (CCT)
 
@@ -240,9 +209,6 @@ This component connects directly to Chapter 2's probability treatment. The stude
 
 <!-- → [CHART: Two calibration curves on the same axes. Horizontal axis: expressed confidence (0–1). Vertical axis: actual accuracy (0–1). Diagonal reference line = perfect calibration. Curve 1 (genuine learning): close to diagonal, slight overconfidence early that corrects over time. Curve 2 (borrowed certainty): systematically bowed above diagonal — high confidence, low accuracy. Caption: "Y₄ detects the direction and magnitude of miscalibration. Borrowed certainty produces a characteristic overconfidence signature." Figure 4.7] -->
 
-![Figure 4.8 — Two calibration curves on the same axes. Horizontal axis: expressed confidence (0–1). Vertical axis: actual accuracy (0–1). Diagonal reference line = perfect calibration. Curve 1 (genuine learning): close to diagonal, slight overconfidence early that corrects over time. Curve 2 (borrowed certainty): systematically bowed above diagonal](images/04-the-frictional-method-evidence-of-learning-when-ai-can-generate-the-artifact-fig-08.jpg)
-
-
 ### Y₅ — Social Knowledge Texture (SKT)
 
 Genuine encounter with material leaves a characteristic texture in social and discursive contexts. When a student has genuinely struggled with a concept, their discussion of it carries specific confusions, particular connections to their prior knowledge, questions that arose from real engagement. They can say where they got stuck, what the sticking point felt like, and what eventually shifted. This texture cannot be manufactured without having had the experience.
@@ -275,9 +241,6 @@ The Frictional journal's trace move (move six) — the longitudinal record over 
 
 <!-- → [CHART: Four-line chart showing performance over time (t₁, t₂, t₃). Two conditions × two student types. Genuine learning + spaced retrieval: retention curve with the characteristic bump at t₃. Genuine learning + no review: moderate decay. Borrowed certainty + spaced retrieval: steep decay regardless. Borrowed certainty + no review: steep decay. Caption: "Y₆ is the performance gap between spaced and unspaced conditions at long delay. Genuine learning produces the gap; borrowed certainty does not." Figure 4.8] -->
 
-![Figure 4.9 — Four-line chart showing performance over time (t₁, t₂, t₃). Two conditions × two student types. Genuine learning + spaced retrieval: retention curve with the characteristic bump at t₃. Genuine learning + no review: moderate decay. Borrowed certainty + spaced retrieval: steep decay regardless. Borrowed certainty + no review: steep decay. Caption: "Y₆ is the performance gap between spaced and unspaced conditions at long delay. Genuine learning produces the gap](images/04-the-frictional-method-evidence-of-learning-when-ai-can-generate-the-artifact-fig-09.jpg)
-
-
 ### Y₇ — Scaffolding Response Curve (SRC)
 
 Vygotsky's Zone of Proximal Development is a structural property of a genuinely developing mental model. A student with genuine partial understanding has a ZPD — a region of near-competence that targeted scaffolding can activate. If I give them a partial hint — one that points toward the relevant structure without solving the problem — the hint enables progress because there is existing partial structure for the hint to connect to. A full hint enables further progress, but the marginal gain from full hint over partial hint is small, because the partial hint found purchase in what was already there.
@@ -294,20 +257,7 @@ For the Frictional journal, the predict move (move one) implements a primitive v
 
 <!-- → [CHART: Bar chart with three bar groups: "no hint (h₀)," "partial hint (h₁)," "full hint (h₂)." Two series per group: genuine learning (dark) and borrowed certainty (light). Genuine learning: large jump from h₀ to h₁, small additional gain from h₁ to h₂ — the partial hint found purchase. Borrowed certainty: no gain from h₀ to h₁, large gain from h₁ to h₂ — nothing for the partial hint to connect to. Caption: "Y₇ measures the Zone of Proximal Development as a ratio. High Y₇ means partial structure exists; low Y₇ means it does not." Figure 4.9] -->
 
-![Figure 4.10 — Bar chart with three bar groups: "no hint (h₀)," "partial hint (h₁)," "full hint (h₂)." Two series per group: genuine learning (dark) and borrowed certainty (light). Genuine learning: large jump from h₀ to h₁, small additional gain from h₁ to h₂](images/04-the-frictional-method-evidence-of-learning-when-ai-can-generate-the-artifact-fig-10.jpg)
-
-
 <!-- → [TABLE: Seven components reference card — columns: component name, abbreviation, neurobiological basis, operational formula, genuine learning signature, borrowed certainty signature, primary data source, Frictional journal move that captures it. This table is the compact reference for the entire GLP section; designed for bookmark use across the course. Figure 4.10] -->
-
-*Figure 4.11*
-
-| | **Property** | **Value** |
-|---|---|---|
-| **Row 1** | _fill in_ | _fill in_ |
-| **Row 2** | _fill in_ | _fill in_ |
-
-: {.data-table}
-
 
 ---
 
@@ -328,9 +278,6 @@ Now let me come back to the line about gaming. A student who manufactures all se
 This is why the Frictional method does not have the structural vulnerability of artifact-based detection. Detection fights a moving target. The GLP asks the student to do a thing that, if done convincingly enough to count as gaming, *is* the thing.
 
 <!-- → [CHART: Grouped bar chart. Horizontal axis: the seven components (Y₁ through Y₇) plus a final group "All seven simultaneously." Vertical axis: estimated cost-to-game (arbitrary units, normalized so that cost-of-genuine-learning = 1.0). Each individual component: low cost (0.1–0.2). "All seven simultaneously": approaches 1.0. A horizontal reference line at 1.0 labeled "cost of genuine learning." Caption: "Gaming the ensemble costs approximately as much as doing the work. At that point, the gaming has become the learning." Figure 4.11] -->
-
-![Figure 4.12 — Grouped bar chart. Horizontal axis: the seven components (Y₁ through Y₇) plus...](images/04-the-frictional-method-evidence-of-learning-when-ai-can-generate-the-artifact-fig-12.jpg)
-
 
 ---
 
@@ -513,3 +460,26 @@ End with: a one-paragraph note on the cognitive risk of using AI to analyze AI �
 **Connection to previous chapters:** Chapters 1–3 told you what to look for. This chapter sets up the discipline that turns "looking for it" into evidence — predictions locked before observation, calibration computed after.
 
 **Preview of next chapter:** Chapter 5 turns to the agent's data layer. You'll reconstruct the epistemic frame of the dataset behind the agent (training data, retrieval corpus, system-prompt examples) and design a hidden-failure test of an assumption that the agent's developers almost certainly made and didn't write down.
+
+
+---
+
+## 🕰️ AI Wayback Machine
+
+The ideas in this chapter didn't appear from nowhere. **Lev Vygotsky** was theorizing that learning happens specifically in the gap between what you can do alone and what you can do with a more competent partner — long before the question became how to tell whether the AI is the partner or the substitute. Here's a prompt to find out more — and then make it better.
+
+**Run this:**
+
+```
+Who was Lev Vygotsky, and how does his Zone of Proximal Development connect to designing learning tasks where AI generates the artifact but the student still has to think? Keep it to three paragraphs. End with the single most surprising thing about his career or ideas.
+```
+
+→ Search **"Lev Vygotsky"** on Wikipedia after you run this. See what the model got right, got wrong, or left out.
+
+**Now make the prompt better.** Try one of these:
+
+- Ask it to explain the Zone of Proximal Development in plain language, as if you've never taken an education course
+- Ask it to compare Vygotsky's mediated learning to a Frictional assignment that resists clean AI completion
+- Add a constraint: "Answer as if you're writing a footnote explaining where the Frictional Method's psychology comes from"
+
+What changes? What gets better? What gets worse?

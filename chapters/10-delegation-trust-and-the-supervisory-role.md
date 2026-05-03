@@ -60,16 +60,6 @@ This is documentation work. It is not glamorous. It is the difference between a 
 
 <!-- → [TABLE: Side-by-side comparison of untestable vs. testable handoff conditions. Three pairs of examples across different pipeline types (loan scoring, medical triage, content moderation). Columns: domain / untestable version / testable version / what interpretation was pinned down. Students use this as a template for the rewrite exercise. Figure 10.1] -->
 
-*Figure 10.1*
-
-| | **Side-by-side comparison of untestable** | **Testable handoff conditions. Three pairs of examples across different pipeline types (loan scoring, medical triage, content moderation). Columns: domain / untestable version / testable version / what interpretation was pinned down. Students use this as a template for the rewrite exercise. Figure 10.1** |
-|---|---|---|
-| **Row 1** | _fill in_ | _fill in_ |
-| **Row 2** | _fill in_ | _fill in_ |
-
-: {.infographic-table}
-
-
 ---
 
 ## The Five Supervisory Capacities as pipeline jobs
@@ -89,16 +79,6 @@ There are five supervisory capacities I introduced in Chapter 1, and this is the
 Each of these is a job in a pipeline, with a documented operational form. The first team in the opening had no documented operational forms. The second team had all of them.
 
 <!-- → [TABLE: The five supervisory capacities as pipeline jobs — columns: capacity name / operational form in a pipeline / the artifact that documents it / failure mode if absent. Students should be able to audit a pipeline against this table. Figure 10.2] -->
-
-*Figure 10.2*
-
-| | **Property** | **Value** |
-|---|---|---|
-| **Row 1** | _fill in_ | _fill in_ |
-| **Row 2** | _fill in_ | _fill in_ |
-
-: {.comparison-table}
-
 
 ---
 
@@ -122,19 +102,6 @@ The five questions sort sub-tasks into three buckets: appropriate for AI executi
 
 <!-- → [TABLE: The Boondoggle Score as a decision worksheet — rows: the five questions (verification cost, stakes, distribution match, reversibility, audit trail clarity). Columns: question / what low risk looks like / what high risk looks like / which delegation bucket a high-risk answer pushes toward. Designed as a fillable worksheet for each sub-task. Figure 10.3] -->
 
-*Figure 10.3*
-
-| | **Property** | **Value** |
-|---|---|---|
-| **The five questions (verification cost** | _fill in_ | _fill in_ |
-| **Stakes** | _fill in_ | _fill in_ |
-| **Distribution match** | _fill in_ | _fill in_ |
-| **Reversibility** | _fill in_ | _fill in_ |
-| **Audit trail clarity). Columns: question / what low risk looks like / what high risk looks like / which delegation bucket a high-risk answer pushes toward. Designed as a fillable worksheet for each sub-task. Figure 10.3** | _fill in_ | _fill in_ |
-
-: {.data-table}
-
-
 ---
 
 ## The full delegation map structure
@@ -155,17 +122,6 @@ Items 1–4 are standard engineering documentation. Items 5–8 are the supervis
 The test for completeness: can an engineer who did not build the pipeline read the map and determine, for any given case, whether each step was executed correctly? If not, one of the eight items is missing or untestable.
 
 <!-- → [TABLE: Delegation map eight-item structure — two columns: item name and "what 'missing' looks like in practice." Rows for items 1–8. Items 5–8 each have a brief note explaining why they are the supervisory additions and what a pipeline loses when each is absent. Designed as a checklist for reviewing any pipeline map. Figure 10.4] -->
-
-*Figure 10.4*
-
-| | **Property** | **Value** |
-|---|---|---|
-| **Delegation map eight-item structure — two columns: item name** | _fill in_ | _fill in_ |
-| **"what 'missing' looks like in practice." Rows for items 1–8. Items 5–8 each have a brief note explaining why they are the supervisory additions** | _fill in_ | _fill in_ |
-| **What a pipeline loses when each is absent. Designed as a checklist for reviewing any pipeline map. Figure 10.4** | _fill in_ | _fill in_ |
-
-: {.comparison-table}
-
 
 ---
 
@@ -202,9 +158,6 @@ Now Gru has something to work with. Notice what the sentence encodes: the word *
 **Why this is a human step.** Gru asks the question, but the answer requires me. An AI could generate plausible-sounding sentences of this form. It cannot determine whether *claim-linked* is the right specification for my deployment — whether researchers using this tool need sentence-level citations or paragraph-level, whether the summary structure matches how researchers actually read papers in this domain, whether the word *factual assertion* is the right boundary for what gets cited. Those are domain judgments. They determine the correctness criteria for every subsequent step. The problem formulation is not a form to fill in. It is the most consequential decision in the project, and it is irreducibly mine.
 
 <!-- → [IMAGE: Gru /v0 conversation flow — user types /v0, Gru asks three questions in sequence, user provides weak answer (shown with annotation "names a goal, not a thing"), user provides strong answer (shown with annotation "names thing / insertion point / output"). Caption: "The /v0 gate produces one sentence. That sentence is the engineering specification everything else is tested against." Figure 10.5] -->
-
-![Figure 10.5 — Gru /v0 conversation flow](images/10-delegation-trust-and-the-supervisory-role-fig-05.jpg)
-
 
 ### Step 2 — Intake with /v1
 
@@ -255,16 +208,6 @@ After reviewing the /v1 summary, I commit to three principles:
 
 <!-- → [TABLE: Architecture principles for the Paper Summarizer — columns: principle name, design commitment, one decision that honors it, one decision that violates it, failure state if ignored. Figure 10.6] -->
 
-*Figure 10.6*
-
-| | **Property** | **Value** |
-|---|---|---|
-| **Row 1** | _fill in_ | _fill in_ |
-| **Row 2** | _fill in_ | _fill in_ |
-
-: {.comparison-table}
-
-
 ### Step 4 — Core user flows with /v3
 
 Now the primary flow, written at the interaction level:
@@ -290,9 +233,6 @@ The administrative flow: I need a way to see which extractions are being flagged
 **Why the flow requires human judgment to write.** Step 5 and step 6 are the load-bearing human steps. The reason they are human steps cannot be determined by AI: it requires knowing that researchers cannot rely on AI to evaluate domain-specific methodological quality. A language model may correctly extract the claim "we used a random effects model" and produce a citation. It cannot flag that a random effects model is inappropriate for this study design — that judgment requires domain knowledge the model does not reliably have. That is why step 6 is a human step, and why the handoff condition for step 5 must specify what the researcher is checking, not just that checking occurred.
 
 <!-- → [IMAGE: Happy path flow diagram for the Paper Summarizer — seven steps as labeled boxes in sequence, color-coded by owner: gray for AI steps (2, 3, 4), white with border for human steps (5, 6), neutral for boundary steps (1, 7). Annotations at the two transitions between AI and human ownership: "handoff condition must be testable here." Caption: "The flow shows where authority changes hands. Those transitions are where the delegation map must be tightest." Figure 10.7] -->
-
-![Figure 10.7 — Happy path flow diagram for the Paper Summarizer](images/10-delegation-trust-and-the-supervisory-role-fig-07.jpg)
-
 
 ### Step 5 — Generating the Boondoggle Score with /claude
 
@@ -511,9 +451,6 @@ Flag: No executive integration step is documented. If this system is used in a t
 
 <!-- → [IMAGE: Boondoggle Score as a visual timeline — six steps arranged horizontally with alternating Claude/Human shading. Claude steps labeled with their task type (parsing, extraction, formatting); Human steps labeled with their supervisory capacity ([PF], [PA], [IJ]). Red flags at the two highest-risk handoffs. A footer bar shows the supervisory capacity distribution with [EI] explicitly flagged as absent. Caption: "Three of six steps are irreducibly human. The AI does the pattern work. The human does the judgment work. The EI gap is the flag." Figure 10.8] -->
 
-![Figure 10.8 — Boondoggle Score as a visual timeline](images/10-delegation-trust-and-the-supervisory-role-fig-08.jpg)
-
-
 ### What the Boondoggle Score reveals
 
 Look at where the human steps fall in the score. Step 1 is human because the taxonomy requires domain knowledge. Step 4 is human because citation accuracy requires domain judgment. Step 6 is human because the researcher must exercise interpretive judgment about what the summary will communicate to a peer.
@@ -542,9 +479,6 @@ In the Paper Summarizer, the trust calibration question is specific: over the la
 
 <!-- → [CHART: Three-panel trust calibration visualization. Panel 1 (overtrust): researcher correction rate near zero, AI error rate 15% — gap labeled "uncaught errors, discovered later by affected user". Panel 2 (undertrust): researcher correction rate 60%, AI error rate 5% — gap labeled "wasted effort, backlash". Panel 3 (calibrated): correction rate tracks error rate, corrections concentrated in LOW-confidence entries. Horizontal axis: cases processed over time. Caption: "Calibrated trust is a property of the deployment, not the model. It requires monitoring the audit trail, not just running the pipeline." Figure 10.9] -->
 
-![Figure 10.9 — Three-panel trust calibration visualization. Panel 1 (overtrust): researcher correction rate near zero, AI error rate 15%](images/10-delegation-trust-and-the-supervisory-role-fig-09.jpg)
-
-
 ---
 
 ## The AI Use Disclosure as supervisory log
@@ -568,15 +502,6 @@ For the Paper Summarizer, the Disclosure for a single processed paper would read
 For the Disclosure to function as a supervisory log rather than a compliance checkbox, it has to be four things: granular (per step), honest (documenting corrections and gaps, not just smooth handoffs), time-stamped, and tied to evidence. The Methods correction in Step 3 is not embarrassing. It is the data point that tells you the pipeline caught a domain-critical qualification that would have misled a downstream reader. That is the system working. The Disclosure makes it visible.
 
 <!-- → [TABLE: AI Use Disclosure format for one step — rows matching the Paper Summarizer Step 3 example. Columns: field name / what goes here / what "missing" or "vague" looks like. Bottom row annotated: "The correction is not embarrassing. It is the data that proves the pipeline is working." Designed as a per-step form template. Figure 10.10] -->
-
-*Figure 10.10*
-
-| | **Property** | **Value** |
-|---|---|---|
-| **Field name / what goes here / what "missing" or "vague" looks like. Bottom row annotated: "The correction is not embarrassing. It is the data that proves the pipeline is working." Designed as a per-step form template. Figure 10.10** | _fill in_ | _fill in_ |
-
-: {.data-table}
-
 
 ---
 
@@ -744,3 +669,26 @@ Plus a one-paragraph note on the deployment's TRUST CALIBRATION failure mode: is
 **Connection to previous chapters:** The cases from Chapter 9 are the evidence base. The bias mechanisms from Chapter 3 tell you which handoff conditions matter most. The fairness defense from Chapter 7 names which handoff conditions affect which populations.
 
 **Preview of next chapter:** Chapter 11 turns the casebook outward — you'll build a dashboard of your findings, in two versions: an honest one and a deliberately misleading one. The misleading version teaches you what the honest one is doing structurally.
+
+
+---
+
+## 🕰️ AI Wayback Machine
+
+The ideas in this chapter didn't appear from nowhere. **Lisanne Bainbridge** named the central paradox of supervising automated systems — the more reliably the machine runs, the rarer and harder the human's job becomes — in 1983, decades before the question got asked again about AI. Here's a prompt to find out more — and then make it better.
+
+**Run this:**
+
+```
+Who was Lisanne Bainbridge, and how does her "Ironies of Automation" connect to the supervisory role a person actually has when they're delegating to an AI tool that mostly works? Keep it to three paragraphs. End with the single most surprising thing about her career or ideas.
+```
+
+→ Search **"Lisanne Bainbridge"** on Wikipedia after you run this. See what the model got right, got wrong, or left out.
+
+**Now make the prompt better.** Try one of these:
+
+- Ask it to explain the central irony of automation in plain language, as if you've never thought about what supervision actually requires
+- Ask it to compare Bainbridge's 1983 industrial-process examples to delegating to a modern AI assistant
+- Add a constraint: "Answer as if you're writing a sidebar in a chapter on delegation and trust"
+
+What changes? What gets better? What gets worse?

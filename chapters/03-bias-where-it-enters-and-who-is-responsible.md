@@ -51,17 +51,6 @@ The ten bias mechanisms covered in this chapter are ten distinct ways of introdu
 
 <!-- → [INFOGRAPHIC: Biased vs. unbiased estimator convergence. Two panels side by side. Left: unbiased estimator — as sample size increases, estimates scatter symmetrically around true θ, converging to it. Right: biased estimator — estimates converge confidently to a value offset from θ; the offset does not shrink with more data. Caption: "More data narrows the scatter. It does not move the systematic offset." This anchors the core claim that more data cannot fix a biased estimator.] -->
 
-*Figure 3.1*
-
-| | **Biased** | **Unbiased estimator convergence. Two panels side by side. Left: unbiased estimator** |
-|---|---|---|
-| **Biased vs. unbiased estimator convergence. Two panels side by side. Left: unbiased estimator — as sample size increases** | _fill in_ | _fill in_ |
-| **Estimates scatter symmetrically around true θ** | _fill in_ | _fill in_ |
-| **Converging to it. Right: biased estimator — estimates converge confidently to a value offset from θ** | _fill in_ | _fill in_ |
-
-: {.infographic-table}
-
-
 ---
 
 ## Ten mechanisms, distinguished
@@ -158,9 +147,6 @@ A hiring model trained on ten years of promotion records at a company that histo
 
 <!-- → [INFOGRAPHIC: Historical bias mechanism. A timeline showing: historical world with discriminatory patterns → data collection (accurate recording) → model training → deployment → perpetuation of historical patterns. Marked clearly: bias lives in the historical patterns, not the recording step. A counterfactual "fair world" branch shows what different labels would have looked like.] -->
 
-![Figure 3.2 — Historical bias mechanism. A timeline showing: historical world with discrimi...](images/03-bias-where-it-enters-and-who-is-responsible-fig-02.jpg)
-
-
 The practical mitigations are: finding a less-biased proxy for the outcome; applying fairness constraints during training that penalize perpetuation of historical disparities; or using time-sensitive weighting to de-emphasize older records from periods with more discriminatory practice. None of these fully solve the problem. They reduce the leverage of the historical signal on current predictions.
 
 ### Implicit bias
@@ -172,9 +158,6 @@ Implicit bias is the ambient background from which several other types emerge. I
 The most tractable algorithmic intervention is demographic parity auditing after the model is built: test whether $P(\hat{Y}=1|A=0) \approx P(\hat{Y}=1|A=1)$ across protected groups. Disparities in this test are not proof of implicit bias — they might reflect real differences in outcome base rates — but they are a flag that requires investigation. The systemic interventions are diverse teams (homogeneous teams share the same blind spots), structured decision processes (structure reduces the surface area for implicit judgment), and continuous auditing.
 
 <!-- → [INFOGRAPHIC: Pipeline entry-point map for all ten bias types. A horizontal pipeline showing stages: Research Design → Data Collection → Labeling / Annotation → Model Training → Model Output → Deployment Context → Final Outcome. Each of the ten bias types is positioned as an arrow entering the pipeline at its primary stage — confirmation bias at Research Design, selection bias and sampling bias at Data Collection, observer bias and data coding bias and self-report bias at Labeling, data entry bias spanning Collection to Labeling, historical bias entering at Labeling (labels reflect historical world), implicit bias shown as a diffuse overlay across all human-judgment stages, publication bias at a Research Synthesis branch, structural bias at Deployment Context. Student should be able to glance at this and locate any type's primary entry point.] -->
-
-![Figure 3.3 — Pipeline entry-point map for all ten bias types. A horizontal pipeline showing stages: Research Design → Data Collection → Labeling / Annotation → Model Training → Model Output → Deployment Context → Final Outcome. Each of the ten bias types is positioned as an arrow entering the pipeline at its primary stage](images/03-bias-where-it-enters-and-who-is-responsible-fig-03.jpg)
-
 
 ---
 
@@ -221,18 +204,6 @@ This is why the leverage analysis procedure in the later section asks you to dra
 
 <!-- → [TABLE: Bias type interaction matrix. Rows and columns both list the ten bias types. Each cell answers: "If type A is present, does it make type B more likely, less likely, or independent?" Fill in known compound patterns: selection bias × historical bias = amplifying (more data from discriminatory period); observer bias × data coding bias = amplifying (annotator priors become categorical rules); confirmation bias × publication bias = amplifying (study designed to confirm + only positive results published). Empty or "independent" cells for pairs without known interactions. Purpose: student uses this to anticipate which types to check for when one type is already confirmed.] -->
 
-*Figure 3.4*
-
-| | **Property** | **Value** |
-|---|---|---|
-| **"If type A is present** | _fill in_ | _fill in_ |
-| **Does it make type B more likely** | _fill in_ | _fill in_ |
-| **Less likely** | _fill in_ | _fill in_ |
-| **Or independent?" Fill in known compound patterns: selection bias × historical bias = amplifying (more data from discriminatory period)** | _fill in_ | _fill in_ |
-
-: {.data-table}
-
-
 ---
 
 ## The dataset as epistemic artifact
@@ -259,9 +230,6 @@ Which means the choice between fairness metrics is not a technical choice. It is
 
 <!-- → [FIGURE: Visual proof sketch of the fairness impossibility. Show two groups with different base rates (30% vs 50%), demonstrate with concrete numbers why achieving equal false positive rates forces calibration disparity and vice versa. Student should see the arithmetic contradiction, not just be told it exists.] -->
 
-![Figure 3.5 — Visual proof sketch of the fairness impossibility. Show two groups with diffe...](images/03-bias-where-it-enters-and-who-is-responsible-fig-05.jpg)
-
-
 *Figure 3.2 — The fairness impossibility.*
 
 But there is something even deeper in the COMPAS case. The data being analyzed was not "did this person commit another crime." It was "was this person re-arrested." Those are not the same. Re-arrest is a function of crime *and* policing. If policing is unevenly distributed across populations, then re-arrest is an uneven measurement of crime. And every model trained on that data inherits the unevenness. This is historical bias and label bias operating simultaneously — the labels accurately record re-arrest, which is itself a biased measurement of the underlying variable the model is supposed to predict.
@@ -270,17 +238,6 @@ This is what I mean by reading the dataset like a historian. The deepest dataset
 
 <!-- → [TABLE: Fairness impossibility. Three rows: fairness criterion, formal definition, what it requires. Row 1: calibration parity — equal PPV across groups. Row 2: equal FPR — equal false positive rates. Row 3: equal FNR — equal false negative rates. Final row: "All three simultaneously" → "Only achievable when base rates are equal." Student should be able to diagnose which criterion any given audit is using.] -->
 
-*Figure 3.6*
-
-| | **Property** | **Value** |
-|---|---|---|
-| **Fairness criterion** | _fill in_ | _fill in_ |
-| **Formal definition** | _fill in_ | _fill in_ |
-| **What it requires. Row 1: calibration parity — equal PPV across groups. Row 2: equal FPR — equal false positive rates. Row 3: equal FNR — equal false negative rates. Final row: "All three simultaneously" → "Only achievable when base rates are equal." Student should be able to diagnose which criterion any given audit is using.** | _fill in_ | _fill in_ |
-
-: {.data-table}
-
-
 ---
 
 ## Pearl's Ladder — Rungs 1 and 2
@@ -288,9 +245,6 @@ This is what I mean by reading the dataset like a historian. The deepest dataset
 Now we need a tool. The tool is due to Judea Pearl, and it is, in my judgment, the single most useful conceptual instrument in this book. He calls it a ladder of causal reasoning, with three rungs. We are going to use the first two now, and the third in Chapter 8.
 
 <!-- → [FIGURE: Pearl's ladder of causal reasoning. A three-rung ladder with Rung 1 (association / seeing), Rung 2 (intervention / doing), Rung 3 (counterfactual / imagining). Each rung shows: the question it asks, the formal notation, the canonical example, and the kind of AI fairness question it can answer. Rung 3 visibly "coming soon" — grayed out, labeled "Chapter 8."] -->
-
-![Figure 3.7 — Pearl's ladder of causal reasoning. A three-rung ladder with Rung 1 (association / seeing), Rung 2 (intervention / doing), Rung 3 (counterfactual / imagining). Each rung shows: the question it asks, the formal notation, the canonical example, and the kind of AI fairness question it can answer. Rung 3 visibly "coming soon"](images/03-bias-where-it-enters-and-who-is-responsible-fig-07.jpg)
-
 
 *Figure 3.3 — Pearl's ladder of causal reasoning.*
 
@@ -310,15 +264,6 @@ Most deployed bias-mitigation pipelines work on Rung 1. They adjust the conditio
 
 <!-- → [TABLE: Rung 1 vs Rung 2 — same fairness claim at two rungs. Three columns: the fairness question, Rung 1 formulation (observational), Rung 2 formulation (interventional). Four rows covering: loan denial by race; model error rates by group; recidivism risk score; hiring outcome. For each row the student sees the Rung 1 metric that gets reported and the Rung 2 question it cannot answer. Drives home why equal Rung 1 metrics don't certify fairness and why a Rung 1 disparity doesn't always mean causal discrimination.] -->
 
-*Figure 3.8*
-
-| | **Rung 1** | **Rung 2** |
-|---|---|---|
-| **Loan denial by race** | _fill in_ | _fill in_ |
-
-: {.infographic-table}
-
-
 ---
 
 ## Leverage analysis — finding the high-leverage intervention point
@@ -330,9 +275,6 @@ Each team intervened. They intervened at different points in the causal chain fr
 But the doings had different leverage. Imagine the causal graph for how the bias appears in the deployed outcome. The protected attribute sits at the top. Below it are proxies — features in the data that correlate with the protected attribute. Below those, the features the model uses. Below those, the model's output. Below that, the deployment context — the reviewer, the threshold, the appeal process. Below that, the final outcome that lands on a real person's life.
 
 <!-- → [FIGURE: Causal graph of a biased deployment pipeline. Layered flow: Protected attribute → Proxies (features correlated with the attribute) → Model input features → Model parameters → Model output → Deployment context (reviewer / threshold / appeals) → Final outcome. Three colored overlays showing where Team A's intervention acts, Team B's acts, and Team C's acts. Diagram makes visible why Team A and B leave the deployment-context path open.] -->
-
-![Figure 3.9 — Causal graph of a biased deployment pipeline. Layered flow: Protected attribu...](images/03-bias-where-it-enters-and-who-is-responsible-fig-09.jpg)
-
 
 *Figure 3.4 — Causal graph of a biased deployment pipeline.*
 
@@ -352,17 +294,6 @@ The procedure for leverage analysis, in working form:
 4. The highest-leverage intervention is the one that blocks the largest fraction of the bias-carrying paths, ideally without blocking paths the deployment requires for its core function.
 
 <!-- → [INFOGRAPHIC: Leverage analysis decision flowchart. Four sequential steps: (1) Draw the causal graph — boxes for each variable, arrows showing causal flow. (2) Enumerate paths from protected attribute to outcome — list each distinct route. (3) For each candidate intervention, shade the paths it blocks vs. leaves open. (4) Select the intervention that blocks the most bias-carrying paths. Annotate with the Teams A/B/C example: show Team A blocking the model-parameter path only, Team B blocking the underrepresentation path only, Team C blocking the deployment-context path — with the proportion of total bias-carrying flow each intervention captures. Student should be able to follow this flowchart as a working tool on a new system.] -->
-
-*Figure 3.10*
-
-| | **Leverage analysis decision flowchart. Four sequential steps: (1) Draw the causal graph — boxes for each variable, arrows showing causal flow. (2) Enumerate paths from protected attribute to outcome — list each distinct route. (3) For each candidate intervention, shade the paths it blocks** | **Leaves open. (4) Select the intervention that blocks the most bias-carrying paths. Annotate with the Teams A/B/C example: show Team A blocking the model-parameter path only, Team B blocking the underrepresentation path only, Team C blocking the deployment-context path** |
-|---|---|---|
-| **Show Team A blocking the model-parameter path only** | _fill in_ | _fill in_ |
-| **Team B blocking the underrepresentation path only** | _fill in_ | _fill in_ |
-| **Team C blocking the deployment-context path — with the proportion of total bias-carrying flow each intervention captures. Student should be able to follow this flowchart as a working tool on a new system.** | _fill in_ | _fill in_ |
-
-: {.infographic-table}
-
 
 This procedure is unromantic. It is also the difference between bias mitigation that works and bias mitigation that produces conference papers and persistent disparities.
 
@@ -554,3 +485,26 @@ End with: a one-page "Bias & Leverage Brief" for my casebook. Include the DAG, t
 **Connection to previous chapters:** Chapter 1 named the supervisory capacity gap. Chapter 2 quantified the trust deficit. This chapter locates *where in the pipeline* the gap originates — which is what the rest of the validation toolkit (Chs 5–9) will probe.
 
 **Preview of next chapter:** Chapter 4 sets up your Frictional journal — the prediction-lock log that will accompany every red-team case you collect, providing the verifiable provenance that proves YOU did the analysis (not the AI you're using to help analyze).
+
+
+---
+
+## 🕰️ AI Wayback Machine
+
+The ideas in this chapter didn't appear from nowhere. **Latanya Sweeney** ran controlled experiments showing how everyday algorithms encode racial bias — and identified the leakage points decades before "algorithmic accountability" was a research field. Here's a prompt to find out more — and then make it better.
+
+**Run this:**
+
+```
+Who is Latanya Sweeney, and how do her studies on data re-identification and discriminatory online ads connect to the question of where bias enters an AI pipeline and who bears responsibility for it? Keep it to three paragraphs. End with the single most surprising thing about her career or ideas.
+```
+
+→ Search **"Latanya Sweeney"** on Wikipedia after you run this. See what the model got right, got wrong, or left out.
+
+**Now make the prompt better.** Try one of these:
+
+- Ask it to explain "k-anonymity" in plain language, as if you've never read a privacy paper
+- Ask it to compare Sweeney's name-based ad-bias study to a bias audit you could run on a deployed AI system today
+- Add a constraint: "Answer as if you're writing an opening case for a chapter on where bias enters"
+
+What changes? What gets better? What gets worse?

@@ -66,16 +66,6 @@ These three look like they should all be compatible. They are not.
 
 <!-- → [TABLE: Three-column definition reference table — columns: metric name (with alias), what it measures (one sentence), what it is a statement about (outputs / errors / probability honesty), values claim embedded. Designed for student reference during the arithmetic section. Figure 7.1] -->
 
-*Figure 7.1*
-
-| | **Property** | **Value** |
-|---|---|---|
-| **Row 1** | _fill in_ | _fill in_ |
-| **Row 2** | _fill in_ | _fill in_ |
-
-: {.data-table}
-
-
 ---
 
 ## The arithmetic
@@ -110,27 +100,7 @@ I want you to sit with this for a moment. The three definitions all sound reason
 
 <!-- → [IMAGE: Three nodes (demographic parity, equalized odds, calibration parity) arranged in a triangle. Between each pair of nodes, an arrow labeled with what breaks when both are required simultaneously given differing base rates. At the center: "base rates differ." Caption: "You can satisfy any two. The third breaks. The triangle is the theorem." Figure 7.2] -->
 
-![Figure 7.2 — Three nodes (demographic parity, equalized odds, calibration parity) arranged...](images/07-fairness-metrics-choosing-a-definition-and-defending-it-fig-02.jpg)
-
-
 <!-- → [TABLE: Worked arithmetic table with base rates 0.6 / 0.3. Rows: base rate, threshold, true-positive rate, false-positive rate, PPV, positive prediction rate. Two columns: group A, group B. Two versions side by side: one satisfying calibration (showing equalized-odds violation), one satisfying equalized odds (showing calibration violation). The student should see the numbers, not just the argument. Figure 7.3] -->
-
-*Figure 7.3*
-
-| | **Property** | **Value** |
-|---|---|---|
-| **Base rate** | _fill in_ | _fill in_ |
-| **Threshold** | _fill in_ | _fill in_ |
-| **True-positive rate** | _fill in_ | _fill in_ |
-| **False-positive rate** | _fill in_ | _fill in_ |
-| **PPV** | _fill in_ | _fill in_ |
-| **Positive prediction rate. Two columns: group A** | _fill in_ | _fill in_ |
-| **Group B. Two versions side by side: one satisfying calibration (showing equalized-odds violation)** | _fill in_ | _fill in_ |
-| **One satisfying equalized odds (showing calibration violation). The student should see the numbers** | _fill in_ | _fill in_ |
-| **Not just the argument. Figure 7.3** | _fill in_ | _fill in_ |
-
-: {.data-table}
-
 
 ---
 
@@ -145,15 +115,6 @@ Northpointe — the maker of COMPAS — responded that the tool was calibrated. 
 Both claims were true. They were measuring different fairness properties, and the underlying base rates of re-arrest in the available data differed across racial groups. The impossibility theorem says, given that base-rate difference, you cannot have both. ProPublica and Northpointe were not having a factual disagreement that more data could settle. They were having a values disagreement about which definition of fairness should win.
 
 <!-- → [TABLE: COMPAS case mapped to the three metrics — rows: metric name / what ProPublica measured / what Northpointe measured / whether each claim was factually accurate / the values claim each embeds. Caption: "Both sides were right about the numbers. The disagreement was about which numbers should matter." Figure 7.4] -->
-
-*Figure 7.4*
-
-| | **Property** | **Value** |
-|---|---|---|
-| **Metric name / what ProPublica measured / what Northpointe measured / whether each claim was factually accurate / the values claim each embeds. Caption: "Both sides were right about the numbers. The disagreement was about which numbers should matter." Figure 7.4** | _fill in_ | _fill in_ |
-
-: {.data-table}
-
 
 ---
 
@@ -192,9 +153,6 @@ This is both the power and the crux of individual fairness. The $(D, d)$-Lipschi
 There is also an approximation issue. For many models, verifying that the Lipschitz condition holds is computationally hard — you would need to check all pairs of individuals, and the check requires knowing $M(x)$ and $M(y)$ for the full distribution over outcomes. In practice, individual fairness is often approximated by auditing a sample of similar pairs and checking whether the model's outputs diverge.
 
 <!-- → [IMAGE: Two-panel illustration. Left: two applicants with identical financial features but different zip codes — labeled with d(x,y) small under financial-only metric. Right: same two applicants under a d that includes zip code distance — d(x,y) large. Each panel shows what the Lipschitz condition permits for D(M(x), M(y)). Caption: "The Lipschitz condition bounds the output difference by the input similarity. The fairness guarantee is only as good as the similarity metric." Figure 7.5] -->
-
-![Figure 7.5 — Two-panel illustration. Left: two applicants with identical financial features but different zip codes](images/07-fairness-metrics-choosing-a-definition-and-defending-it-fig-05.jpg)
-
 
 ### Fairness through awareness vs. unawareness
 
@@ -250,16 +208,6 @@ Counterfactual fairness is satisfied if $\hat{Y}$ has the same distribution unde
 
 <!-- → [INFOGRAPHIC: Three-step counterfactual fairness procedure — Step 1 (Abduction): observed X=x, A=a → infer distribution of U. Step 2 (Action): intervene to set A=a', hold U fixed. Step 3 (Prediction): forward-propagate through causal model → compute distribution of Ŷ under A=a'. Side-by-side comparison of Ŷ distributions: if equal, fairness is satisfied; if different, fairness is violated. Caption: "Counterfactual fairness asks: what would have happened to this individual under a different sensitive attribute value, holding their background fixed?" Figure 7.6] -->
 
-*Figure 7.6*
-
-| | **Property** | **Value** |
-|---|---|---|
-| **Row 1** | _fill in_ | _fill in_ |
-| **Row 2** | _fill in_ | _fill in_ |
-
-: {.infographic-table}
-
-
 A worked example. Suppose a model predicts loan default. The causal structure is: $A$ (race) $\to$ $E$ (educational credential, which is causally influenced by race through historical access to education) $\to$ $Y$ (default). The direct path $A \to \hat{Y}$ and the indirect path $A \to E \to \hat{Y}$ are both present.
 
 Counterfactual fairness asks: if this individual had been white instead of Black, holding their background variables $U$ fixed, would the predicted default probability change? If $E$ is in the model and $E$ is causally downstream of $A$, then counterfactually changing $A$ would also change $E$, and the prediction would change. Counterfactual fairness is violated.
@@ -267,9 +215,6 @@ Counterfactual fairness asks: if this individual had been white instead of Black
 The remedy is to exclude variables that are causally downstream of the sensitive attribute along paths we consider illegitimate. Which paths are illegitimate is — again — a values question the mathematics cannot answer.
 
 <!-- → [IMAGE: Causal graph with nodes: A (sensitive attribute / race), E (education, mediator causally downstream of A), C (confounder affecting both A and default risk), Y (default). Three labeled paths: direct (A → Y), indirect (A → E → Y), spurious (A ← C → Y). Caption: "Observational metrics conflate all three paths. Counterfactual fairness targets specific paths. The choice of which paths are illegitimate is a values decision." Figure 7.7] -->
-
-![Figure 7.7 — Causal graph with nodes: A (sensitive attribute / race), E (education, mediat...](images/07-fairness-metrics-choosing-a-definition-and-defending-it-fig-07.jpg)
-
 
 ### What causal fairness requires that statistical fairness does not
 
@@ -308,9 +253,6 @@ The parameter $\alpha$ controls sensitivity: low $\alpha$ values weight differen
 
 <!-- → [CHART: Three-panel chart showing the GE index for the same benefit distribution under α=0, α=1, α=2. Each panel shows which individuals' deviations are weighted most heavily — bottom for α=0, uniform for α=1, top for α=2. Caption: "The α parameter shifts attention across the distribution. Low α catches inequity at the bottom; high α catches it at the top." Figure 7.8] -->
 
-![Figure 7.8 — Three-panel chart showing the GE index for the same benefit distribution under α=0, α=1, α=2. Each panel shows which individuals' deviations are weighted most heavily](images/07-fairness-metrics-choosing-a-definition-and-defending-it-fig-08.jpg)
-
-
 ### The decomposition
 
 The most powerful property of the GE index for fairness analysis is its exact decomposition into within-group and between-group components. Let the population be partitioned into groups $g = 1, \ldots, G$ with sizes $n_g$ and group mean benefits $\mu_g$. Then:
@@ -324,15 +266,6 @@ This decomposition says: *total unfairness equals the sum of unfairness within e
 A group-fairness audit catches only the between-group term. An individual-fairness audit (via the Lipschitz condition) catches the within-group term for pairs of similar individuals. The GE decomposition catches both simultaneously, and — crucially — it tells you *how much* of the total unfairness comes from each source. That ratio affects the remedy: if most unfairness is between-group, group-level intervention (reweighting, threshold adjustment) is the right tool. If most unfairness is within-group, the model's treatment of individuals within each group is the problem.
 
 <!-- → [INFOGRAPHIC: GE decomposition stacked bar — total GE divided into between-group segment (left, darker) and within-group segments for each group g (right, lighter, subdivided). Arrows from each segment to the corresponding fairness concept: between-group → group metrics; within-group → individual fairness (Lipschitz). Caption: "The GE decomposition is the only standard measure that quantifies both simultaneously and tells you how much of the total comes from each source." Figure 7.9] -->
-
-*Figure 7.9*
-
-| | **Property** | **Value** |
-|---|---|---|
-| **Between-group → group metrics** | _fill in_ | _fill in_ |
-
-: {.infographic-table}
-
 
 ### What the GE Index does not do
 
@@ -356,17 +289,6 @@ The toolkit is a way to implement a values choice. It does not absolve you of ma
 
 <!-- → [TABLE: Three-family toolkit comparison — columns: family, mechanism, typical target metric, key advantage, key limitation. Rows: pre-processing (data transformation), in-processing (algorithmic constraint), post-processing (output calibration). Footer row: "What none of them do: resolve the impossibility theorem or reach upstream structural bias." Figure 7.10] -->
 
-*Figure 7.10*
-
-| | **Property** | **Value** |
-|---|---|---|
-| **Pre-processing (data transformation)** | _fill in_ | _fill in_ |
-| **In-processing (algorithmic constraint)** | _fill in_ | _fill in_ |
-| **Post-processing (output calibration). Footer row: "What none of them do: resolve the impossibility theorem or reach upstream structural bias." Figure 7.10** | _fill in_ | _fill in_ |
-
-: {.infographic-table}
-
-
 ---
 
 ## The defense as deliverable
@@ -385,9 +307,6 @@ The deliverable is a *defended choice*. It has the following structure, and you 
 6. **Name what would change your mind.** What evidence or argument would lead you to revise the choice.
 
 <!-- → [INFOGRAPHIC: The defended-choice structure as a six-box scaffold — boxes labeled (1) deployment specification, (2) base-rate distribution and provenance, (3) candidate metrics computed and shown, (4) where metrics disagree and values claim each embeds, (5) stated choice with justification, (6) what would change your mind. Designed as a reusable assignment template. Figure 7.11] -->
-
-![Figure 7.11 — The defended-choice structure as a six-box scaffold](images/07-fairness-metrics-choosing-a-definition-and-defending-it-fig-11.jpg)
-
 
 ---
 
@@ -559,3 +478,26 @@ If the agent's decisions truly do not produce unequal effects across any meaning
 **Connection to previous chapters:** Chapter 3's bias mechanisms and Chapter 6's language-game audit both feed into this chapter. The bias mechanisms tell you where unequal treatment originates; the language-game audit tells you whether the agent's self-explanations land differently in different audiences.
 
 **Preview of next chapter:** Chapter 8 turns the casebook adversarial. You'll design specific input perturbations that probe what your agent has actually learned versus what its developers think it learned — adversarial examples for the agent setting, including prompt-injection variants that exploit non-robust features in its instruction-following.
+
+
+---
+
+## 🕰️ AI Wayback Machine
+
+The ideas in this chapter didn't appear from nowhere. **Cynthia Dwork** co-introduced differential privacy and then "Fairness Through Awareness" — a paper that named the tension between individual and group definitions of fair treatment well before fairness audits became routine. Here's a prompt to find out more — and then make it better.
+
+**Run this:**
+
+```
+Who is Cynthia Dwork, and how does her work on individual versus group fairness connect to the problem of choosing one fairness metric and defending it against the alternatives? Keep it to three paragraphs. End with the single most surprising thing about her career or ideas.
+```
+
+→ Search **"Cynthia Dwork"** on Wikipedia after you run this. See what the model got right, got wrong, or left out.
+
+**Now make the prompt better.** Try one of these:
+
+- Ask it to explain "individual fairness" in plain language, as if you've never read an algorithmic-fairness paper
+- Ask it to compare Dwork's individual-fairness framework to a real fairness-metric incompatibility result you'd have to navigate
+- Add a constraint: "Answer as if you're writing a memo to a team that has to pick one fairness metric and defend it"
+
+What changes? What gets better? What gets worse?

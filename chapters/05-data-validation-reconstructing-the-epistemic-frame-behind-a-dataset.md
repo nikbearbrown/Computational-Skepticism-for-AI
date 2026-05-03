@@ -42,9 +42,6 @@ The EDA report had every plot it was supposed to have. The histograms were drawn
 
 <!-- → [FIGURE: Two-panel diagram. Left panel labeled "What EDA sees" — a single clean merged dataframe, histogram shapes, green checkmarks on missingness and outlier checks. Right panel labeled "What actually happened" — three labeled source system boxes (System A, System B, System C) with arrows converging into a merge operation; a gap is shown between the merge output and a dashed "expected full population" outline, annotated "4% dropped at join — never written, never visible." A callout bridging both panels: "EDA tools cannot detect rows that were never written." Placed immediately after the paragraph ending "you cannot compute the missingness of rows that never existed."] -->
 
-![Figure 5.1 — Two-panel diagram. Left panel labeled "What EDA sees"](images/05-data-validation-reconstructing-the-epistemic-frame-behind-a-dataset-fig-01.jpg)
-
-
 So I want to ask you a question that is the question of this whole chapter. *Why are there exactly N rows in this dataset?* What was N supposed to be? What is the difference between what was supposed to be there and what is?
 
 That single question, taken seriously, would have surfaced this entire failure mode in the first hour of working with the data. Nobody asked it. Why not? Because the procedure they had been taught for EDA didn't include it. The procedure was: histograms, correlations, missing-value analysis, summary statistics, outliers. Nothing about the row count. Nothing about the join. Nothing about *what came in versus what was supposed to come in*.
@@ -80,16 +77,6 @@ Before drawing anything, know what kind of data each column contains. This matte
 This classification is not always obvious. A column called `zip_code` looks numeric but is categorical nominal — arithmetic on zip codes is meaningless. A column called `score` may be continuous, ordinal, or a calculated composite depending on how it was produced. Read the schema documentation before classifying.
 
 <!-- → [TABLE: Five-column reference table — Data Type | Examples | Natural Summary Statistics | Visualization Default | Key Questions to Ask. Row 1: Continuous numeric | salary, temperature, model confidence score | mean, median, std, min/max, percentiles | histogram (30 bins), box plot | Is the distribution skewed? Are there outliers? Does the range make physical sense? Row 2: Discrete numeric | number of visits, floor count | frequency table, mode | bar chart (treat as categorical if range < ~20 distinct values) | Are there impossible values? Gaps in the range? Row 3: Categorical nominal | city, product category, blood type | frequency, mode, entropy | bar chart sorted by frequency descending | Rare categories? Misspellings suggesting dirty data? Unexpected values? Row 4: Categorical ordinal | survey rating, education level, income bracket | frequency, mode | bar chart sorted by natural order | Is ordering preserved in the encoding? Are any levels absent? Row 5: Temporal | date, timestamp | min, max, range, count-by-period | line chart (record count over time) | Gaps in coverage? Seasonality? Sudden distribution changes? Caption: "Before drawing a single plot, classify every column. The correct visualization depends entirely on the data type — and the most dangerous classification error is treating a categorical column as numeric."] -->
-
-*Figure 5.2*
-
-| | **Property** | **Value** |
-|---|---|---|
-| **Row 1** | _fill in_ | _fill in_ |
-| **Row 2** | _fill in_ | _fill in_ |
-
-: {.data-table}
-
 
 ### Step 1 — Get the shape of the dataset
 
@@ -143,9 +130,6 @@ The `missingno` matrix plot shows each row as a horizontal line and each column 
 
 <!-- → [FIGURE: missingno-style matrix visualization. A rectangular grid — rows on y-axis (each row is one dataset record), columns on x-axis (each column is one feature). Most cells are white (present). Two columns — call them "income" and "employment_status" — have heavy black vertical stripes (missing). Crucially, those stripes align: the same rows are missing in both columns. A callout box: "Co-missing: income and employment_status are absent in the same rows. This is structural — probably a shared data source that fails together, or a subpopulation that reports neither." A second column nearby has scattered individual black cells (random missingness). Caption: "Aligned stripes = structural missing pattern. Scattered dots = random missingness. The difference is the question: does missingness depend on something we can see, or something we can't?"] -->
 
-![Figure 5.3 — missingno-style matrix visualization. A rectangular grid](images/05-data-validation-reconstructing-the-epistemic-frame-behind-a-dataset-fig-03.jpg)
-
-
 ### Step 4 — Examine bivariate relationships
 
 A univariate distribution tells you about one column in isolation. A bivariate plot tells you how two columns relate. This matters for two reasons: understanding the data, and catching data-quality problems that only become visible when two variables are plotted together (a relationship that should exist but doesn't, or shouldn't exist but does).
@@ -168,9 +152,6 @@ A univariate distribution tells you about one column in isolation. A bivariate p
 
 <!-- → [FIGURE: Annotated scatter plot — x-axis "Age," y-axis "Salary." The main mass of points forms a loose upward-trending cloud (realistic age-salary relationship). Two isolated points are far upper-right (very high age and very high salary). A tight cluster of ~40 points sits at x=0 (age encoded as 0 to mean "unknown"). Three annotation callouts: pointing at the age=0 cluster: "Sentinel value — age=0 means 'not recorded,' not newborn. Not visible in the age histogram alone." Pointing at the two upper-right outliers: "Plausible outliers — verify against source data before removing." Pointing at the main cluster: "Expected pattern — positive age-salary relationship." Caption: "A scatter plot catches problems invisible to either univariate distribution alone. The age histogram showed no spike at zero because 40 points in a dataset of 10,000 is too small to flag there — but it's a structurally meaningful cluster."] -->
 
-![Figure 5.4 — Annotated scatter plot](images/05-data-validation-reconstructing-the-epistemic-frame-behind-a-dataset-fig-04.jpg)
-
-
 ### Step 5 — Examine temporal patterns
 
 If the dataset has a date or timestamp column, plot counts over time as the first temporal diagnostic. This catches: time periods with unusually few records (a source system was down, a batch job failed, a collection methodology changed); sudden distribution shifts (the product changed, the data schema changed, the population changed); seasonality that you need to account for in modeling.
@@ -180,9 +161,6 @@ If the dataset has a date or timestamp column, plot counts over time as the firs
 A sharp drop in record counts is always a finding. It may be benign (a holiday, a weekend effect in a business dataset). It may be critical (the system was down; the subpopulation affected by the downtime is now underrepresented).
 
 <!-- → [FIGURE: Time-series line chart — x-axis "Week," y-axis "Records per week." The line runs roughly flat at ~800 records/week from early 2018 through February 2020. A sharp drop to ~200 records/week begins in March 2020 and persists through June 2020. The line recovers in July 2020 but settles at a slightly different level (~850/week) with a changed slope. Three annotations: "Drop: possible data collection disruption — what changed here?"; "Recovery: data resumes, but is the population the same?"; "Mean weekly count" marked as a dashed horizontal line. Caption: "Record counts over time are the first temporal diagnostic. A drop that aligns with a known external event (pandemic, system migration, policy change) is a finding — the subpopulation that stopped generating data during the gap may be systematically absent from your training set."] -->
-
-![Figure 5.5 — Time-series line chart](images/05-data-validation-reconstructing-the-epistemic-frame-behind-a-dataset-fig-05.jpg)
-
 
 ### Step 6 — Examine outliers formally
 
@@ -197,9 +175,6 @@ The histogram and box plot will surface obvious outliers visually. Formal outlie
 The most important thing about outlier detection is not the detection — it is what you do next. Every identified outlier needs a decision: is this a data-entry error (a salary of $1,200,000 when typical salaries are $50,000–$200,000 might be a decimal-point error)? A legitimate extreme value (a CEO salary is legitimately high)? A sentinel value used to encode "unknown" or "not applicable"? The decision determines whether you remove, impute, cap, or retain the value.
 
 <!-- → [FIGURE: Annotated box plot for a single "salary" column. Box spans Q1 to Q3. Whiskers extend to 1.5×IQR above and below. Three individual points lie above the upper whisker. Each point has a callout: Point at ~$1,200,000: "Verify: possible data-entry error — is this $120,000 with a misplaced decimal? Check source record." Point at $9,999,999: "Verify: likely sentinel — $9,999,999 is a common 'not applicable' encoding." Point at ~$750,000: "Plausible: C-suite compensation. Verify before removing." A fourth label on the box itself: "IQR — the box's height is the interquartile range, not affected by the outliers above it." Caption: "Outlier detection is triage, not removal. The IQR method flags the candidates. Domain knowledge makes the call."] -->
-
-![Figure 5.6 — Annotated box plot for a single "salary" column. Box spans Q1 to Q3. Whiskers extend to 1.5×IQR above and below. Three individual points lie above the upper whisker. Each point has a callout: Point at ~$1,200,000: "Verify: possible data-entry error](images/05-data-validation-reconstructing-the-epistemic-frame-behind-a-dataset-fig-06.jpg)
-
 
 ### What the procedural pass cannot see
 
@@ -223,9 +198,6 @@ A **channel** is a visual property that encodes information about marks. Positio
 
 <!-- → [FIGURE: Two-panel illustration. Left panel labeled "The three mark types" — three clearly distinct geometric shapes with labels: a small solid circle labeled "Point (one item = one mark)"; a diagonal line segment labeled "Line (relationship between items)"; a filled irregular shape labeled "Area (magnitude as region)." Right panel labeled "Channels applied to a scatter plot" — a scatter plot of ~20 dots, with four annotation callouts using brackets and lines: one bracket spanning the x-axis: "Channel: x-position encodes a numeric variable"; one bracket spanning the y-axis: "Channel: y-position encodes a second numeric variable"; an arrow pointing at differently-colored dots: "Channel: hue encodes a categorical variable (no size ordering implied)"; an arrow pointing at differently-sized dots: "Channel: size encodes a third numeric variable (larger = more)." Caption: "Every visualization is marks + channels. Understanding which channels are active — and whether they are matched to the right data types — is how you evaluate whether a chart is telling the truth."] -->
 
-![Figure 5.7 — Two-panel illustration. Left panel labeled "The three mark types"](images/05-data-validation-reconstructing-the-epistemic-frame-behind-a-dataset-fig-07.jpg)
-
-
 ### Why some channels are stronger than others
 
 Not all channels are equal. Position is the most powerful channel for encoding quantitative data — human perception of position along a common scale is extremely accurate. Length is the next most powerful, which is why bar charts (where length encodes value) work well for comparing quantities. Area and color intensity are weaker: we perceive them inaccurately, especially when comparing non-adjacent elements.
@@ -233,16 +205,6 @@ Not all channels are equal. Position is the most powerful channel for encoding q
 Stevens' psychophysical power law gives us a framework for why. For length, perceived magnitude tracks physical magnitude almost exactly — your eye correctly judges that one bar is twice as long as another. For area, perceived magnitude is systematically compressed — you underestimate how much larger a big circle is compared to a small one. This is why pie charts and bubble charts require more cognitive effort than bar charts to read accurately: they rely on area rather than position or length.
 
 <!-- → [CHART: Two-column ranked list — left column "For quantitative data (rank 1 = most accurate):" listing (1) Position on common aligned scale, (2) Position on non-aligned scales, (3) Length, (4) Angle / slope, (5) Area, (6) Color intensity / luminance, (7) Color hue — least accurate for quantities. Right column "For categorical data (rank 1 = best separation):" listing (1) Position, (2) Hue, (3) Shape, (4) Texture, (5) Size — weakest (implies ordering). Below both columns, a note: "Use the highest-ranked channel for your most important variable. The hierarchy is not arbitrary — it reflects measured perceptual accuracy." Caption: "Channel effectiveness hierarchy, based on Cleveland & McGill's landmark perceptual studies. Encode the variable that matters most with the channel people read most accurately."] -->
-
-*Figure 5.8*
-
-| | **Property** | **Value** |
-|---|---|---|
-| **Row 1** | _fill in_ | _fill in_ |
-| **Row 2** | _fill in_ | _fill in_ |
-
-: {.data-table}
-
 
 This ranking has direct consequences for EDA:
 
@@ -264,9 +226,6 @@ The **effectiveness principle** says: encode the most important variable with th
 
 <!-- → [FIGURE: Two side-by-side scatter plots — identical dataset (age on x, salary on y, department as a third variable). Left plot labeled "Expressiveness principle: satisfied." Dots colored by department hue (categorical → hue is a match). Legend shows department names, no implied ordering. Right plot labeled "Expressiveness principle: violated." Dots sized by department (categorical → size is a mismatch). Caption note: "Size implies 'Finance > Marketing > Engineering' — but there is no such ordering. The reader infers a quantity relationship that does not exist in the data." Overall caption: "Using size for a categorical variable is the single most common expressiveness violation. It misleads without lying — the data is all there, but the encoding creates a false impression of magnitude differences."] -->
 
-![Figure 5.9 — Two side-by-side scatter plots](images/05-data-validation-reconstructing-the-epistemic-frame-behind-a-dataset-fig-09.jpg)
-
-
 ### Applying this to EDA output
 
 When you are reading your own EDA output — or someone else's — ask these questions:
@@ -286,16 +245,6 @@ The last question is the one that connects the procedural pass to the interrogat
 Once you start asking these questions, a list of structural failures begins to emerge — failures that almost never get surfaced by procedural EDA, and almost always show up in deployment.
 
 <!-- → [TABLE: Six-row reference table — Failure Mode | What it is | Why procedural EDA misses it | Example deployment consequence. Row 1: Sampling assumption | Training data drawn from a more accessible subpopulation than the deployment target | EDA only sees what is present; it cannot compare the present data to the absent target population | Model performs well on easy-to-reach customers, degrades on the long tail it was never trained on. Row 2: Time-window assumption | Training data covers a historical period that no longer reflects the deployment environment | EDA tools have no knowledge of what was true outside the dataset's time range | Model trained on 2019 data deployed in 2022 confidently predicts patterns that have shifted. Row 3: Label assumption | The label column measures an operational proxy, not the underlying construct of interest | EDA can show a label's distribution but cannot show the gap between the label and the construct | Re-arrest rate predicts re-arrest, not crime; click-through rate predicts clicks, not interest. Row 4: Missing not at random (MNAR) | Values are missing because of the value itself | The missingness and the data appear independent from within the dataset — the pattern only becomes visible by reasoning about why someone would not report | Income missingness concentrated in high earners; survival data missing the patients who died; both produce biased models. Row 5: Feature-engineering assumption | An input column is a calculated composite from an upstream model or analyst, not raw measurement | The column looks like data and has no missing values; its provenance is invisible unless documented | customer_lifetime_value encodes someone's old model's assumptions; when those assumptions break, so does the new model trained on them. Row 6: Access/boundary assumption | The effective data universe extends beyond the schema — through references, links, or embedded content | EDA validates the records that are present; it cannot follow references to data outside the schema | An agent given access to an email corpus implicitly has access to everything the emails reference or quote. Caption: "The six failures. Each has a structural reason it evades EDA. Memorizing the list matters less than being able to ask, for each column: why is this value here, and what is it not telling me?"] -->
-
-*Figure 5.10*
-
-| | **Property** | **Value** |
-|---|---|---|
-| **Row 1** | _fill in_ | _fill in_ |
-| **Row 2** | _fill in_ | _fill in_ |
-
-: {.data-table}
-
 
 There is the **sampling assumption**. Was this sample drawn from the population the model is going to be deployed against? Often, no. The sample is *available* data — meaning the data that was easiest to collect, which means it skews toward the easy-to-reach end of every distribution it was drawn from. You train on convenience samples and deploy against the world. The world is wider than the convenience sample, and you find this out slowly.
 
@@ -325,9 +274,6 @@ This is not a model failure. This is a data-validation failure. The team thought
 
 <!-- → [FIGURE: Concentric boundary diagram. A solid circle in the center labeled "Validated schema boundary — the email corpus (rows × columns the team inspected)." A larger dotted-circle surrounding it labeled "Actual data universe." Between the two circles, six labeled arrows point outward from the inner circle: "Referenced internal documents (linked by URL in message body)," "Embedded phone numbers and addresses (in message text)," "Fragment of a credit card number (quoted in reply chain)," "Third-party identities (people CC'd who never consented)," "Conversation history (prior thread quoted in each message)," "External attachments referenced by filename." The gap between the two circles is shaded and labeled "Validation blind spot — present in the data, invisible to schema-level validation." Caption: "The access boundary is not the schema. Naturally occurring data always references the world outside itself. Validating only what is formally in scope means the agent was given access to far more than the team intended — and no access control was violated."] -->
 
-![Figure 5.11 — Concentric boundary diagram. A solid circle in the center labeled "Validated schema boundary](images/05-data-validation-reconstructing-the-epistemic-frame-behind-a-dataset-fig-11.jpg)
-
-
 The validation move that catches this — the move I want you to make on every dataset you ingest — is to ask: *what is the boundary of this data, and how do I know?* And to insist on an answer more rigorous than "the schema." The boundary is the union of the schema and everything the schema's contents reference, link to, or imply.
 
 ---
@@ -337,9 +283,6 @@ The validation move that catches this — the move I want you to make on every d
 If you take what I have argued seriously, the procedure for validation changes. Not the procedural EDA — that part is fine, run it as you have always run it. The interrogation is what changes.
 
 <!-- → [FIGURE: Six-step linear workflow diagram with labeled boxes connected by arrows. Box 1: "Read metadata → lock prediction" — annotation: "Catches surprises that later feel obvious." Box 2: "Run procedural EDA" — annotation: "Catches what is visible in the data as written." Box 3: "Test metadata against data" — annotation: "Catches gaps between claimed and actual scope, row counts, units." Box 4: "Ask what is NOT in the data" — annotation: "Catches dropped rows, absent populations, time gaps." Box 5: "Trace one row end-to-end" — annotation: "Catches pipeline surprises invisible at the aggregate level." Box 6: "Write epistemic frame, compare to prediction" — annotation: "The gap between prediction and finding is the learning event." A horizontal bracket under all six boxes: "The procedural EDA (box 2) reveals what is present. Steps 1 and 3–6 reveal what is absent, assumed, or beyond the schema." Caption: "Keep this as a checklist. Steps 3–6 are the work that EDA alone does not do."] -->
-
-![Figure 5.12 — Six-step linear workflow diagram with labeled boxes connected by arrows. Box 1: "Read metadata → lock prediction"](images/05-data-validation-reconstructing-the-epistemic-frame-behind-a-dataset-fig-12.jpg)
-
 
 **Step 1 — Read the metadata, lock your prediction.** Before you run a single histogram on a dataset you did not create, read the metadata, the schema documentation, and any published description of how the data was collected. Write down, in your own words, what you predict the dataset's epistemic frame to be — what it claims to represent, how it was collected, what is excluded, and over what time period. *Lock your prediction.* The whole exercise depends on this.
 
@@ -370,16 +313,6 @@ Now, you may be wondering: can I have an AI do some of this? You can, and you sh
 The procedural work is evidence of competence. The interrogation is evidence of understanding. The two are not the same, and only one of them is what makes the deployment safe.
 
 <!-- → [TABLE: Three-column delegation decision table — Category | What belongs here | Why. Row 1: Delegate freely | Shape/dtype inspection, summary statistics (.describe()), missingness counts and matrix, univariate histograms and bar charts, outlier flagging via IQR or Z-score, correlation heatmap, pair plots, temporal record counts | Well-defined operations; output is determinate; AI errors are immediately visible when you look at the result. Row 2: Verify before trusting | Interpretation of why a value is missing, claim that a distribution is "normal for this domain," narrative explanation of a detected anomaly, suggested imputation strategy | Requires domain knowledge the AI does not have; errors are not obviously visible in the output — they sound plausible. Row 3: Do not delegate | Epistemic-frame reconstruction (steps 1 and 3–6), prediction-lock and gap analysis, access-boundary scoping, row-tracing to source systems | The output of these steps is your engagement with the data — not the document it produces. A fluent AI-generated epistemic frame contains no information, because the AI started from the same documentation you did. Caption: "The line is not about AI capability — it is about what the work produces. Mechanical outputs have determinate right answers the AI can reach. The interrogation produces understanding that only comes from you confronting the data yourself."] -->
-
-*Figure 5.13*
-
-| | **Property** | **Value** |
-|---|---|---|
-| **Row 1** | _fill in_ | _fill in_ |
-| **Row 2** | _fill in_ | _fill in_ |
-
-: {.data-table}
-
 
 ---
 
@@ -559,3 +492,26 @@ If I have access to the agent's system prompt or retrieval corpus, ALSO walk thr
 **Connection to previous chapters:** Chapter 3 located bias in the pipeline. This chapter audits the data layer of that pipeline. Together they identify where the agent's beliefs about the world come from — and where those beliefs are most likely to be wrong.
 
 **Preview of next chapter:** Chapter 6 probes what the agent says about its own actions. You'll apply explainability methods to the agent's natural-language self-reports and identify language-game mismatches between what the agent claims to have done and what the world actually shows — the technically-accurate-practically-misleading pattern that defines the Ash case.
+
+
+---
+
+## 🕰️ AI Wayback Machine
+
+The ideas in this chapter didn't appear from nowhere. **Suzanne Briet** was asking what counts as evidence and how an object becomes a document — including her famous example of an antelope in a zoo — decades before anyone worried about how a dataset selects, frames, and silences. Here's a prompt to find out more — and then make it better.
+
+**Run this:**
+
+```
+Who was Suzanne Briet, and how does her claim that documents are made by social context — not by inherent properties — connect to reconstructing the epistemic frame behind an AI training dataset? Keep it to three paragraphs. End with the single most surprising thing about her career or ideas.
+```
+
+→ Search **"Suzanne Briet"** on Wikipedia after you run this. See what the model got right, got wrong, or left out.
+
+**Now make the prompt better.** Try one of these:
+
+- Ask it to explain Briet's "antelope" example in plain language, as if you've never thought about what makes something a document
+- Ask it to compare her account of how documents are made to how a modern training dataset selects and excludes
+- Add a constraint: "Answer as if you're writing a chapter epigraph for a textbook on data validation"
+
+What changes? What gets better? What gets worse?

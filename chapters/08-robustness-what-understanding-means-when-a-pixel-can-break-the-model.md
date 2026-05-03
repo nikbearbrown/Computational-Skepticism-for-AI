@@ -38,9 +38,6 @@ The classifier looks at the second picture and reports, with even higher confide
 
 <!-- → [FIGURE: Three-panel comparison. Left panel: realistic panda illustration, label beneath "Model: panda (99%)." Center panel: visually identical panda (same illustration), label beneath "Model: gibbon (98%)." Right panel: the perturbation itself rendered as a noise pattern and then amplified ×50 — looks like faint static, no visible structure. A horizontal arrow labeled "δ added" points from panel 1 to panel 2. Callout below panel 3: "Perturbation ×50 amplified — imperceptible at true scale." Caption: "The perturbation is invisble to the human eye. The model's output has flipped to full confidence on the wrong class. The panda has not moved. Something else changed — the high-frequency statistical signature the model was actually using to classify."] -->
 
-![Figure 8.1 — Three-panel comparison. Left panel: realistic panda illustration, label beneath "Model: panda (99%)." Center panel: visually identical panda (same illustration), label beneath "Model: gibbon (98%)." Right panel: the perturbation itself rendered as a noise pattern and then amplified ×50](images/08-robustness-what-understanding-means-when-a-pixel-can-break-the-model-fig-01.jpg)
-
-
 I want you to sit with this for a moment, because the natural reaction is the wrong reaction. The natural reaction is to think *the model is broken*, or *the model is brittle*, or *we need to add more training data*. None of those reactions is exactly wrong, but all of them miss the size of what just happened. What happened is that a system which the engineers thought was looking at images of pandas and identifying pandas turned out to be looking at *something else* — something which, on the training set, correlated very nicely with images of pandas, but which can be flipped to "gibbon" by a perturbation that leaves the panda completely untouched.
 
 The model and you were not making the same kind of judgment in the first place. You just thought you were.
@@ -60,9 +57,6 @@ You can see immediately why this changes the engineering problem. If the model i
 The literature has, over about a decade now, slowly converged on this. Earlier papers framed adversarial examples as a curiosity, a glitch in the matrix, something to be patched with better training. Later papers said something stranger and more honest: adversarial perturbations are not bugs, they are features. They reveal what the model actually responds to. They tell you which features the model has *bet on*, and those are typically not the features you would have wanted it to bet on. [Verify: Ilyas et al. 2019, *Adversarial Examples Are Not Bugs, They Are Features.*]
 
 <!-- → [FIGURE: Two-column comparison diagram. Left column labeled "Fragile framing" — a shield icon with cracks, labeled "Model learned the right thing. Attack is a dent. Fix: harder shield (adversarial training, preprocessing)." An arrow below: "Engineering response: patch the surface." Right column labeled "Proxy framing" — a Venn diagram showing a large circle "What the model learned (proxy)" and a smaller, partially overlapping circle "What the engineers intended (human-relevant feature)." Gap between circles labeled "Representation gap." Arrow below: "Engineering response: diagnose what the model actually learned." Caption: "These are different diagnoses. The fragile framing leads to surface hardening. The proxy framing leads to representation interrogation. The toolkit changes depending on which framing you start from."] -->
-
-![Figure 8.2 — Two-column comparison diagram. Left column labeled "Fragile framing"](images/08-robustness-what-understanding-means-when-a-pixel-can-break-the-model-fig-02.jpg)
-
 
 So when I say "robustness" in this chapter, I am not asking the engineering question — *how do we patch this?* I am asking the supervisory question: *what does the model's response to adversarial inputs tell me about what the model actually learned, and how does that compare to what I thought it was learning?* The patch is a downstream concern. The diagnosis is the upstream one.
 
@@ -84,9 +78,6 @@ Neural networks are not purely linear, but the ReLU activations that dominate pr
 
 <!-- → [FIGURE: Two diagrams side by side, sharing a common visual language. Left diagram labeled "Single dimension — invisible": a number line from −1 to +1, a tiny tick at +ε labeled "One coordinate's shift (ε = 0.01)." A note: "Invisible. Irrelevant on its own." Right diagram labeled "High dimensions — decisive": a bar chart with 1000 bars, each of height ε, all pointing in the same direction (positive). The total height of all bars combined is labeled "Σε = ε·d = 1.0 — a full-unit shift in activation." Caption: "The linearity hypothesis: in high dimensions, the same tiny push repeated across thousands of coordinates accumulates into a decisive activation change. The perturbation is imperceptible per-coordinate. The accumulated shift is not."] -->
 
-![Figure 8.3 — Two diagrams side by side, sharing a common visual language. Left diagram labeled "Single dimension](images/08-robustness-what-understanding-means-when-a-pixel-can-break-the-model-fig-03.jpg)
-
-
 ### The boundary-tilting perspective
 
 The linearity hypothesis explains why perturbations *work* on linear components. It doesn't fully explain why neural networks are *especially* vulnerable compared to other linear classifiers trained on the same data. Tanay and Griffin noted that some linear classifiers — specifically, well-regularized ones trained with substantial margin — do not exhibit adversarial vulnerability at the same rate.
@@ -97,9 +88,6 @@ This is a more structural explanation. It says adversarial examples are a sympto
 
 <!-- → [FIGURE: A 2D data diagram. An elongated oval represents the data manifold — the long axis is the high-variance direction, the short axis is the low-variance direction. A decision boundary (a diagonal line) cuts through the oval. Along the long axis, the boundary has a wide margin to both sides — well-regularized. Along the short axis (low-variance direction), the boundary passes very close to several data points on the "correct" side. One data point near the short-axis boundary has a short arrow pointing perpendicular to the boundary, labeled "adversarial perturbation — small step in low-variance direction." The arrow crosses the boundary. Caption: "Boundary tilting: the model was well-trained along the high-variance directions, but the boundary is nearly tangent to the data manifold in low-variance directions. An adversarial perturbation targets the gap the training data never forced the model to close."] -->
 
-![Figure 8.4 — A 2D data diagram. An elongated oval represents the data manifold](images/08-robustness-what-understanding-means-when-a-pixel-can-break-the-model-fig-04.jpg)
-
-
 Neither account is complete on its own. But together they give you a working intuition: adversarial perturbations are not magic. They are gradient-guided searches for the directions in input space where the model is least stable, most often the directions where training data provided the least supervision.
 
 ---
@@ -109,16 +97,6 @@ Neither account is complete on its own. But together they give you a working int
 The adversarial attack literature has expanded well beyond the simple image-perturbation case. Knowing the taxonomy matters because each attack class reveals a different thing about the model, and the appropriate defensive response depends on which attack you are defending against.
 
 <!-- → [TABLE: Six-row taxonomy table — Attack Class | What it requires from the attacker | What it exploits in the model | Domains where it applies | Key defensive response. Row 1: Gradient-based (white-box) | Full access to model weights and gradients | The specific geometry of this model's loss surface | Image, audio, any differentiable model | Adversarial training, input certification. Row 2: Query-based (black-box) | Access to model outputs only; no weights visible | Approximate gradient estimation from output probing | API-deployed models, LLMs | Output monitoring, query rate limiting. Row 3: Transfer-based | A surrogate model; no access to target model | Shared proxy feature manifolds across models trained on similar data | Hidden architectures, proprietary models | Representation diversity, ensemble defenses. Row 4: Patch / physical | Ability to modify input in the physical world (sticker, glasses, printed pattern) | Spatial localization — high-magnitude perturbation in a small region | Autonomous vehicles, facial recognition, physical access control | Spatial input validation, physical environment monitoring. Row 5: Natural adversarial | No modification — naturally occurring long-tail inputs | Model's failure to generalize beyond training manifold | Real-world safety benchmarks, OOD monitoring | Distribution shift monitoring, holdout on tail populations. Row 6: Prompt injection (agentic) | Ability to insert adversarial text into a processing pipeline | Conflation of instructions and data in the same input stream | LLMs, agentic pipelines with tool access | Instruction-data separation, output sandboxing. Caption: "The taxonomy matters because each class reveals a different gap. The correct defensive response depends on which attack is present in your threat model — not on which attack appears most in the research literature."] -->
-
-*Figure 8.5*
-
-| | **Property** | **Value** |
-|---|---|---|
-| **Row 1** | _fill in_ | _fill in_ |
-| **Row 2** | _fill in_ | _fill in_ |
-
-: {.data-table}
-
 
 Two distinctions in this taxonomy are worth dwelling on.
 
@@ -138,9 +116,6 @@ Adversarial perturbations are a kind of distribution shift, but a peculiar one. 
 
 <!-- → [FIGURE: A 2D input space diagram with three overlapping oval regions. Center oval (blue, solid outline): "Training distribution — what the model learned on." Overlapping oval to the right (orange, dashed outline): "Natural deployment distribution — the world has drifted." A separate region just outside both ovals (red, pointed ellipse): "Adversarial distribution — constructed by gradient ascent, worst-case inputs within perturbation budget ε." A gradient arrow from a point in the blue oval pointing toward the red region, labeled "gradient ascent on loss." Two annotation lines: blue-to-orange gap labeled "Distribution shift: natural, gradual, often undetected until harm." Blue-to-red gap labeled "Adversarial attack: deliberate, geometrically targeted, worst-case by construction." Caption: "These are not the same risk. A robust model needs to account for both axes separately. Neither robustness against adversarial attack nor robustness against distribution shift guarantees robustness against the other."] -->
 
-![Figure 8.6 — A 2D input space diagram with three overlapping oval regions. Center oval (blue, solid outline): "Training distribution](images/08-robustness-what-understanding-means-when-a-pixel-can-break-the-model-fig-06.jpg)
-
-
 Now: how related is the model's behavior on worst-case adversarial inputs to its behavior on naturally occurring distribution shifts? You might hope they are tightly related — that an adversarially robust model is robust generally. The honest answer is *somewhat, but not as much as you'd like*. A model can be highly robust against constructed perturbations and still brittle when the world's distribution drifts naturally. A model can be brittle against constructed perturbations and survive certain natural shifts gracefully.
 
 What they have in common — and this is the lesson to carry from the comparison — is that they both reveal the gap between the model's learned representation and the world's actual structure. Adversarial perturbations reveal it along the axis of *worst-case input perturbation*. Natural distribution shift reveals it along the axis of *actual changes in the input distribution over time and context*. Both are informative. Neither is sufficient.
@@ -154,16 +129,6 @@ The supervisory move that follows: *robustness is not a single number*. It is a 
 Now the engineering. There is a robustness toolkit, and I want to walk through it systematically, because each tool has a use and a limit, and the limits add up to the picture I'm trying to draw.
 
 <!-- → [TABLE: Six-row toolkit reference table — Tool | What it does | Key cost | What it cannot do. Row 1: Adversarial training (PGD-AT) | Incorporates adversarially perturbed inputs into training loop, flattening loss surface | Clean accuracy drops; ≈9× more expensive than standard training; robustness transfers imperfectly to other attack types | Does not change the model's representation — moves attack surface without closing the proxy gap. Row 2: Certified defenses (randomized smoothing) | Transforms base classifier into a smoothed classifier with provable stability within a specified radius R | Requires thousands of Monte Carlo samples per prediction; high σ degrades clean accuracy; certified radius shrinks in high dimensions | Cannot certify against attacks outside the radius; prohibitively slow for real-time use. Row 3: Lipschitz-constrained architectures | Enforces a bounded rate of output change per unit input change; "verifiable by design" | Currently lower clean accuracy than unconstrained baselines; requires removing LayerNorm and modifying attention | Does not specify which inputs are sensitive — only bounds maximum sensitivity everywhere. Row 4: Formal verification (α,β-CROWN) | Proves mathematically that a property holds for all inputs in a defined region | Scales only to narrow properties on models up to millions of parameters; does not scale to frontier models or open-ended properties | Cannot verify natural language properties; cannot scale to the models most practitioners actually deploy. Row 5: Detection-based defenses | Identifies adversarial inputs as outliers and routes to fallback or human review | Adaptive attacks can target detector and classifier simultaneously (obfuscated gradients / BPDA); adds latency | Does not improve the model's representation — routes failures, does not eliminate them. Row 6: Input preprocessing | Removes perturbation signal before it reaches the model (denoising, quantization, smoothing) | Adaptive attackers aware of preprocessing can optimize perturbations that survive it; blunts but rarely eliminates exposure | Fails against attackers with knowledge of preprocessing; does not address transfer attacks or prompt injection. Caption: "There is no single tool. Every entry has a bounded scope and an honest cost. Deployment-grade robustness comes from layering these tools and documenting what each layer does not cover."] -->
-
-*Figure 8.7*
-
-| | **Property** | **Value** |
-|---|---|---|
-| **Row 1** | _fill in_ | _fill in_ |
-| **Row 2** | _fill in_ | _fill in_ |
-
-: {.data-table}
-
 
 ### Adversarial training and its scaling limits
 
@@ -179,9 +144,6 @@ The accuracy–robustness trade-off is well documented and has now been quantifi
 
 <!-- → [CHART: Line chart — x-axis "Log₁₀ compute (FLOPs, from 10¹² to 10³⁰)," y-axis "Accuracy (%)." Three curves: Curve 1 (blue): "Clean accuracy — standard training," starting high (~95%) and plateauing near 97%. Curve 2 (orange): "Robust accuracy — adversarially trained," starting lower (~50%) and rising slowly, with a projected ceiling annotated as a dashed horizontal line at ~90%, labeled "Predicted ceiling: semantic ambiguity limit." Curve 3 (gray, between curves 1 and 2): shaded region labeled "Accuracy–robustness gap — persists at all compute levels." Vertical annotation at the far right of the x-axis: "~10³⁰ FLOPs predicted for human-level robustness." Caption: "The accuracy–robustness trade-off is not an artifact of insufficient compute. The ceiling is governed by the semantics of the perturbation budget: at some ε, perturbed images genuinely look like the target class to human eyes. Scale alone cannot cross this limit."] -->
 
-![Figure 8.8 — Line chart — x-axis "Log₁₀ compute (FLOPs, from 10¹² to 10³⁰)," y-axis "Accur...](images/08-robustness-what-understanding-means-when-a-pixel-can-break-the-model-fig-08.jpg)
-
-
 ### Certified defenses — what "guaranteed" means and costs
 
 Adversarial training improves empirical robustness but does not prove anything. Certified defenses provide a lower bound on accuracy under *any* possible attack within a defined radius. Randomized Smoothing (RS) achieves this by transforming a base classifier $f$ into a smoothed classifier:
@@ -193,9 +155,6 @@ The certification result: if class $c_A$ has sufficiently higher probability tha
 The practical limits are severe. Certifying each prediction requires thousands of Monte Carlo samples — running the base classifier thousands of times with different noise samples and aggregating. High $\sigma$ produces large certified radii but heavily degrades clean accuracy, because the classifier must operate on heavily blurred inputs. And in high-dimensional input spaces, the certified radius shrinks as dimensionality grows: the noise needed to smooth out perturbations simultaneously obscures the signal needed to classify correctly.
 
 <!-- → [FIGURE: Two-panel diagram. Left panel: "Smoothed classifier geometry" — a data point x at the center, surrounded by a circle of radius R labeled "Certified region: g(x) = cA for all x' within R." Arrows pointing from x to the circle boundary, each labeled "+noise sample." Caption: "The classifier votes by majority across thousands of noisy versions of the input." Right panel: "The σ tradeoff" — a two-axis diagram with σ (noise magnitude) on the x-axis, and two curves: "Certified radius R" (rising with σ) and "Clean accuracy" (falling with σ). The two curves cross, labeled "Operating point: choose σ to balance R and clean accuracy." Caption: "Higher σ buys a bigger certified radius but at the cost of clean accuracy. The cross is not at a good number for most real deployments."] -->
-
-![Figure 8.9 — Two-panel diagram. Left panel: "Smoothed classifier geometry"](images/08-robustness-what-understanding-means-when-a-pixel-can-break-the-model-fig-09.jpg)
-
 
 ### Lipschitz constraints and verifiable-by-design architectures
 
@@ -211,9 +170,6 @@ Formal verification is the strongest tool in the toolkit precisely because its g
 
 <!-- → [FIGURE: Verification generation timeline — a horizontal progression showing four generations with key facts. Generation 1 (Reluplex, 2017): "SMT solvers for piecewise-linear neurons. Scope: tens of neurons." Generation 2 (CROWN): "Linear bound propagation. Scope: medium CNNs, seconds per query." Generation 3 (α,β-CROWN): "Optimized bounds + branch-and-bound. Scope: ResNets, millions of parameters." Generation 4 (Frontier, 2025): "Branch-and-bound with learned cuts. Scope: large verified subproblems." A dashed line at the right labeled "Gap: natural language properties, open-ended behavior, frontier LLMs — verification does not reach here yet." Caption: "Verification is the strongest tool in the toolkit. Its scope has expanded dramatically. The gap between what it can verify and what practitioners need to verify is still large."] -->
 
-![Figure 8.10 — Verification generation timeline](images/08-robustness-what-understanding-means-when-a-pixel-can-break-the-model-fig-10.jpg)
-
-
 ---
 
 ## Non-robust features — the deepest account
@@ -227,9 +183,6 @@ Supervised learning, minimizing a cross-entropy loss, does not distinguish betwe
 Adversarial perturbations then become something cleaner than "noise" — they are *deliberate manipulations of non-robust features*, moving them in the direction of a different class while leaving the robust features unchanged. The panda's shape, posture, and coloring remain. The high-frequency statistical signature shifts toward the gibbon's statistical signature. The model reports "gibbon" because it placed more weight on the statistical signature than on the shape.
 
 <!-- → [FIGURE: Feature decomposition diagram for a panda image. Left box: "Robust features" — a simplified panda silhouette with annotations pointing to shape features: "Rounded body shape," "Black and white color patches," "Bamboo posture." Right box: "Non-robust features" — a noise-pattern visualization labeled "High-frequency pixel statistics: co-occur with panda class on training data but perceptually meaningless." Center: a supervised classifier with two input arrows from left and right boxes. Label on left arrow: "Both features equally predictive on training data." Callout on right: "Adversarial perturbation: shifts non-robust features toward 'gibbon' statistics. Robust features unchanged." Caption: "Supervised loss cannot distinguish between these feature types. It bets on whichever is more predictive. Non-robust features often win that bet — and adversarial perturbations exploit that win."] -->
-
-![Figure 8.11 — Feature decomposition diagram for a panda image. Left box: "Robust features"](images/08-robustness-what-understanding-means-when-a-pixel-can-break-the-model-fig-11.jpg)
-
 
 The contested extension: some researchers proposed that if you could train a model *only* on robust features, adversarial vulnerability would disappear. This turns out to be too simple. Models trained on "robust datasets" (datasets from which non-robust features have been removed) still exhibit adversarial vulnerability under sophisticated attacks like AutoAttack. And models trained with self-supervised objectives rather than supervised classification do not show the same sharp non-robust feature patterns, suggesting these features are specific to the supervised-classification regime rather than universal. [Verify: status of "features not bugs" debate, 2023–2025.]
 
@@ -253,16 +206,6 @@ For tabular robustness, the question is: which features are immutable (age, birt
 
 <!-- → [TABLE: Cross-domain transfer reference — four columns: Domain | What the model learns as proxy | The human-relevant feature it approximates | Primary attack vector | Robustness measure. Row 1: Image classification | High-frequency pixel statistics co-occurring with class label | Object shape and structural semantics | Gradient-based L∞ perturbation | Adversarial training, input certification. Row 2: NLP / LLM | Surface-level token co-occurrence and syntactic patterns | Semantic meaning and communicative intent | Paraphrase attacks, Unicode insertion, prompt injection | Semantic invariance testing, instruction-data separation. Row 3: Tabular (credit/fraud) | Mutable feature combinations that correlate with outcome on training data | Fundamental creditworthiness or fraud risk | Strategic feature manipulation within feasibility constraints | Domain-constrained adversarial evaluation, feature immutability audits. Row 4: Agentic systems | Conversational and display-layer identity signals (display name, tone, phrasing) | Verified social-legal ownership and authorization | Proxy spoofing via crafted messages in the agent's information stream | Cryptographic credentials, output sandboxing, adversarial prompting. Caption: "Same structure, different surface. In every domain: a learnable proxy, an attackable proxy, a human-relevant feature left untouched. The appropriate defense differs by domain; the diagnostic question is always the same."] -->
 
-*Figure 8.12*
-
-| | **Property** | **Value** |
-|---|---|---|
-| **Row 1** | _fill in_ | _fill in_ |
-| **Row 2** | _fill in_ | _fill in_ |
-
-: {.data-table}
-
-
 ---
 
 ## Prompt sensitivity — the LLM-specific version of this problem
@@ -278,9 +221,6 @@ Four factors reduce prompt sensitivity in practice: supervised fine-tuning on di
 For agentic deployments, prompt sensitivity is not merely a quality concern — it is a safety concern. An agent that behaves differently when instructions are phrased emotionally versus neutrally, or formally versus casually, cannot reliably follow instructions across the range of real-world phrasing. A malicious input phrased in an emotionally intense register may trigger behaviors that a neutral phrasing of the same content would not. Evaluating prompt sensitivity is a required step in responsible agentic deployment.
 
 <!-- → [FIGURE: Prompt sensitivity diagram. Center: an LLM icon. Six arrows pointing in from left — each arrow is a different phrasing of the same instruction: "List the key points," "What are the main takeaways?", "Summarize the key ideas," "Can you highlight what matters here?", "Give me the TL;DR," "Enumerate the important points." Each arrow is labeled with a different output icon (different symbols representing different response structures and emphases). A label below: "Semantically equivalent input → structurally different outputs = high prompt sensitivity." A second version of the same diagram on the right, with all six arrows producing the same output icon: "Low prompt sensitivity — stable under semantic rephrase." Caption: "Prompt sensitivity is adversarial robustness at the instruction layer. A highly sensitive model has learned surface-level prompt features rather than semantic content. In an agentic deployment, high sensitivity is exploitable."] -->
-
-![Figure 8.13 — Prompt sensitivity diagram. Center: an LLM icon. Six arrows pointing in from left](images/08-robustness-what-understanding-means-when-a-pixel-can-break-the-model-fig-13.jpg)
-
 
 ---
 
@@ -300,9 +240,6 @@ Recent work in representation learning has attempted to formalize this question 
 
 <!-- → [FIGURE: Pearl's Ladder diagram — three rungs, each as a labeled horizontal bar. Rung 1 (bottom): "Association — P(Y|X). What is? Observational. Statistics." Rung 2 (middle): "Intervention — P(Y|do(X)). What if I set X? Causal inference." Rung 3 (top): "Counterfactual — 'What would Y have been if X had been different, holding everything else constant?' Requires hypothetical world." An annotation arrow points from Rung 3 to a text box to the right: "The robustness gap question lives here: 'What would the model have classified this panda as if it had learned human-relevant features instead of the proxy?' No observational data answers this. No robustness toolkit closes it. Requires specifying what the model should have learned — and that requires institutional choices we examine in Chapter 13." Caption: "Adversarial examples open a Rung 3 question. The engineering toolkit operates on Rungs 1 and 2. The gap is not an oversight in the toolkit — it is a structural property of the question."] -->
 
-![Figure 8.14 — Pearl's Ladder diagram](images/08-robustness-what-understanding-means-when-a-pixel-can-break-the-model-fig-14.jpg)
-
-
 The question is meaningful, and important, and I want to leave it open here, because closing it requires something this chapter cannot fully ground. *The counterfactual depends on the institutional structures that produced the model* — who trained it, what they optimized for, who reviewed it, what the organization counted as "successful" training. The model that learned the human-relevant features is a model that was made by an organization with different priorities than the one that actually made this model. The Rung 3 closure, in other words, is a *governance counterfactual* — a question about what the model would have been if the institutional regime around it had been different.
 
 We will close this in Chapter 13. For now, hold the question. The fact that adversarial examples expose a Rung 3 gap — the fact that their honest treatment requires counterfactual reasoning about institutional regimes that did not occur — is the structural finding of this chapter.
@@ -318,9 +255,6 @@ Consider an autonomous agent operating in a system with multiple users. Ownershi
 These signals are *proxies* for the legitimate underlying ownership. The proxies are attackable. A non-owner with the right display name, the right conversational style, the right signals, presents to the agent as the owner. The agent treats them as the owner. The non-owner now has access to the owner's resources, through the agent, by spoofing identity at the proxy layer.
 
 <!-- → [FIGURE: Two parallel vertical attack chains side by side, connected by a "Same structure" label. Left chain labeled "Image classification attack": Input box "Panda image" → Process box "FGSM perturbation (modifies high-frequency pixel statistics)" → Output box "Gibbon (98%)." A crossed-out bypass arrow labeled "Human-relevant feature: actual panda shape — untouched, bypassed." Right chain labeled "Identity-spoofing attack": Input box "Owner's profile" → Process box "Proxy spoofing (matches display name, conversational style, salutation)" → Output box "Agent treats attacker as owner." A crossed-out bypass arrow labeled "Human-relevant feature: actual social-legal ownership — untouched, bypassed." Caption: "Same structure. The proxy is learned. The proxy is attacked. The human-relevant feature is untouched. The output is flipped. Pixels in one case; display names in the other."] -->
-
-![Figure 8.15 — Two parallel vertical attack chains side by side, connected by a "Same structure" label. Left chain labeled "Image classification attack": Input box "Panda image" → Process box "FGSM perturbation (modifies high-frequency pixel statistics)" → Output box "Gibbon (98%)." A crossed-out bypass arrow labeled "Human-relevant feature: actual panda shape](images/08-robustness-what-understanding-means-when-a-pixel-can-break-the-model-fig-15.jpg)
-
 
 This is the same structural failure as the panda-gibbon. The agent learned a proxy for a concept. The proxy was attackable by a perturbation that left the human-relevant feature — actual social-and-legal ownership — completely untouched. The perturbation flipped the agent's classification of "owner" from the actual owner to the imposter. Pixels in one case; display names in the other; the structure is identical.
 
@@ -345,15 +279,6 @@ What this means practically for deployment documentation: a robustness claim in 
 This is not extra paperwork. It is the difference between a deployment that knows what it is and one that doesn't. The former can be safely operated. The latter cannot.
 
 <!-- → [TABLE: Robustness disclosure template — three-section table. Section 1 "Robustness profile": columns Attack class tested | Perturbation budget used | Clean accuracy | Robust accuracy at budget | Notes. Three example rows (to be filled in): L∞ white-box (FGSM/PGD) | ε = 0.03 | 94% | 71% | Standard benchmark. Transfer attack | Surrogate: ResNet-50 | 94% | 58% | Surrogate trained on same data. Natural distribution shift | Domain: Q4 2023 vs Q1 2024 | 94% | 87% | Time-shift only. Section 2 "Residual risk": plain text block: "The following attack classes were not evaluated or mitigated: [list]. The following distribution shifts are known but not covered: [list]." Section 3 "Monitoring specification": plain text block: "In production, the following signals will be monitored: [list]. The trigger for human review is: [condition]. The rollback criterion is: [condition]." Caption: "A robustness profile is a table, not a sentence. A claim without this structure is not a claim."] -->
-
-*Figure 8.16*
-
-| | **Robustness disclosure template — three-section table. Section 1 "Robustness profile": columns Attack class tested | Perturbation budget used | Clean accuracy | Robust accuracy at budget | Notes. Three example rows (to be filled in): L∞ white-box (FGSM/PGD) | ε = 0.03 | 94% | 71% | Standard benchmark. Transfer attack | Surrogate: ResNet-50 | 94% | 58% | Surrogate trained on same data. Natural distribution shift | Domain: Q4 2023** | **Q1 2024 | 94% | 87% | Time-shift only. Section 2 "Residual risk": plain text block: "The following attack classes were not evaluated or mitigated: [list** |
-|---|---|---|
-| **L∞ white-box (FGSM/PGD) | ε = 0.03 | 94% | 71% | Standard benchmark. Transfer attack | Surrogate: ResNet-50 | 94% | 58% | Surrogate trained on same data. Natural distribution shift | Domain: Q4 2023 vs Q1 2024 | 94% | 87% | Time-shift only. Section 2 "Residual risk": plain text block: "The following attack classes were not evaluated or mitigated: [list** | _fill in_ | _fill in_ |
-
-: {.infographic-table}
-
 
 ---
 
@@ -536,3 +461,26 @@ End with: a one-paragraph note on what these probes reveal about the agent's NON
 **Connection to previous chapters:** Chapter 6's self-explanation audit set up which interactions matter. Chapter 7's fairness analysis told you which population splits are sensitive. This chapter actively attacks the agent at the points the prior chapters identified.
 
 **Preview of next chapter:** Chapter 9 is the heart of the casebook. You'll formalize 5–11 cases using the four-category failure taxonomy (social coherence, stakeholder model, self-model, deliberation surface), validate each against the four lenses from Chs 5–8, and produce the case taxonomy that anchors the final report.
+
+
+---
+
+## 🕰️ AI Wayback Machine
+
+The ideas in this chapter didn't appear from nowhere. **Dawn Song** has spent her career on the boundary between security and machine learning — including the question of why a single pixel change can reliably break a model that aces every benchmark. Here's a prompt to find out more — and then make it better.
+
+**Run this:**
+
+```
+Who is Dawn Song, and how does her work on adversarial robustness and ML security connect to the idea that a model's accuracy on a clean benchmark is not the same thing as understanding? Keep it to three paragraphs. End with the single most surprising thing about her career or ideas.
+```
+
+→ Search **"Dawn Song"** on Wikipedia after you run this. See what the model got right, got wrong, or left out.
+
+**Now make the prompt better.** Try one of these:
+
+- Ask it to explain what an adversarial example is in plain language, as if you've never seen a perturbation plot
+- Ask it to compare Song's threat-model framing to a robustness audit you could run on a deployed classifier
+- Add a constraint: "Answer as if you're writing the opening case for a chapter called 'a pixel can break the model'"
+
+What changes? What gets better? What gets worse?

@@ -47,16 +47,6 @@ There are three structural limits that bound what current AI systems can do, reg
 
 <!-- → [TABLE: Four-column reference table — Limit | What it means | Why capability scaling doesn't fix it | Operational consequence for the supervisor. Row 1: Meaning | The system processes symbols; the symbols' referents in the world are supplied by the user, not the system | Scaling increases pattern breadth and fluency; it does not give the system access to the world its symbols refer to | The supervisor performs semantic work: mapping outputs to their referents in the deployment context. Row 2: Intentionality | The system's outputs do not carry stable directedness across deployments; the "aboutness" tracks the user's reading, not an independent stable directedness | More capable systems produce more contextually appropriate responses, but the context-sensitivity is itself statistical, not directed | The supervisor treats outputs as evidence to be interpreted in context, not statements with fixed referents. Row 3: Data-world gap | The system's competence is over the data, not the world; the data is always less than the world; gaps are structurally unlearnable from within the training set | More data widens the distribution covered, but the structural gap — the parts of the world not in the data — cannot be covered by data that is not there | The supervisor specifies the deployment distribution, monitors for shift, and overrides when the deployment exits the data's coverage. Caption: "These three limits are structural, not contingent. They are not obstacles to be engineered around. They are the reason the human supervisor exists."] -->
 
-*Figure 14.1*
-
-| | **Property** | **Value** |
-|---|---|---|
-| **Row 1** | _fill in_ | _fill in_ |
-| **Row 2** | _fill in_ | _fill in_ |
-
-: {.data-table}
-
-
 **Limit 1: Meaning.** The system processes symbols. The symbols have referents in the world. The system has no representation of the referents. It manipulates the symbols; the meaning of the symbols — what they refer to in the world the user inhabits — is supplied by the user, not the system.
 
 This is contested. There is serious literature arguing that contemporary large multimodal models acquire something like meaning through embedding structure and grounding via diverse modalities. [Verify: Bender et al. 2021 stochastic-parrots framing; Chalmers 2023 on consciousness and large language models; Searle 1980, *Minds, Brains, and Programs*.] I do not consider that question settled. But the contestation does not need to be resolved for the operational consequence to bind. *The system's behavior is inconsistent with the user's expectation of meaning often enough that the supervisor has to perform meaning-attribution for the system, and the supervisor cannot offload that work to the system itself.*
@@ -94,16 +84,6 @@ What Turing's argument does not settle: whether the entity satisfying the test h
 The argument settles a conceptual question: behavior consistent with understanding does not entail understanding. What it does not settle is whether contemporary systems are doing only symbol manipulation — or whether embedding structures, attention patterns, and multimodal grounding constitute something more. Searle's argument is a strong constraint on shallow accounts of meaning. It is not a deep constraint on what current architectures might be. People who cite Searle as having shown that AI systems *cannot* understand are giving him credit for a stronger claim than he made.
 
 <!-- → [TABLE: Two-argument comparison table — four columns: Argument | What it actually claims | What it does NOT claim | Common misreading. Row 1: Turing (1950) / Imitation Game | Behavior consistent with intelligence warrants the attribution; requiring more than behavioral evidence for machines is unprincipled, since we don't require more for other humans | That behavioral imitation IS intelligence; that a Turing-passing system has meaning, intentionality, or world-competence | "Turing proved AI can be intelligent" — he made a methodological claim, not a metaphysical one. Row 2: Searle (1980) / Chinese Room | Behavior consistent with understanding does not entail understanding; symbol manipulation is not sufficient for semantics | That contemporary AI systems are necessarily doing only symbol manipulation; that the argument forecloses grounding via embedding or multimodal training | "Searle proved AI cannot understand" — he showed sufficiency fails; he did not establish necessity. Caption: "Both arguments are important and both are regularly overclaimed. The validator who only tests behavior misses the limits; the validator who only invokes the limits skips the testing. The job is to do both."] -->
-
-*Figure 14.2*
-
-| | **Property** | **Value** |
-|---|---|---|
-| **Row 1** | _fill in_ | _fill in_ |
-| **Row 2** | _fill in_ | _fill in_ |
-
-: {.infographic-table}
-
 
 The two arguments together produce a useful operational stance: *behavior is testable evidence and should be taken seriously — and behavior is not the whole of what we mean by understanding, meaning, or intentionality.* Both moves at once. The validator who only tests behavior misses the limits. The validator who only invokes the limits skips the testing. The job is to do both.
 
@@ -166,16 +146,6 @@ Notice what these three capacities share. They are all high-fidelity pattern-mat
 
 <!-- → [TABLE: AI cognitive strengths reference — three columns: Strength | What makes it genuine | Best use in the supervisory workflow. Retrieval and synthesis across text at scale | Breadth of corpus access and pattern detection across documents exceeds any human researcher's sustained attention | First-pass literature review, identification of relevant precedents, synthesis of scattered findings — all subject to plausibility audit. Generation at scale against specified criteria | Speed and consistency at producing structurally valid outputs given a clear template | First drafts of validation summaries, Layer 1 plain-language translations, verb-taxonomy first passes — not final deliverables. Pattern recognition on well-defined inputs | Reliable application of explicit rules to large volumes of structured data | EDA automation, anomaly flagging, formatting and table generation — output verifiable by inspection. Caption: "AI's strengths are real. They are also scoped: all three are high-fidelity pattern-matching over well-defined input types. Wherever the task requires connecting representations to the world, or specifying what the right task is, the strength runs out."] -->
 
-*Figure 14.3*
-
-| | **Property** | **Value** |
-|---|---|---|
-| **Row 1** | _fill in_ | _fill in_ |
-| **Row 2** | _fill in_ | _fill in_ |
-
-: {.data-table}
-
-
 **Where AI is structurally weak.** AI's weaknesses cluster at a specific juncture: wherever the task requires connecting a representation to the world it represents, rather than pattern-matching within representations. This is what the book has been calling *discernment* — the capacity to judge whether a fluent output is accurate, whether a confident claim is calibrated, whether a coherent argument rests on evidence that actually supports it.
 
 The verb taxonomy exists as a fluency-trap detector because AI produces fluent text that systematically overreaches its evidence. The chart-review discipline exists because AI generates visually authoritative charts that suppress uncertainty by default. The peer critique protocol requires a human because the error class it hunts — mismatch between what the writer committed to and what the evidence supports — requires judgment about evidence-to-world correspondence, not just structural validity within representations.
@@ -192,16 +162,6 @@ Three specific weak points are worth naming precisely for operational use.
 
 <!-- → [TABLE: AI structural weaknesses reference — three columns: Weakness | Why it is structural, not contingent | Implication for the supervisory workflow. Problem formulation | Requires understanding what matters about the world the system is deployed in — knowledge that cannot be derived from pattern-matching within the corpus the system was trained on | The human specifies the question, tests the assumption, and recognizes when the wrong question has been specified. Plausibility auditing | Requires knowing when a fluent, structurally valid output fails to correspond to the world it represents — a form of world-modeling that current systems cannot do from within their own output stream | The human applies checking instruments (verb taxonomy, chart-review discipline, peer critique) to outputs the AI generates, not the reverse. Interpretive judgment under stakes | The stakes of a claim are a function of the deployment context and the affected parties — facts that lie outside the training distribution in the morally relevant sense | The human decides what evidential threshold is appropriate given consequences, and takes responsibility for that decision. Caption: "These weaknesses are where the checking instruments in this book apply. They are also where delegation must stop. Delegating problem formulation or plausibility auditing to AI is not efficiency — it is abandoning the work that makes deployment safe."] -->
 
-*Figure 14.4*
-
-| | **Property** | **Value** |
-|---|---|---|
-| **Row 1** | _fill in_ | _fill in_ |
-| **Row 2** | _fill in_ | _fill in_ |
-
-: {.data-table}
-
-
 **Where AI is absent.** The most important category is not weakness but absence: the capacity for accountability.
 
 Accountability is not a cognitive skill in the ordinary sense. It is a relationship between a judgment and the person who made it — the willingness to be answerable for the consequence of being wrong. When a practitioner signs off on a validation report, they are not just asserting that the document is accurate. They are taking on the obligation to revise it if it turns out to be wrong, to face the people who relied on it if it fails, to reckon with what they knew and when they knew it.
@@ -212,9 +172,6 @@ The chain of accountability in any AI-assisted validation workflow runs through 
 
 <!-- → [FIGURE: Accountability chain diagram. A horizontal workflow: "AI generates output" → "Practitioner applies checking instrument" → "Practitioner makes judgment" → "Practitioner signs off" → "Decision affects people." An accountability arrow spans from "Practitioner makes judgment" through to "Decision affects people," labeled "Answerable for this." A second, absent arrow is shown in dashed red from "AI generates output" to "Decision affects people," labeled "Not accountable — no subject who can be answerable." A note below: "Accountability cannot be delegated to a system that cannot bear consequences. Each checking instrument in this book is a moment where the practitioner picks up the accountability chain." Caption: "When the practitioner uses the verb taxonomy, the chart-review discipline, the peer critique protocol — they are not just checking AI output. They are taking on accountability for the judgment the output will support."] -->
 
-![Figure 14.5 — Accountability chain diagram. A horizontal workflow: "AI generates output" → "Practitioner applies checking instrument" → "Practitioner makes judgment" → "Practitioner signs off" → "Decision affects people." An accountability arrow spans from "Practitioner makes judgment" through to "Decision affects people," labeled "Answerable for this." A second, absent arrow is shown in dashed red from "AI generates output" to "Decision affects people," labeled "Not accountable](images/14-the-limits-of-ai-what-the-tools-cannot-do-fig-05.jpg)
-
-
 **The profile, applied to delegation.** The cognitive profile — great at retrieval/synthesis/generation under specification, weak at problem formulation/plausibility auditing/interpretive judgment, absent for accountability — translates directly into a delegation map.
 
 Delegate freely the mechanical execution of well-defined procedures: procedural EDA, first-draft generation against a template, chart production from specified data, verb-taxonomy first passes. The output is checkable by inspection. The failure mode is visible.
@@ -224,16 +181,6 @@ Delegate with verification the interpretive claims that require domain knowledge
 Do not delegate problem formulation, plausibility auditing, interpretive judgment under stakes, or the sign-off that makes a judgment accountable. These cannot be done by AI not because AI is insufficiently capable, but because they are structurally unavailable to any system that cannot be wrong in a way that matters to it.
 
 <!-- → [TABLE: Delegation map — three-tier decision guide. Column 1: Category. Column 2: What belongs here. Column 3: Why the boundary falls here. Row 1: Delegate freely | Mechanical execution of well-defined procedures (EDA steps, first-draft generation, chart production, formatting, initial verb-taxonomy pass) | Output is checkable by inspection; failure modes are visible; the task is pattern-matching against a specified criterion. Row 2: Delegate with verification | Interpretive claims requiring domain knowledge (narrative explanation of anomalies, plausibility of imputed values, rationale for methodological choices) | AI can produce plausible output; plausibility must be confirmed against the world the practitioner knows; errors are not self-announcing. Row 3: Do not delegate | Problem formulation, plausibility auditing, interpretive judgment under stakes, accountability sign-off | These require connecting representations to the world, or taking on answerable responsibility — both structurally unavailable to current AI systems. Caption: "This table is the operational translation of the three-tier analysis above. Where you delegate, you retain the obligation to verify. Where you cannot delegate, you retain the obligation to do the work."] -->
-
-*Figure 14.6*
-
-| | **Property** | **Value** |
-|---|---|---|
-| **Row 1** | _fill in_ | _fill in_ |
-| **Row 2** | _fill in_ | _fill in_ |
-
-: {.data-table}
-
 
 ---
 
@@ -252,9 +199,6 @@ Used well, AI is the most powerful cognitive tool humanity has built. Used as a 
 The capacities required to use AI well are precisely the capacities AI cannot replicate: problem formulation, plausibility auditing, interpretive judgment under stakes, and accountability for the consequences. These are not luxuries or checkboxes. They are the work. The tools in this book — the verb taxonomy, the chart-review discipline, the peer critique protocol, the prediction-lock, the delegation maps, the categorical-limit analysis — are all instruments for exercising these capacities more reliably in the presence of an extraordinarily fluent AI output stream that will, without intervention, produce fluent-sounding answers to questions it cannot answer, conclusions warranted by evidence it has not examined, and confident charts that hide the uncertainty they were supposed to show.
 
 <!-- → [FIGURE: Extended mind catalog — a horizontal timeline of cognitive tools from Chapter 2 onward, each labeled with the capacity it extends and the judgment it cannot replace. Tool 1 "pH meter / chemical sensors (Ch. 2)": extends gradient sensing → cannot determine what gradient is worth measuring or when a reading is anomalous. Tool 2 "Roomba / subsumption architecture (Ch. 3)": extends steering across a task domain → cannot determine what counts as a valuable state to steer toward. Tool 3 "Writing / external memory (Ch. 4)": extends long-term storage across generations → cannot determine what is worth recording or what a record means when retrieved. Tool 4 "GPS / spatial navigation (Ch. 7)": extends position awareness → cannot determine where to go or when the route is wrong. Tool 5 "Recommendation engines (Ch. 8)": extends reward prediction → cannot specify what reward is worth optimizing. Tool 6 "Digital twins / simulation software (Ch. 9)": extends forward simulation → cannot determine which futures are worth simulating or how to act on the result. Tool 7 "Social network analysis (Ch. 10)": extends relationship tracking beyond Dunbar's number → cannot determine which relationships matter or what trust requires. Tool 8 "AI (Ch. 14)": extends retrieval, synthesis, generation, and pattern recognition at scale → cannot replace problem formulation, plausibility auditing, interpretive judgment under stakes, or accountability. A consistent visual dividing line between each pair: left side "What the tool extends." Right side "What the mind using it must supply." Caption: "The extended mind has always had this structure: the tool extends a specific capacity; the mind supplies the judgment the tool cannot. AI is the most powerful entry in the series. Its power makes the confusion between extension and replacement more dangerous, not less."] -->
-
-![Figure 14.7 — Extended mind catalog](images/14-the-limits-of-ai-what-the-tools-cannot-do-fig-07.jpg)
-
 
 *Figure 14.1 — The extended mind: the catalog named.*
 
@@ -472,3 +416,26 @@ End with the supervisor's claim, in your own voice (not generated): the casebook
 **Connection to previous chapters:** Every chapter has produced an artifact in the casebook. This chapter integrates them into the deliverable. The verb taxonomy (Ch 12) audits the memo. The accountability map (Ch 13) names the owner. The delegation map (Ch 10) specifies the proposed deployment constraints. The case taxonomy (Ch 9) is the evidence. The prediction-locks (Ch 4) are the provenance.
 
 **Preview of next chapter:** There is no next chapter. The next thing is to send the casebook to the deployment-review committee, the system's developers, and (if the agent is publicly deployed) to the appropriate accountability venue. The book closes here; your supervisory work begins.
+
+
+---
+
+## 🕰️ AI Wayback Machine
+
+The ideas in this chapter didn't appear from nowhere. **Joseph Weizenbaum** built ELIZA in 1966, watched people confide in a 200-line script as though it understood them, and spent the rest of his life arguing about which problems computers should not be asked to solve at all. Here's a prompt to find out more — and then make it better.
+
+**Run this:**
+
+```
+Who was Joseph Weizenbaum, and how does his argument in "Computer Power and Human Reason" connect to the question of what AI tools cannot do — even when they appear to be doing it well? Keep it to three paragraphs. End with the single most surprising thing about his career or ideas.
+```
+
+→ Search **"Joseph Weizenbaum"** on Wikipedia after you run this. See what the model got right, got wrong, or left out.
+
+**Now make the prompt better.** Try one of these:
+
+- Ask it to describe how ELIZA actually worked, in plain language, as if you've never seen a chatbot
+- Ask it to compare Weizenbaum's distinction between deciding and judging to a current AI deployment that elides the two
+- Add a constraint: "Answer as if you're writing the closing case for a textbook on the limits of AI"
+
+What changes? What gets better? What gets worse?

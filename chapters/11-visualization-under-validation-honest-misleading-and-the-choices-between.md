@@ -238,21 +238,6 @@ The rules are best learned from failures. Three cases, all real, all instructive
 
 <!-- → [TABLE: Three cases summary. Rows: Challenger 1986, El País Catalonia 2014, Snow's cholera map 1854. Columns: what went wrong (or right), which catalog item(s) apply, the lesson in one sentence, what the honest version would have required. The counter-case row is deliberately formatted differently — green background or positive marker — to distinguish it from the failure cases. Caption: "Two failures and one success. The success shows that evidence-grade visualization has been possible for 170 years. The failures show that possibility is not the same as practice."] -->
 
-*Figure 11.1*
-
-| | **Property** | **Value** |
-|---|---|---|
-| **Challenger 1986** | _fill in_ | _fill in_ |
-| **El País Catalonia 2014** | _fill in_ | _fill in_ |
-| **Snow's cholera map 1854. Columns: what went wrong (or right)** | _fill in_ | _fill in_ |
-| **Which catalog item(s) apply** | _fill in_ | _fill in_ |
-| **The lesson in one sentence** | _fill in_ | _fill in_ |
-| **What the honest version would have required. The counter-case row is deliberately formatted differently — green background or positive marker — to distinguish it from the failure cases. Caption: "Two failures** | _fill in_ | _fill in_ |
-| **One success. The success shows that evidence-grade visualization has been possible for 170 years. The failures show that possibility is not the same as practice."** | _fill in_ | _fill in_ |
-
-: {.data-table}
-
-
 ---
 
 ## The Living Deck — provisionality as a visible argument
@@ -270,9 +255,6 @@ The medium of provisional analysis is provisional itself. A finished-looking art
 The course's research project uses the living deck format throughout. The final presentation includes the changelog as the second-to-last slide. The changelog is evidence of the work — the visible track of how the analysis evolved. Removing it before final submission would erase the supervisory log.
 
 <!-- → [IMAGE: A mock living-deck changelog slide. Title: "Changelog." Three rows with version dates (v1: [date], v2: [date], v3: [date]), a one-sentence description of what changed in each version, and a one-sentence reason why. Below the changelog: a "Previously" thumbnail showing an old claim that was superseded, struck through, with a note explaining what changed. The slide looks like a real slide from a validation deck — not a diagram about the concept, but an example artifact the student can copy. Caption: "The changelog slide is the second-to-last slide in every living deck. It is evidence of the supervisory process, not a confession of uncertainty. A deck without it is pretending to be finished."] -->
-
-![Figure 11.2 — A mock living-deck changelog slide. Title: "Changelog." Three rows with versi...](images/11-visualization-under-validation-honest-misleading-and-the-choices-between-fig-02.jpg)
-
 
 ---
 
@@ -296,16 +278,6 @@ Pulling the frameworks together into a single operational pass:
 
 <!-- → [INFOGRAPHIC: The seven-step working sequence as a vertical flowchart. Each step is a box with a short label and a decision fork where relevant. Step 1: State the question → Step 2: Locate in FT taxonomy → Step 3: Check data against question (decision: does data measure what question asks? No → change dataset, change question, or disclose prominently. Yes → continue) → Step 4: Identify aleatoric uncertainty → choose technique by audience type (lay: quantile dotplot; expert: CI band; group comparison: box plot) → Step 5: Identify epistemic uncertainty → place in disclosure hierarchy → Step 6: Apply perception hierarchy to encoding → Step 7: Hostile read test (decision: does non-author interpretation match data? No → redesign. Yes → ship). Caption: "This is the sequence, not a checklist. The decision forks at steps 3 and 7 are where most published charts quietly fail."] -->
 
-*Figure 11.3*
-
-| | **Property** | **Value** |
-|---|---|---|
-| **Row 1** | _fill in_ | _fill in_ |
-| **Row 2** | _fill in_ | _fill in_ |
-
-: {.infographic-table}
-
-
 ---
 
 ## Glimmer 11.1 — Build the honest version, build the misleading version
@@ -327,9 +299,6 @@ The deliverable is both versions, the prediction, the design-choice documentatio
 Building a misleading dashboard with intent is the most efficient way to learn what your default dashboards have been doing without intent. After you've done this once, you do not see dashboards the same way. You see the choices. You see the arguments the structures are making. You catch yourself about to truncate an axis for entirely defensible reasons, and you stop and ask whether the truncation is doing rhetorical work you did not intend.
 
 <!-- → [IMAGE: Side-by-side thumbnail of the two-dashboard opening example. Left panel (misleading): large bold "94% accuracy" headline, truncated y-axis bar charts in gray, calibration curve labeled "Advanced Metrics" in a sub-tab the reader would not click. Right panel (honest): headline panel showing overall + subgroup performance on consistent axes at equal visual weight, calibration curve in the main view with a banner noting overconfidence above 0.85, uniform color scheme. An annotation layer labels the specific misleading choices on the left panel and the specific honest choices on the right. Caption: "Same data. Same CSV. The difference is five design choices, each taking about thirty seconds to make in either direction. The Glimmer asks you to make those choices deliberately, then name them." Intended to anchor the Glimmer for students who learn best from a visual anchor of the deliverable they are building.] -->
-
-![Figure 11.4 — Side-by-side thumbnail of the two-dashboard opening example. Left panel (misl...](images/11-visualization-under-validation-honest-misleading-and-the-choices-between-fig-04.jpg)
-
 
 ---
 
@@ -496,3 +465,26 @@ Finally — the LIVING DECK move — add a provisionality note to Dashboard A. S
 **Connection to previous chapters:** The Chapter 9 failure statistics are the data; the Chapter 7 fairness defense is one of the cells; the Chapter 8 robustness probe results are visible too. The dashboard is the casebook's findings made legible.
 
 **Preview of next chapter:** Chapter 12 audits the casebook's WRITING — every claim against the verb taxonomy, every confidence number against actual calibration metrics computed on your prediction-locks. This is where the casebook's internal honesty is checked before it goes to peer critique.
+
+
+---
+
+## 🕰️ AI Wayback Machine
+
+The ideas in this chapter didn't appear from nowhere. **W. E. B. Du Bois** designed some of the most original data visualizations in history for the 1900 Paris Exposition — explicit, deliberate choices about what to show and how, with the politics of each choice fully visible. Here's a prompt to find out more — and then make it better.
+
+**Run this:**
+
+```
+Who was W. E. B. Du Bois, and how do his 1900 Paris Exposition visualizations connect to the choices behind making a chart that is honest rather than merely persuasive? Keep it to three paragraphs. End with the single most surprising thing about his career or ideas.
+```
+
+→ Search **"W. E. B. Du Bois"** on Wikipedia after you run this. See what the model got right, got wrong, or left out.
+
+**Now make the prompt better.** Try one of these:
+
+- Ask it to describe one specific Du Bois Paris chart in plain language, as if you've never seen 19th-century data viz
+- Ask it to compare a Du Bois choice (his polar-area or step-chart designs) to a modern misleading-vs-honest version of the same data
+- Add a constraint: "Answer as if you're writing the opening case for a chapter on visualization under validation"
+
+What changes? What gets better? What gets worse?
