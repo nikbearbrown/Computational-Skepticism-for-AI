@@ -52,11 +52,17 @@ What makes the Cartesian move powerful is that it produces a *checklist*. When y
 
 <!-- → [INFOGRAPHIC: Cartesian doubt as an inspection protocol — the single question "what would have to be true for this to be wrong?" branching into three checkable engineering conditions: (1) training data representation, (2) input feature completeness, (3) deployment/validation context match. Each branch terminates in a yes/no check. Positioned here as a companion to the prose before the Hume paragraph.] -->
 
+![Figure 1.1 — Cartesian doubt as an inspection protocol](images/01-the-skeptics-toolkit-fig-01.jpg)
+
+
 **Hume** donates *the limit of induction*. Here is the thing about induction that I want you to feel in your bones, because most engineers have heard the words and not really felt the thing. The model has been right thousands of times. Each one of those correct predictions adds *zero logical guarantee* that the next prediction will be right. None. Zero. The reason induction works in practice is that the world is doing some of the work for you — the distribution is stable, the patterns persist — and the working is invisible until it stops working. When it stops working, the model is exactly as confident as it was the day before, and the confidence is now a lie.
 
 Nassim Taleb gives a version of this problem that I find harder to shake than the philosophical formulation. A turkey is fed every morning for a thousand days. Each morning of feeding increases the turkey's confidence that tomorrow will also involve feeding. By day nine hundred and ninety-nine, the turkey's model of the world assigns very high probability to a meal on day one thousand. On day one thousand, the farmer arrives with an axe.
 
 <!-- → [IMAGE: The turkey problem as a confidence timeline — x-axis: days 1 through 1000, y-axis: turkey's model confidence that tomorrow involves feeding. Confidence rises smoothly toward 1.0, then a vertical drop and termination at day 1000. A small annotation at the peak: "maximum confidence, maximum wrongness." This is the single most important image in the Hume section; it should be sized generously.] -->
+
+![Figure 1.2 — The turkey problem as a confidence timeline](images/01-the-skeptics-toolkit-fig-02.jpg)
+
 
 The problem is not that the turkey was foolish. The problem is that the turkey had genuinely good evidence, correctly processed, leading to a prediction that happened to be catastrophically wrong because the turkey's model had no representation of the causal structure underneath the pattern. The turkey knew the correlation. The turkey did not know the mechanism. When the mechanism changed — when the calendar flipped to late November — the correlation model had no way to notice.
 
@@ -76,9 +82,22 @@ There is a related discipline here that Popper called the demarcation between sc
 
 <!-- → [TABLE: Rhetorical claims vs. their Popperian engineering corrections — left column: "The system is robust," "The model performs well," "The migration was a success," "We have mitigated drift." Right column: the same claims rewritten with specific metric, threshold, and measurement window. The point is that the right column is checkable and the left column is not. Student should immediately see the structural difference.] -->
 
+*Figure 1.3*
+
+| | **Rhetorical claims** | **Their Popperian engineering corrections** |
+|---|---|---|
+| **Row 1** | _fill in_ | _fill in_ |
+| **Row 2** | _fill in_ | _fill in_ |
+
+: {.infographic-table}
+
+
 I want to be clear about something. You do not have to think Descartes was right about anything to use his move. You do not have to be a Humean or a Popperian. The moves are tools. A structural engineer does not have to believe in the metaphysics of steel to perform a load test on a beam. You perform the move. The move either reveals something or it does not. If it does, you have learned something about the system. If it does not, you have learned that this particular check came back clean. Either is useful.
 
 <!-- → [INFOGRAPHIC: The three moves as a portable checklist — Cartesian doubt (what would make this wrong? → produces a checkable list of conditions), Humean induction limit (confidence is a property of the model, not the world → check whether the distribution has shifted), Popperian falsifiability (what would failure look like, specified in metrics, thresholds, and windows → refuse claims that are compatible with every outcome). Designed for margin reference or pull-quote treatment — the kind of thing students photograph and tape to monitors. [Figure 1.1]] -->
+
+![Figure 1.4 — The three moves as a portable checklist](images/01-the-skeptics-toolkit-fig-04.jpg)
+
 
 ---
 
@@ -98,6 +117,9 @@ The triage system produced a score. The score was the artifact. The patient had 
 
 <!-- → [IMAGE: Two-column split — left column labeled "The Artifact" (model, score, validation metrics, deployment review), right column labeled "The World" (patient, clot, waiting room, outcome). A dotted line connects them labeled "statistical relationship." A bold caption beneath: "The engineers reviewed the left column. The patient was in the right column." [Figure 1.2]] -->
 
+![Figure 1.5 — Two-column split](images/01-the-skeptics-toolkit-fig-05.jpg)
+
+
 ---
 
 ## The solve-verify asymmetry
@@ -115,6 +137,16 @@ If you do not budget for verification, you will not get verification. The system
 Most of this book is about how to verify cheaply enough that verification scales. The answer is *never* "automate the verification" — because that is just another model, with the same problem, sitting one layer up. The answer is always: design the system so that the verification a human can perform tells you what you need to know.
 
 <!-- → [CHART: Cost asymmetry bar chart — horizontal axis: AI task type (triage scoring, loan decisioning, autonomous email management, medical imaging). Vertical axis: relative cost (log scale). Two bars per task: production cost (near-zero, consistent across all domains) vs. verification cost (variable, always higher, domain-dependent). The visual point is that production cost is flat and verification cost is not — the gap is the problem. [Figure 1.3]] -->
+
+*Figure 1.6*
+
+| | **Cost asymmetry bar chart — horizontal axis: AI task type (triage scoring, loan decisioning, autonomous email management, medical imaging). Vertical axis: relative cost (log scale). Two bars per task: production cost (near-zero, consistent across all domains)** | **Verification cost (variable, always higher, domain-dependent). The visual point is that production cost is flat and verification cost is not** |
+|---|---|---|
+| **Row 1** | _fill in_ | _fill in_ |
+| **Row 2** | _fill in_ | _fill in_ |
+
+: {.data-table}
+
 
 ---
 
@@ -137,6 +169,19 @@ I count five, and the rest of the book is in some sense an operationalization of
 These five are vocabulary for now. By the end of the book you will be able to look at any AI deployment and name, for each step, which capacity is being exercised and by whom. Where you cannot name it, you have found a gap. Gaps are where the patients die.
 
 <!-- → [TABLE: The five supervisory capacities — columns: capacity name | what the supervisor does | what failure looks like | chapter that develops it. Rows: plausibility auditing, problem formulation, tool orchestration, interpretive judgment, executive integration. This table is the navigational spine of the book; students should bookmark it and return at the start of each chapter. [Figure 1.4]] -->
+
+*Figure 1.7*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **Plausibility auditing** | _fill in_ | _fill in_ |
+| **Problem formulation** | _fill in_ | _fill in_ |
+| **Tool orchestration** | _fill in_ | _fill in_ |
+| **Interpretive judgment** | _fill in_ | _fill in_ |
+| **Executive integration. This table is the navigational spine of the book** | _fill in_ | _fill in_ |
+
+: {.comparison-table}
+
 
 ---
 
@@ -164,6 +209,9 @@ The Popperian move helps here. Before you read the output: specify what a wrong 
 
 <!-- → [INFOGRAPHIC: The fluency trap as a two-stage mechanism — Stage 1: fluent output → elevated confidence in output. Stage 2: elevated confidence in output → elevated confidence in own evaluation. A third annotation breaking out the form/content independence: "in human speech, form tracks content; in AI output, they are generated by separate processes." Caption: "Fluency boosts wrong evaluations as readily as right ones. The shape of a sentence is not evidence about its truth." [Figure 1.5]] -->
 
+![Figure 1.8 — The fluency trap as a two-stage mechanism](images/01-the-skeptics-toolkit-fig-08.jpg)
+
+
 ---
 
 ## Skepticism as a team practice
@@ -179,6 +227,9 @@ This is not a bureaucratic point. It is an architectural one. When you design a 
 The five supervisory capacities are a framework for thinking about this architecture. For each capacity, the design question is: where in the workflow is this capacity exercised? Who exercises it? What do they see, and when, that makes exercising it possible? If the answer to any of those questions is "nobody" or "we haven't thought about that," you have found an undefended gap. Undefended gaps are where the patients die.
 
 <!-- → [IMAGE: Workflow diagram — a horizontal pipeline: input → model → output → human review → decision. Each stage annotated with which supervisory capacity lives there: problem formulation (before input), tool orchestration (at model selection), plausibility auditing (at human review), interpretive judgment (also at human review), executive integration (at decision). Red gap markers at the stages most commonly left unoccupied in real deployments. [Figure 1.6]] -->
+
+![Figure 1.9 — Workflow diagram](images/01-the-skeptics-toolkit-fig-09.jpg)
+
 
 ---
 
@@ -272,3 +323,60 @@ The first time most engineers do this exercise honestly, the result is uncomfort
 **10.** The chapter presents skepticism as a *method* — a set of moves — rather than a disposition. But some deployments operate under time pressure severe enough that the four moves cannot all be executed before action is required. Design a *triage protocol for skeptical moves*: given ten seconds, which one move do you run? Given two minutes? Given twenty? Justify your ordering using the concepts from this chapter.
 
 **11.** The chapter closes with an open question: when should a supervisor trust the model *anyway*, in high-pressure deployments where verification time is not available? Without Chapters 2 and 10: frame the question as precisely as you can. What variables determine the answer? What would a principled decision rule look like, even in rough form? What information would you need that this chapter does not yet provide?
+
+---
+
+###  LLM Exercise — Chapter 1: The Skeptic's Toolkit
+
+**Project:** The Agentic Red-Team Casebook
+
+**What you're building this chapter:** The agent you will red-team across the next thirteen chapters, plus a System Dossier and a first-pass application of the four moves and Five Supervisory Capacities to one observed interaction with that agent.
+
+**Tool:** Claude Project — set up a new Project called "Red-Team Casebook" and return to it every chapter. Pin the System Dossier into the system prompt.
+
+---
+
+**The Prompt:**
+
+```
+I am working through "Computational Skepticism for AI." Across the book I am going to red-team one agentic AI system in the format of Shapira et al., "Agents of Chaos" (2026) — producing my own multi-case casebook by Chapter 14. This is the setup chapter. I need your help with two tasks.
+
+TASK 1 — Help me pick the right agent to red-team. The agent should:
+- Be agentic (it takes actions in the world via tools, not just produces text)
+- Be accessible to me (I can run it, instrument it, capture its inputs and outputs) OR be sufficiently documented publicly that I can analyze its architecture and behavior from primary sources
+- Have a meaningful blast radius (a wrong action has real consequences — lost data, wrong recommendation, leaked information, financial impact, safety issue)
+- Be one I can poke at safely and ethically (no production systems where my testing harms real users; sandbox or isolated instance)
+- Be small enough to study in fifteen weeks but rich enough to produce 5–11 distinct failure cases
+
+Here is my context:
+- My background / discipline: [FILL IN]
+- Agents I'm considering: [LIST 2–4, OR SAY "HELP ME BRAINSTORM"]
+- Whether I can run them locally / have credentials / am limited to public docs: [FILL IN]
+
+Help me evaluate the candidates and pick one. Push back if a candidate is too risky to test, too opaque to study, or too narrow to support 5+ cases.
+
+TASK 2 — Once we settle on the agent, do a first-pass skeptic's-toolkit application. Walk me through ONE observed (or plausibly representative) interaction with the agent — the agent receives input X, takes action Y, reports outcome Z. For that interaction:
+
+- CARTESIAN DOUBT: What would have to be true for the agent's report Z to be wrong about the world? List at least three structural conditions.
+- HUMEAN INDUCTION: What features of the deployment context might differ from the training context in ways that would silently invalidate the agent's behavior? Name at least two.
+- POPPER FALSIFIABILITY: What specific observation would falsify the agent's claim? If you cannot construct such an observation, the claim is not yet engineering — it is rhetoric.
+- PLATO'S CAVE: What is the agent reporting versus what is the world doing? Where is the artifact-vs-world gap most likely to live?
+
+Then, for the FIVE SUPERVISORY CAPACITIES, name (a) what exercising each capacity would look like concretely on this agent and (b) what the failure mode is if that capacity is absent. Identify the single capacity whose absence would most likely break this agent — that's the capacity my Chapter 9 case-collection should center on.
+
+End with a one-paragraph "System Dossier" I can paste into my Claude Project's system prompt: name of agent, architecture summary, tool surface, deployment context, the candidate failure mode my casebook will pursue, and any access constraints I'm working under.
+```
+
+---
+
+**What this produces:** A chosen agent, a four-moves analysis on one interaction, a Five-Capacities scoring with the most-likely-binding capacity named, and a System Dossier paragraph pinned to the top of your Claude Project so every subsequent chapter exercise inherits the context.
+
+**How to adapt this prompt:**
+- *For your own project:* Fill in the bracketed fields. If you don't have candidates, write "Help me brainstorm given my background." Be honest about access — a publicly-documented agent you can only analyze (not poke at) still works for many chapters but limits Chs 8–9.
+- *For ChatGPT / Gemini:* Works as-is. In ChatGPT, set up as a Custom GPT for persistence.
+- *For Claude Code:* Not yet. Coming chapters use Claude Code for instrumenting the agent and capturing audit trails.
+- *For a Claude Project:* Recommended. The System Dossier becomes part of the Project's system prompt going forward — every chapter from here on assumes it.
+
+**Connection to previous chapters:** This is the foundation. Skip it and the rest of the casebook has no anchor.
+
+**Preview of next chapter:** Chapter 2 takes your chosen agent and asks you to compute base rates and posterior probabilities for its claims — what is P(task actually completed | agent reports "task complete") given a realistic prior on agent reliability?

@@ -55,6 +55,16 @@ The taxonomy is not exhaustive — *characterize*, *report*, *describe*, *quanti
 
 <!-- → [TABLE: Verb taxonomy reference card — columns: verb, epistemic posture, minimum evidence required, correct use example, common misuse. Eight rows: hypothesize through prove. Footer note: "Most engineering writing sits between observe and find. Most engineering writing uses conclude. The gap is the problem." Figure 12.1] -->
 
+*Figure 12.1*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **Hypothesize through prove. Footer note: "Most engineering writing sits between observe** | _fill in_ | _fill in_ |
+| **Find. Most engineering writing uses conclude. The gap is the problem." Figure 12.1** | _fill in_ | _fill in_ |
+
+: {.comparison-table}
+
+
 This is unromantic editing. There is no inspiration in it. You are downgrading verbs because the evidence does not warrant the original verb, and the prose loses some of the punch you put into it. I want to tell you that this is also the most operationally important single skill in technical communication of validation findings. The careful engineer's writing reads, at first, as quieter than the careless engineer's. It also survives reading.
 
 ---
@@ -80,6 +90,9 @@ The layered approach is harder to write than two separate documents. It is easie
 Layer 1 is not "dumbed down." Dumbing down is condescending and loses information. Layer 1 is a specific, careful, accurate summary in plain English. Plain English is *harder* to write than jargon. The technical reader benefits from Layer 1 as much as the non-technical reader does — it forces the writer to articulate what the section is really doing, which is sometimes a useful discovery for the writer.
 
 <!-- → [IMAGE: Layered document structure — a single document shown as a vertical stack. Three clearly labeled bands: Layer 1 (plain English summary, executive reader enters here), Layer 2 (technical detail, peer reviewer enters here), Layer 3 (appendix / reproducibility detail, auditor enters here). Three reader-type labels on the right, each with an arrow pointing to the layer they primarily use. Key callout: "all three layers live in the same document — no translation required." Figure 12.2] -->
+
+![Figure 12.2 — Layered document structure](images/12-communicating-uncertainty-calibrating-claims-to-evidence-fig-02.jpg)
+
 
 ---
 
@@ -110,6 +123,9 @@ where $\overline{y}$ is the base rate of positive outcomes, REL is the resolutio
 For example: a model with a low Brier score but poor resolution is one that is well-calibrated but predicts close to the base rate for every instance — it is honest about uncertainty but useless for triage. A model with high resolution but poor calibration is one that discriminates well but whose probabilities are misleading — it ranks cases correctly but the absolute numbers cannot be trusted.
 
 <!-- → [INFOGRAPHIC: Brier score decomposition — three-part stacked bar. Left bar shows Uncertainty term (fixed for given base rate). Right bar shows Brier score split into Resolution (subtracted, shown in green) and Calibration error (added, shown in red). Two example profiles beneath: Model A (low calibration error, low resolution) labeled "honest but unhelpful"; Model B (high resolution, high calibration error) labeled "discriminates but misleads." Caption: "The Brier score collapse hides which of the three components is driving the number. Always decompose." Figure 12.3] -->
+
+![Figure 12.3 — Brier score decomposition](images/12-communicating-uncertainty-calibrating-claims-to-evidence-fig-03.jpg)
+
 
 ### Expected Calibration Error: binning the predictions
 
@@ -142,6 +158,9 @@ The shape of the deviation is diagnostic:
 
 <!-- → [CHART: Four reliability diagrams in a 2×2 grid. Panel 1: perfectly calibrated (points on the diagonal). Panel 2: overconfident (points below diagonal, gap between points and diagonal shaded). Panel 3: underconfident (points above diagonal). Panel 4: sigmoidal pattern (below diagonal at low and high confidence, above diagonal in the middle). Each panel labeled with failure mode name and one-sentence description of which model type typically produces it. Histogram of prediction frequency shown at bottom of each panel. Caption: "The shape of the deviation from the diagonal tells you what kind of miscalibration you have. The aggregate ECE does not." Figure 12.4] -->
 
+![Figure 12.4 — Four reliability diagrams in a 2×2 grid. Panel 1: perfectly calibrated (point...](images/12-communicating-uncertainty-calibrating-claims-to-evidence-fig-04.jpg)
+
+
 ### Subgroup calibration: where aggregate metrics lie
 
 The single most important limitation of aggregate calibration metrics is that they are aggregate. A system with low global ECE can be catastrophically miscalibrated for a specific subgroup if that subgroup is small enough to be washed out in the overall average.
@@ -157,6 +176,17 @@ $$\text{ECE}_g = \sum_{m=1}^{M} \frac{|B_m^g|}{N_g} \left| \text{acc}(B_m^g) - \
 and report both the global $\text{ECE}$ and the full distribution of $\{\text{ECE}_g\}$. If the maximum subgroup $\text{ECE}$ is substantially higher than the global $\text{ECE}$, the aggregate metric is concealing a real problem.
 
 <!-- → [TABLE: Subgroup calibration reporting template — columns: subgroup name, N (count), base rate, global ECE (reference), subgroup ECE, subgroup MCE, flag (Y/N if subgroup ECE > 2× global). Example rows filled in with plausible values for a medical deployment. Bottom row: "Global" row showing aggregate values. Caption: "This table, completed for every deployment, makes the aggregate-mask failure mode visible before it reaches patients." Figure 12.5] -->
+
+*Figure 12.5*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **"Global" row showing aggregate values. Caption: "This table** | _fill in_ | _fill in_ |
+| **Completed for every deployment** | _fill in_ | _fill in_ |
+| **Makes the aggregate-mask failure mode visible before it reaches patients." Figure 12.5** | _fill in_ | _fill in_ |
+
+: {.data-table}
+
 
 ### Temperature scaling: the fix and its limits
 
@@ -177,6 +207,9 @@ The Platt scaling and isotonic regression alternatives offer more flexibility at
 None of these methods address distribution shift. When the deployment population differs from the calibration population — which is the normal situation for a model deployed across multiple sites, over time, or on a population with different demographics — post-hoc calibration on historical data is not a calibration guarantee for the current deployment.
 
 <!-- → [IMAGE: Temperature scaling effect diagram — two reliability diagrams side by side. Left: pre-scaling, curve below diagonal (overconfident). Right: post-scaling with T=1.8, curve closer to diagonal. Annotation: "T>1 flattens the distribution. The ranking of predictions is unchanged." Below both diagrams: two small panels showing "calibration set" and "deployment set" with an arrow between them labeled "distribution shift" and a note: "Temperature scaled on the calibration set. The deployment set is not the calibration set." Caption: "Temperature scaling corrects the symptom. It does not transfer across distribution shift." Figure 12.6] -->
+
+![Figure 12.6 — Temperature scaling effect diagram](images/12-communicating-uncertainty-calibrating-claims-to-evidence-fig-06.jpg)
+
 
 ### From calibration metrics to trust claims
 
@@ -203,6 +236,20 @@ This table is not decoration. I use it to write Layer 2. Every calibration claim
 
 <!-- → [TABLE: Calibration evidence ladder — full version with six rows. Columns: evidence level, warranted verb, what is established, what remains uncertain, what evidence would move to the next row. The last column makes the ladder actionable: it specifies what the team would need to do to justify a stronger verb. Caption: "The verb follows from the evidence. The table makes the derivation explicit and the upgrade path visible." Figure 12.7] -->
 
+*Figure 12.7*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **Evidence level** | _fill in_ | _fill in_ |
+| **Warranted verb** | _fill in_ | _fill in_ |
+| **What is established** | _fill in_ | _fill in_ |
+| **What remains uncertain** | _fill in_ | _fill in_ |
+| **What evidence would move to the next row. The last column makes the ladder actionable: it specifies what the team would need to do to justify a stronger verb. Caption: "The verb follows from the evidence. The table makes the derivation explicit** | _fill in_ | _fill in_ |
+| **The upgrade path visible." Figure 12.7** | _fill in_ | _fill in_ |
+
+: {.comparison-table}
+
+
 ### The conformal prediction guarantee — and what it costs
 
 Conformal prediction offers something the metrics above do not: a provable finite-sample coverage guarantee. For a given significance level $\alpha$, a conformal predictor produces a prediction set $C(x)$ such that:
@@ -223,6 +270,9 @@ The verb warranted by conformal coverage: *prove* — but only for the exchangea
 
 <!-- → [INFOGRAPHIC: Conformal prediction mechanism — three panels. Panel 1: calibration set with non-conformity scores shown as a sorted bar chart, (1-α)-quantile marked. Panel 2: test instance with its non-conformity score compared to q-hat, prediction set shown. Panel 3: two deployment scenarios — same population ("marginal guarantee holds") and shifted population ("exchangeability violated, guarantee does not apply"). Caption: "Conformal prediction proves the guarantee holds under exchangeability. Distribution shift is not exchangeability." Figure 12.8] -->
 
+![Figure 12.8 — Conformal prediction mechanism](images/12-communicating-uncertainty-calibrating-claims-to-evidence-fig-08.jpg)
+
+
 ### What calibration metrics cannot see
 
 A clean list before moving on.
@@ -236,6 +286,19 @@ Calibration metrics measure what was observed in the evaluation set. They do not
 These are not failures of calibration metrics. They are the scope boundary of what calibration metrics measure. The supervisory work continues past the metric, into the construct, the deployment context, and the validation design. The metric is necessary. It is not sufficient.
 
 <!-- → [TABLE: What calibration metrics cannot see — three rows: (1) construct validity failure, (2) calibration without usefulness, (3) distribution shift. Columns: what the failure looks like, why standard metrics miss it, what would catch it instead. Caption: "The metric is honest about the evaluation. The evaluation may not be representative of the deployment. These are different problems." Figure 12.9] -->
+
+*Figure 12.9*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **(1) construct validity failure** | _fill in_ | _fill in_ |
+| **(2) calibration without usefulness** | _fill in_ | _fill in_ |
+| **(3) distribution shift. Columns: what the failure looks like** | _fill in_ | _fill in_ |
+| **Why standard metrics miss it** | _fill in_ | _fill in_ |
+| **What would catch it instead. Caption: "The metric is honest about the evaluation. The evaluation may not be representative of the deployment. These are different problems." Figure 12.9** | _fill in_ | _fill in_ |
+
+: {.comparison-table}
+
 
 ---
 
@@ -297,6 +360,9 @@ Think of this as the verb taxonomy *operating as a fluency-trap detector*. AI ou
 In practice, downgrading verbs in AI output is one of the highest-leverage editing moves you can make. It is also one of the most defensible — the underlying claim does not change. The calibration of how the claim is presented changes. Most AI-generated paragraphs are improved by one or two verb downgrades, and the resulting paragraph reads more like the work of a careful engineer than the work of an enthusiastic press release.
 
 <!-- → [IMAGE: Annotated AI-generated paragraph — four to six sentences, each strong-verb usage circled in one color, appropriate downgraded verb written above it in another color. Margin annotations show the evidentiary gap that motivates each downgrade. Example: "conclusively demonstrates" → "suggests," annotated "no replication, no significance test." Student uses this as a model for annotating their own AI-output review exercises. Figure 12.10] -->
+
+![Figure 12.10 — Annotated AI-generated paragraph](images/12-communicating-uncertainty-calibrating-claims-to-evidence-fig-10.jpg)
+
 
 ---
 
@@ -425,3 +491,74 @@ What verb is warranted for the post-scaling calibration claim when applied to th
 **C1.** The verb taxonomy is presented in this chapter as a tool for human writers editing their own work and reviewing AI output. Propose a formal specification for an automated verb-calibration tool — one that takes a paragraph and its evidence base as input and outputs a verb-calibration assessment. Specify: the representation of "evidence base" the tool would require, the decision rule mapping evidence to warranted verb, the failure modes of the tool (cases where it would produce wrong assessments), and the class of verb mismatches it cannot catch even in principle. Your proposal should make clear why this tool, even if perfectly implemented, would not replace the peer-critique infrastructure the chapter describes.
 
 **C2.** The chapter claims that the subgroup ECE table should be included in every deployment validation report, and that a maximum subgroup ECE substantially above the global ECE is a flag requiring response. But the chapter does not specify what ratio constitutes "substantially above" or what response is required. Design a decision framework for subgroup ECE findings: what threshold triggers a flag, what organizational or technical actions each flag level requires, and how the framework handles tradeoffs between subgroup calibration and deployment feasibility. Identify the values questions your framework embeds and explain how a different organization might reasonably set different thresholds.
+
+---
+
+###  LLM Exercise — Chapter 12: Communicating Uncertainty
+
+**Project:** The Agentic Red-Team Casebook
+
+**What you're building this chapter:** A two-pass audit of your casebook's writing — first a verb-calibration pass against every claim in the case files, then a calibration-metric computation on the prediction-locks you wrote in Chapters 4, 5, and 8. The casebook then goes to peer critique using the chapter's protocol.
+
+**Tool:** Claude chat for the verb audit (it's analytical reading work). Claude Code for the calibration-metric computation. Cowork to apply the rewrites.
+
+---
+
+**The Prompt:**
+
+```
+Continuing my Red-Team Casebook. The casebook now contains: System Dossier, Bias-and-Leverage Brief, Frictional journal with locked predictions, Data Frame Audit, Self-Explanation Audit, Defended Fairness Choice, Robustness Probe Results, casebook-index, individual case files (5–11), delegation maps, dashboards.
+
+This chapter teaches:
+- VERB TAXONOMY: hypothesize → suggest → find → observe → conclude. Each verb implies a specific epistemic posture; engineers default to "conclude" when "find" or "suggest" is what the evidence warrants.
+- THREE-LAYER DOCUMENT: plain English summary; technical detail; reproducibility appendix.
+- CALIBRATION METRICS: Brier score, Expected Calibration Error (ECE), reliability diagrams, proper scoring rules. SUBGROUP calibration matters more than aggregate.
+- PEER CRITIQUE: solitary review does not work for verb-calibration; collective synthesis catches what self-review misses.
+
+For my casebook, do four things:
+
+PASS 1 — VERB AUDIT (Claude chat):
+Walk through every CLAIM in my casebook (case write-ups, dashboards, delegation maps, fairness defense). For each:
+- Identify the verb the claim uses (or implies)
+- Identify the evidence the claim is built on
+- Determine whether the verb is warranted, weaker than warranted, or stronger than warranted
+- Mark each over-reach with [VERB] and propose the calibrated rewrite
+Flag the FIVE WORST over-reaches with explicit before/after rewrites.
+
+PASS 2 — CALIBRATION METRIC COMPUTATION (Claude Code):
+I made prediction-locks in Chs 4, 5, 8 with confidence scores (low/medium/high or numeric). I observed the actual outcomes when I ran the cases in Ch 9. Compute:
+- BRIER SCORE on the binary predictions (right vs wrong)
+- ECE on the confidence-binned predictions
+- A reliability diagram (Mermaid or matplotlib)
+If I made fewer than ~10 predictions, the metrics are noisy; report them with their uncertainty (or use Wilson intervals on the bin frequencies). Identify any subgroup of predictions where calibration is notably worse — e.g., predictions about social-coherence cases vs predictions about self-model cases.
+
+PASS 3 — DOCUMENT RESTRUCTURE:
+Restructure the casebook into the three-layer form:
+- LAYER 1 — Plain English summary (1–2 pages): the core findings, the recommendation, the calibration metric, the limits — in language a non-engineer reviewer could read in 5 minutes
+- LAYER 2 — Technical detail (the existing case write-ups, delegation maps, fairness defense, dashboards)
+- LAYER 3 — Reproducibility appendix: probe scripts, prediction-lock log, AI Use Disclosure, all primary sources cited
+Show me the Layer 1 summary, freshly written and verb-audited.
+
+PASS 4 — PEER CRITIQUE PROTOCOL:
+Draft the email I would send to a peer reviewer (a classmate, a colleague, or a domain expert) requesting verb-evidence-calibration peer critique. The protocol from the chapter has structure: what to share, what specific failures to look for, how to format the response. Use it.
+
+Output:
+- The verb-audit report with the 5 worst over-reaches and rewrites
+- The calibration metrics file (Brier, ECE, reliability diagram, subgroup calibration if applicable)
+- The Layer 1 plain-English summary (verb-audited)
+- The peer-critique request email
+```
+
+---
+
+**What this produces:** A verb-audit report with rewrites, computed Brier / ECE / reliability diagram on your own predictions, the Layer 1 plain-English casebook summary, and a peer-critique request ready to send.
+
+**How to adapt this prompt:**
+- *For your own project:* Be willing to send the peer-critique request to an actual peer. Solitary review really does not work — the chapter is right about this.
+- *For ChatGPT / Gemini:* Works as-is.
+- *For Claude Code:* Recommended for the metric pass — it's the kind of small numeric script that goes faster in Code than in chat.
+- *For Cowork:* Save all four outputs to the casebook folder.
+
+**Connection to previous chapters:** This chapter audits everything previous. The Frictional prediction-locks (Ch 4), the case files (Ch 9), the dashboards (Ch 11), and the fairness defense (Ch 7) all get verb-audited and calibration-checked.
+
+**Preview of next chapter:** Chapter 13 builds the responsibility-attribution map for the failures your casebook documents. Who is responsible — the agent's developers, the model provider, the deployer, the user? You'll work the same multi-party analysis that Chapter 13 demonstrates on the §16.5 case, but applied to YOUR cases.

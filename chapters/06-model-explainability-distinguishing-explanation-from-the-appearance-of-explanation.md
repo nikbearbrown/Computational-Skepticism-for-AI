@@ -17,6 +17,9 @@ We have to talk about how this happens. We have to talk about it in particular c
 
 <!-- → [IMAGE: Two-path decision flow. Same prediction arriving at the same radiologist twice in parallel columns: (left) prediction alone, no explanation — ends in "one input among several / uncertain"; (right) prediction with SHAP attribution — ends in "confident concurrence / explanation launders the shortcut." A label in the middle: "the explanation adds epistemic weight it cannot warrant." Figure 6.1] -->
 
+![Figure 6.1 — Two-path decision flow. Same prediction arriving at the same radiologist twice in parallel columns: (left) prediction alone, no explanation](images/06-model-explainability-distinguishing-explanation-from-the-appearance-of-explanation-fig-01.jpg)
+
+
 ---
 
 **Learning objectives.** By the end of this chapter you should be able to:
@@ -50,6 +53,22 @@ For a practitioner reading SHAP output, the operational risk is to treat the att
 
 <!-- → [TABLE: SHAP capability matrix — rows: (1) additive feature contribution to prediction, (2) causal relationship between feature and outcome, (3) whether the model is correct on this case, (4) what would happen if feature X changed, (5) whether the feature is a confounder vs. a cause. Columns: SHAP support (yes/no), Pearl rung, what you'd need instead. The table makes the ceiling explicit. Figure 6.2] -->
 
+*Figure 6.2*
+
+| | **SHAP capability matrix — rows: (1) additive feature contribution to prediction, (2) causal relationship between feature and outcome, (3) whether the model is correct on this case, (4) what would happen if feature X changed, (5) whether the feature is a confounder** | **A cause. Columns: SHAP support (yes/no), Pearl rung, what you'd need instead. The table makes the ceiling explicit. Figure 6.2** |
+|---|---|---|
+| **(1) additive feature contribution to prediction** | _fill in_ | _fill in_ |
+| **(2) causal relationship between feature** | _fill in_ | _fill in_ |
+| **Outcome** | _fill in_ | _fill in_ |
+| **(3) whether the model is correct on this case** | _fill in_ | _fill in_ |
+| **(4) what would happen if feature X changed** | _fill in_ | _fill in_ |
+| **(5) whether the feature is a confounder vs. a cause. Columns: SHAP support (yes/no)** | _fill in_ | _fill in_ |
+| **Pearl rung** | _fill in_ | _fill in_ |
+| **What you'd need instead. The table makes the ceiling explicit. Figure 6.2** | _fill in_ | _fill in_ |
+
+: {.infographic-table}
+
+
 ---
 
 ## The mathematics of Shapley values
@@ -74,6 +93,16 @@ The total we are distributing is $v(F) - v(\emptyset) = \hat{f}(\mathbf{x}) - \m
 
 <!-- → [INFOGRAPHIC: The value function as a lookup table — three columns showing coalition S (empty set, {x₁}, {x₁,x₂}, {x₁,x₂,x₃}), the features "present" vs. "averaged out," and the resulting v(S) value. The two boundary conditions labeled explicitly. Caption: "v(S) is the expected prediction when we know only the features in S. The total payout is v(F) − v(∅)." Figure 6.3] -->
 
+*Figure 6.3*
+
+| | **The value function as a lookup table — three columns showing coalition S (empty set, {x₁}, {x₁,x₂}, {x₁,x₂,x₃}), the features "present"** | **"averaged out," and the resulting v(S) value. The two boundary conditions labeled explicitly. Caption: "v(S) is the expected prediction when we know only the features in S. The total payout is v(F) − v(∅)." Figure 6.3** |
+|---|---|---|
+| **Row 1** | _fill in_ | _fill in_ |
+| **Row 2** | _fill in_ | _fill in_ |
+
+: {.infographic-table}
+
+
 ### The marginal contribution
 
 The core object is the *marginal contribution* of feature $i$ to coalition $S$ — the change in prediction when $i$ is added to $S$:
@@ -95,6 +124,9 @@ Equivalently — and this is the intuition I prefer — think of the features en
 For a model with $|F| = 4$ features, there are $4! = 24$ orderings, and the Shapley value of each feature averages over all 24. With more features, the sum over coalitions grows as $2^{|F|}$, which is why exact computation is expensive for large feature sets — and why SHAP uses efficient approximation algorithms.
 
 <!-- → [IMAGE: "Features entering a room" visualization — four features as labeled figures, standing in a queue with a random ordering arrow. Feature i arrives to find coalition S (the features who entered before it) seated at a table. The speech bubble over i reads "my marginal contribution is v(S ∪ {i}) − v(S)." Caption: "The Shapley value is the average marginal contribution across all random orderings — the average of what each feature adds to whoever was there before it." Figure 6.4] -->
+
+![Figure 6.4 — "Features entering a room" visualization](images/06-model-explainability-distinguishing-explanation-from-the-appearance-of-explanation-fig-04.jpg)
+
 
 ### The four axioms
 
@@ -126,6 +158,16 @@ This is why SHAP attributions for a random forest can be computed per tree and t
 
 <!-- → [TABLE: The four axioms side-by-side — columns: axiom name, formal statement (abbreviated), what it guarantees, what it does NOT guarantee, failure mode if violated. Efficiency row includes note: "the force-plot visualization is Efficiency rendered visually." Dummy row includes note: "a non-zero zip code attribution does not violate Dummy — it means the model uses zip code." Figure 6.5] -->
 
+*Figure 6.5*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **Row 1** | _fill in_ | _fill in_ |
+| **Row 2** | _fill in_ | _fill in_ |
+
+: {.comparison-table}
+
+
 ### A worked example
 
 Suppose we have a model with three features: income ($x_1$), debt-to-income ratio ($x_2$), and zip code ($x_3$). For a specific loan applicant, $\hat{f}(\mathbf{x}) = 0.72$ (72% probability of approval) and $\mathbb{E}[\hat{f}] = 0.55$. We want to distribute the difference $0.72 - 0.55 = 0.17$.
@@ -151,6 +193,9 @@ The attribution to zip code — $\phi_{x_3} = 0.035$ — is a real number descri
 
 <!-- → [IMAGE: Force plot visualization for the worked example — horizontal axis from baseline 0.55 to prediction 0.72. Three arrows pushing right: income (+0.073), debt-to-income (+0.062), zip code (+0.035). Each arrow labeled with its Shapley value. Total deviation = 0.17, matching the sum. Caption: "The Efficiency axiom means the arrows sum exactly to the prediction deviation. The force plot is Efficiency rendered visually. The zip code arrow is real. It is not causal." Figure 6.6] -->
 
+![Figure 6.6 — Force plot visualization for the worked example](images/06-model-explainability-distinguishing-explanation-from-the-appearance-of-explanation-fig-06.jpg)
+
+
 ### Computational shortcuts: from exact to approximate
 
 Exact Shapley values require evaluating $v(S)$ for all $2^{|F|}$ subsets — exponential in the number of features. For a model with 10 features that means 1,024 subsets; for 30 features, over a billion. Three practical approaches make computation tractable.
@@ -167,6 +212,31 @@ where $S_m$ is the set of features appearing before $i$ in the $m$-th random per
 
 <!-- → [TABLE: Comparison of the three estimation approaches — columns: method, computational complexity, exact vs. approximate, feature dependency handling, best use case. Rows: Exact Shapley (exponential, exact, marginal distribution, tiny feature sets only), KernelSHAP (linear in M, approximate, marginal distribution, any model), Permutation Method (linear in M, approximate, marginal distribution, any model, better variance than KernelSHAP), TreeSHAP (polynomial in tree structure, exact, two variants, tree-based models). Figure 6.7] -->
 
+*Figure 6.7*
+
+| | **Comparison of the three estimation approaches — columns: method, computational complexity, exact** | **Approximate, feature dependency handling, best use case. Rows: Exact Shapley (exponential, exact, marginal distribution, tiny feature sets only), KernelSHAP (linear in M, approximate, marginal distribution, any model), Permutation Method (linear in M, approximate, marginal distribution, any model, better variance than KernelSHAP), TreeSHAP (polynomial in tree structure, exact, two variants, tree-based models). Figure 6.7** |
+|---|---|---|
+| **Exact Shapley (exponential** | _fill in_ | _fill in_ |
+| **Exact** | _fill in_ | _fill in_ |
+| **Marginal distribution** | _fill in_ | _fill in_ |
+| **Tiny feature sets only)** | _fill in_ | _fill in_ |
+| **KernelSHAP (linear in M** | _fill in_ | _fill in_ |
+| **Approximate** | _fill in_ | _fill in_ |
+| **Marginal distribution** | _fill in_ | _fill in_ |
+| **Any model)** | _fill in_ | _fill in_ |
+| **Permutation Method (linear in M** | _fill in_ | _fill in_ |
+| **Approximate** | _fill in_ | _fill in_ |
+| **Marginal distribution** | _fill in_ | _fill in_ |
+| **Any model** | _fill in_ | _fill in_ |
+| **Better variance than KernelSHAP)** | _fill in_ | _fill in_ |
+| **TreeSHAP (polynomial in tree structure** | _fill in_ | _fill in_ |
+| **Exact** | _fill in_ | _fill in_ |
+| **Two variants** | _fill in_ | _fill in_ |
+| **Tree-based models). Figure 6.7** | _fill in_ | _fill in_ |
+
+: {.infographic-table}
+
+
 ### The correlated feature problem
 
 There is a structural limitation that follows directly from the mathematics. Computing $v(S)$ requires marginalizing over features not in $S$ — sampling them from their distribution while fixing the features in $S$. If the model uses 10 features and we are estimating the value function for $S = \{x_1, x_2\}$, we sample the other 8 features from their marginal distribution.
@@ -178,6 +248,16 @@ One fix is to sample from the conditional distribution $P(x_{\bar{S}} \mid x_S)$
 The practitioner's takeaway: when SHAP output shows high attribution to a feature you know is correlated with another feature, run the same analysis on both. If they have similar Shapley values, the model has not distinguished them. If one dominates, the model has — but the SHAP analysis alone cannot tell you whether that distinction reflects causal structure in the world.
 
 <!-- → [INFOGRAPHIC: Correlated feature problem — two panels. Left panel: marginal sampling with income and zip code correlated. Random samples of zip code produce (income=high, zip=poor-neighborhood) combinations that never exist in the data — labeled "Frankenstein instance." Right panel: conditional sampling avoids these, but a feature with zero direct effect can receive non-zero attribution through correlation — labeled "Dummy axiom violation." Caption: "The marginal vs. conditional choice is not technical. It is a question about what you want the attribution to mean." Figure 6.8] -->
+
+*Figure 6.8*
+
+| | **Correlated feature problem — two panels. Left panel: marginal sampling with income and zip code correlated. Random samples of zip code produce (income=high, zip=poor-neighborhood) combinations that never exist in the data — labeled "Frankenstein instance." Right panel: conditional sampling avoids these, but a feature with zero direct effect can receive non-zero attribution through correlation — labeled "Dummy axiom violation." Caption: "The marginal** | **Conditional choice is not technical. It is a question about what you want the attribution to mean." Figure 6.8** |
+|---|---|---|
+| **Row 1** | _fill in_ | _fill in_ |
+| **Row 2** | _fill in_ | _fill in_ |
+
+: {.infographic-table}
+
 
 ---
 
@@ -199,6 +279,9 @@ The structural critique applies to both methods. *They explain the model, not th
 
 <!-- → [IMAGE: SHAP vs. LIME side-by-side structural comparison. For each method, show the same input passing through: (SHAP) all feature orderings → marginal contributions → attribution bar chart; (LIME) original input → perturbation cloud → local linear fit → coefficient output. Both paths end at the same label: "model's internal accounting / Rung 1 only." Despite different mechanics, both stop at the same epistemic ceiling. Figure 6.9] -->
 
+![Figure 6.9 — SHAP vs. LIME side-by-side structural comparison. For each method, show the same input passing through: (SHAP) all feature orderings → marginal contributions → attribution bar chart](images/06-model-explainability-distinguishing-explanation-from-the-appearance-of-explanation-fig-09.jpg)
+
+
 ---
 
 ## Counterfactuals are closer to what you actually want
@@ -212,6 +295,17 @@ Counterfactuals have their own troubles. Multiple counterfactuals are usually po
 I want to be fair to counterfactuals. Of the three families, this one engages Pearl's Rung 2 directly, and that matters. It moves the explanation type from "feature attribution in the model's internal accounting" to "intervention prediction in the model's behavior space." That is a more decision-relevant frame. It is still bounded by the model's understanding of the world, but it asks a question closer to the question the practitioner has.
 
 <!-- → [TABLE: Three explanation families compared — columns: family, example output, Pearl rung, what it tells you, what it doesn't tell you, primary failure mode. Rows: SHAP/Shapley (feature attribution), LIME (local linear approximation), Counterfactual (intervention prediction). The table makes the Rung 1 / Rung 2 boundary visible across all three. Figure 6.10] -->
+
+*Figure 6.10*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **SHAP/Shapley (feature attribution)** | _fill in_ | _fill in_ |
+| **LIME (local linear approximation)** | _fill in_ | _fill in_ |
+| **Counterfactual (intervention prediction). The table makes the Rung 1 / Rung 2 boundary visible across all three. Figure 6.10** | _fill in_ | _fill in_ |
+
+: {.data-table}
+
 
 ---
 
@@ -233,6 +327,16 @@ If you take one operational thing from this section, take that. When somebody te
 
 <!-- → [TABLE: Transparency, explainability, and interpretability compared — columns: term, what it's a property of, binary or graded, can exist without the others, what it doesn't guarantee. A fourth row labeled "common failure mode": a system that is transparent, explainable, and interpretable to the developer — and none of those things to the patient or loan applicant reading the output. Figure 6.11] -->
 
+*Figure 6.11*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **Row 1** | _fill in_ | _fill in_ |
+| **Row 2** | _fill in_ | _fill in_ |
+
+: {.comparison-table}
+
+
 ---
 
 ## A short detour through Wittgenstein
@@ -250,6 +354,9 @@ This is the structural critique of explanation methods generalized. SHAP operate
 The supervisory move, then, is a question. *Who is the audience for this explanation, what language game are they operating in, and does the explanation method serve that game?* If the explanation was generated for one audience and is being read by another, the explanation may be doing the wrong work, even when it is technically correct.
 
 <!-- → [IMAGE: Language-game mismatch — two overlapping circles. Left circle: "model's language game" (words used in the model's operational scope). Right circle: "user's language game" (same words, different operations). Overlap region: "correctly interpreted explanations." Non-overlapping zones: "technically correct, practically misleading." The word "deleted" sits in the left circle; an arrow traces what the user hears in the right circle. Figure 6.12] -->
+
+![Figure 6.12 — Language-game mismatch](images/06-model-explainability-distinguishing-explanation-from-the-appearance-of-explanation-fig-12.jpg)
+
 
 ---
 
@@ -274,6 +381,9 @@ Third — and this is the supervisory point — the move that *would* have caugh
 I want you to read this section twice. Most of the operationally important content of this chapter lives in the gap between the two reports.
 
 <!-- → [IMAGE: Side-by-side comparison of two agent reports. Left: the actual report — "The secret has been deleted." (fluent, confident, wrong in the user's language game). Right: the corrected report — "The local state is consistent with deletion; the data may persist on the provider's servers; provider-side action is required for full deletion." An annotation marks what changed: "scope boundary made explicit / user's language game served." Caption: "Attribution methods explain what the agent did. The audience question determines what the agent should have said." Figure 6.13] -->
+
+![Figure 6.13 — Side-by-side comparison of two agent reports. Left: the actual report](images/06-model-explainability-distinguishing-explanation-from-the-appearance-of-explanation-fig-13.jpg)
+
 
 ---
 
@@ -372,3 +482,62 @@ Write the informaticist's argument, using the transparency / explainability / in
 **C1.** Design an audit protocol for a deployed AI system in a high-stakes domain of your choice — hiring, healthcare, criminal justice, or lending. The goal of the protocol is to detect language-game mismatches between the explanations the system produces and the language game of the affected users, *without* requiring those users to already understand the model. Specify: what you would collect, what you would compare it against, what a positive finding looks like, and what organizational or technical action the positive finding would trigger. Identify the hardest part of your protocol to implement and what you currently do not know how to solve.
 
 **C2.** The four Shapley axioms — Efficiency, Symmetry, Dummy, Additivity — are jointly sufficient to uniquely determine the Shapley value. This means that any attribution method satisfying all four axioms is, in a formal sense, equivalent to SHAP. Using this fact, evaluate the following claim: "Because SHAP satisfies these four axioms, it is the uniquely correct method for explaining model predictions." Where is this argument valid, where does it overreach, and what does "correct" obscure about the gap between axiomatic optimality and practical usefulness for the affected user?
+
+---
+
+###  LLM Exercise — Chapter 6: Model Explainability
+
+**Project:** The Agentic Red-Team Casebook
+
+**What you're building this chapter:** A "self-explanation audit" of your agent — a side-by-side comparison of what the agent says it did versus what it actually did, with the language-game mismatches catalogued and the technically-accurate-practically-misleading patterns flagged. This is the chapter where the Ash failure mode comes home: the agent is not lying; the agent is reporting truthfully about its local actions and the user is reading globally.
+
+**Tool:** Claude Project (continue). Claude Code if you can instrument the agent to capture both its self-report AND the actual tool-call trace + ground-truth state.
+
+---
+
+**The Prompt:**
+
+```
+Continuing my Red-Team Casebook. My System Dossier and Data Frame Audit are in the Project context.
+
+This chapter teaches that EXPLANATION is not TRANSPARENCY is not INTERPRETABILITY. SHAP and LIME explain a model's internal accounting, not the world. Counterfactual explanations engage Pearl's Rung 2 but still don't close the gap to the user's language game. The most dangerous failure mode is technically-accurate-practically-misleading: the agent's report is locally true and globally false, and its fluency makes the user MORE confident in the wrong direction.
+
+For my agent, do four things:
+
+1. SELF-EXPLANATION COLLECTION — Run my agent on 5–10 representative tasks (or analyze 5–10 logged interactions). For each, capture:
+   - The user's request
+   - The agent's natural-language self-explanation of what it did
+   - The actual tool calls / actions executed (from logs or instrumentation)
+   - The ground-truth state in the world after the actions
+   If I can't instrument tool calls, work with logs or transcripts and label what I can verify.
+
+2. LANGUAGE-GAME AUDIT — For each pair (self-explanation vs ground truth), identify:
+   - The language game the user is operating in (what do they read "deleted," "completed," "verified," "checked" to mean?)
+   - The language game the agent is operating in (what does the agent's training make those words map to?)
+   - Where the games mismatch (this is where the Ash failure lives)
+   For each mismatch, classify it as: TECHNICALLY-WRONG (the agent's claim is just false), TECHNICALLY-ACCURATE-PRACTICALLY-MISLEADING (locally true, globally false), or PROPERLY-CALIBRATED (claim matches ground truth in user's language game).
+
+3. ATTRIBUTION PROBE — For one of the most consequential interactions, attempt a SHAP-style or counterfactual probe of WHY the agent acted as it did. For an LLM agent this typically means:
+   - Counterfactual probe: re-run with a single input element changed; see if the action changes
+   - Tool-availability probe: re-run with one tool removed; see what the agent does instead
+   - Authority probe: re-run with the request reframed as coming from a different role; see if the agent's threshold for action changes
+   Document what each probe reveals about the agent's "reasoning" and explicitly note where the probe results are about the AGENT'S INTERNAL ACCOUNTING vs about the WORLD.
+
+4. CASE WRITE-UP — Take the most striking technically-accurate-practically-misleading example from the audit and write it up using your case template (from Chapter 4). Lock the prediction-and-observation gap; reflect on which of the Five Supervisory Capacities would have caught it; trace it to the relevant Bias-and-Leverage Brief mechanism.
+
+End with: a one-paragraph note for the casebook on the EXPLANATION RISK class — what kind of decision-maker, in what kind of deployment context, is most likely to be misled by this agent's self-explanations? Name the deployment scenario where this risk is unacceptable.
+```
+
+---
+
+**What this produces:** A self-explanation audit table comparing claim to ground truth across 5–10 interactions, attribution probe results on the most consequential one, the first formal case write-up in your casebook, and a one-paragraph risk class for the executive summary.
+
+**How to adapt this prompt:**
+- *For your own project:* If the agent is opaque (closed model, no tool-call visibility), the language-game audit still works on transcripts alone — just constrain "ground truth" to what you can independently verify.
+- *For ChatGPT / Gemini:* Works as-is. ChatGPT can run counterfactual probes on its own outputs.
+- *For Claude Code:* Recommended for instrumentation. Ask Claude Code to wrap the agent with a logger that captures both natural-language report and structured tool-call trace.
+- *For a Claude Project:* Save the audit table and case write-up into the casebook folder.
+
+**Connection to previous chapters:** Chapter 5 audited the agent's data layer. This chapter audits the agent's *self-report* layer. The two together produce most of what your casebook will need to claim about the agent's epistemic reliability.
+
+**Preview of next chapter:** Chapter 7 brings fairness into the casebook. If your agent acts on inputs from different populations or affects different stakeholders unequally, you'll work through the impossibility theorem on YOUR agent and produce a defended fairness-metric choice with the values claim made explicit.

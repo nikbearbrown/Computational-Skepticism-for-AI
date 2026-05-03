@@ -35,6 +35,9 @@ The answer is cognitive. Specifically, it is about what kinds of cognitive work 
 
 <!-- → [FIGURE: Figure 13.1 — The mail-server case as a responsibility-attribution map. Five nodes (non-owner, agent, owner, framework developers, model provider) arranged by distance from the proximate event, with labeled arrows showing causal contribution and duty for each party. Caption: "None of these nodes, in isolation, produced the failure. Each was necessary. None was sufficient."] -->
 
+![Figure 13.1 — Figure 13.1](images/13-accountability-who-is-responsible-when-the-system-fails-fig-01.jpg)
+
+
 ---
 
 **Learning objectives.** By the end of this chapter you should be able to:
@@ -68,6 +71,9 @@ AI is the latest entry in this series, and by far the most powerful. The questio
 
 <!-- → [INFOGRAPHIC: The cognitive extension lineage — AI as the latest entry in a long series. Timeline running left to right: writing (extends memory, ~3200 BCE), the printed book (extends transmission fidelity), the microscope (extends perception), the calculator (extends working memory), GPS (extends spatial navigation — and begins to substitute for it), the bomb-sniffing dog (extends olfactory detection into hazard identification), AI (extends pattern recognition, semantic retrieval, constrained planning — and raises the question of what it cannot extend). Each entry labeled with: what capacity it extends, whether additive or substitutive, and what the human must still supply. Caption: "Nobody worried that the microscope would replace the scientist. The question is whether we are being equally clear about what AI does and does not extend."] -->
 
+![Figure 13.2 — The cognitive extension lineage](images/13-accountability-who-is-responsible-when-the-system-fails-fig-02.jpg)
+
+
 Let me take the capacities one at a time.
 
 **Learning.** Under a behaviorist definition — adjustable response to experience — current AI qualifies without controversy. A model trained on new data learns in that sense. Under a deeper definition — the formation of new internal representations that transfer to genuinely novel situations — the answer is contested and depends on what you mean by "genuinely novel." Large language models transfer poorly to problems that fall far outside their training distribution. A child who learns the concept of "fairness" in a playground negotiation applies it to a contract dispute fifteen years later. The transferability is not just statistical extrapolation; it involves abstraction at a level that current architectures approach but do not consistently achieve. The accountability implication: AI systems can learn from labeled corrections within their domain. They cannot reliably learn that they are operating outside their domain.
@@ -94,9 +100,36 @@ Each capacity tells a version of the same story. Where AI is strong — pattern 
 
 <!-- → [CHART: Two-axis diagram of AI cognitive capacity. Horizontal axis: "Extension" (additive cognitive prosthetic) to "Substitution" (replaces biological capacity). Vertical axis: "AI strong" to "AI absent." Plotted points for each capacity: pattern recognition (strong / additive), semantic memory (strong / additive), constrained planning (strong / additive), metric navigation (strong / substitutive — note the GPS warning), statistical language (strong / additive for production, uncertain for communication), episodic memory (absent — nothing to extend or substitute), metacognition (absent — Gödel problem), calibrated self-awareness (absent), collective practice (absent — reflects output, not practice), stakes (absent by definition). Caption: "The capacities AI extends are the capacities that can be formalized. The capacities it cannot extend are the ones that require a subject — an agent with history, commitments, and the possibility of loss. Those are precisely the capacities accountability requires."] -->
 
+![Figure 13.3 — Two-axis diagram of AI cognitive capacity. Horizontal axis: "Extension" (additive cognitive prosthetic) to "Substitution" (replaces biological capacity). Vertical axis: "AI strong" to "AI absent." Plotted points for each capacity: pattern recognition (strong / additive), semantic memory (strong / additive), constrained planning (strong / additive), metric navigation (strong / substitutive](images/13-accountability-who-is-responsible-when-the-system-fails-fig-03.jpg)
+
+
 The accountability apparatus is built from both kinds of capacity. The specification, the audit trail, the recourse mechanism, the independent review, the sanctions — each draws on the second kind. The *Irreducibly Human* taxonomy organizes this observation into a structure you can use.
 
 <!-- → [TABLE: Cognitive capacities mapped to AI status and accountability implication. Rows: learning, memory (semantic vs. episodic), emotion (three definitions), pattern recognition, navigation (metric vs. cognitive mapping), planning (tree-search vs. hierarchical), self-awareness (mirror vs. metacognitive), metacognition, language, collective intelligence. Columns: AI capability status with brief justification, what the capacity requires that AI lacks, accountability implication. The table is the companion-volume argument in condensed form — each row shows one capacity, both where AI extends human reach and where it cannot. Caption: "Both answers are informative. Under one definition, AI qualifies. Under another, it doesn't. The accountability question is which definition the regime requires."] -->
+
+*Figure 13.4*
+
+| | **Cognitive capacities mapped to AI status and accountability implication. Rows: learning, memory (semantic** | **Metacognitive), metacognition, language, collective intelligence. Columns: AI capability status with brief justification, what the capacity requires that AI lacks, accountability implication. The table is the companion-volume argument in condensed form** |
+|---|---|---|
+| **Learning** | _fill in_ | _fill in_ |
+| **Memory (semantic vs. episodic)** | _fill in_ | _fill in_ |
+| **Emotion (three definitions)** | _fill in_ | _fill in_ |
+| **Pattern recognition** | _fill in_ | _fill in_ |
+| **Navigation (metric vs. cognitive mapping)** | _fill in_ | _fill in_ |
+| **Planning (tree-search vs. hierarchical)** | _fill in_ | _fill in_ |
+| **Self-awareness (mirror vs. metacognitive)** | _fill in_ | _fill in_ |
+| **Metacognition** | _fill in_ | _fill in_ |
+| **Language** | _fill in_ | _fill in_ |
+| **Collective intelligence. Columns: AI capability status with brief justification** | _fill in_ | _fill in_ |
+| **What the capacity requires that AI lacks** | _fill in_ | _fill in_ |
+| **Accountability implication. The table is the companion-volume argument in condensed form — each row shows one capacity** | _fill in_ | _fill in_ |
+| **Both where AI extends human reach** | _fill in_ | _fill in_ |
+| **Where it cannot. Caption: "Both answers are informative. Under one definition** | _fill in_ | _fill in_ |
+| **AI qualifies. Under another** | _fill in_ | _fill in_ |
+| **It doesn't. The accountability question is which definition the regime requires."** | _fill in_ | _fill in_ |
+
+: {.infographic-table}
+
 
 ### The seven-tier taxonomy
 
@@ -117,6 +150,16 @@ The taxonomy organizes human intelligence into seven tiers, sorted by AI capabil
 **Tier 7 — Existential and Wisdom.** Practical wisdom. Requires stakes, the possibility of loss, a life that can be poorly lived. An algorithm has no stakes. It cannot commit because it cannot lose. This is the tier where accountability reaches its bedrock: the human who must stand behind a validation, who can lose something when it is wrong, is operating at Tier 7 in a way no AI system can.
 
 <!-- → [TABLE: The seven tiers mapped to AI capability. Columns: tier number and label, brief definition, AI capability status (superhuman / weak-emerging / simulates-doesn't-feel / poor / weak-to-absent / absent-by-definition / absent-no-stakes), and educational implication. Caption: "Read this not as an academic classification but as a triage. Where machines are strongest, training humans to compete directly is now malpractice."] -->
+
+*Figure 13.5*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **Row 1** | _fill in_ | _fill in_ |
+| **Row 2** | _fill in_ | _fill in_ |
+
+: {.data-table}
+
 
 ### The Gödel argument
 
@@ -142,6 +185,9 @@ The plausibility auditor — the profession that the automated research vision f
 
 <!-- → [FIGURE: Figure 13.2 — Why AI cannot close the accountability loop. A diagram with two components. Left: the Gödel argument — a formal system cannot verify its own consistency; a validator must be external to the system being validated. Right: the tier argument — the accountability apparatus requires Tier 4 (independent supervisory judgment), Tier 5 (causal-counterfactual reasoning), Tier 6 (institutional accountability), and Tier 7 (stakes). AI is at Tier 1. The diagram shows the structural gap rather than an empirical limitation.] -->
 
+![Figure 13.6 — Figure 13.2](images/13-accountability-who-is-responsible-when-the-system-fails-fig-06.jpg)
+
+
 ---
 
 ## Two frameworks, one topology
@@ -164,6 +210,25 @@ Two frameworks. Different bases. Same topology. Responsibility distributes, and 
 
 <!-- → [TABLE: Figure 13.3 — The two frameworks applied to the mail-server case. Rows: each responsible party (non-owner, agent, owner, framework developers, model provider). Columns: Kantian basis (capacity to act otherwise, duty imposed, relative magnitude) / utilitarian basis (leverage of accountability, downstream effects on engineering practice, whether the accountability target can actually change the conditions for future failures). Caption: "Two frameworks, different bases, same topology. The distribution is the finding."] -->
 
+*Figure 13.7*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **Each responsible party (non-owner** | _fill in_ | _fill in_ |
+| **Agent** | _fill in_ | _fill in_ |
+| **Owner** | _fill in_ | _fill in_ |
+| **Framework developers** | _fill in_ | _fill in_ |
+| **Model provider). Columns: Kantian basis (capacity to act otherwise** | _fill in_ | _fill in_ |
+| **Duty imposed** | _fill in_ | _fill in_ |
+| **Relative magnitude) / utilitarian basis (leverage of accountability** | _fill in_ | _fill in_ |
+| **Downstream effects on engineering practice** | _fill in_ | _fill in_ |
+| **Whether the accountability target can actually change the conditions for future failures). Caption: "Two frameworks** | _fill in_ | _fill in_ |
+| **Different bases** | _fill in_ | _fill in_ |
+| **Same topology. The distribution is the finding."** | _fill in_ | _fill in_ |
+
+: {.data-table}
+
+
 ---
 
 ## The cognitive tiers inside the accountability requirements
@@ -181,6 +246,24 @@ The **independent review requirement** is Tier 4 by definition. The logical argu
 The **sanctions requirement** is Tier 7. Sanctions are consequential only when the party sanctioned has stakes — something to lose. An AI system does not lose its job when it produces a flawed output. A plausibility auditor does. A deploying organization does. The model provider whose trained system produced the conditions for the failure does, if the regulatory regime imposes consequences. The stakes are what give the accountability machinery its force. Remove the possibility of consequence and you have a descriptive system, not a prescriptive one. Tier 7 is not a philosophical add-on to accountability. It is the load-bearing tier — the tier without which the rest of the apparatus has no teeth.
 
 <!-- → [TABLE: Figure 13.4 — The five accountability requirements mapped to cognitive tiers. Rows: each requirement (specifications, audit trail, recourse, independent review, sanctions). Columns: which tier the requirement depends on, what specifically that tier provides, why AI operating at Tier 1 cannot supply it, and what a human must do instead. Caption: "The accountability apparatus requires Tiers 4 through 7 at every stage. AI systems operate primarily at Tier 1. This is the structural argument for human oversight, not the contingent one."] -->
+
+*Figure 13.8*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **Each requirement (specifications** | _fill in_ | _fill in_ |
+| **Audit trail** | _fill in_ | _fill in_ |
+| **Recourse** | _fill in_ | _fill in_ |
+| **Independent review** | _fill in_ | _fill in_ |
+| **Sanctions). Columns: which tier the requirement depends on** | _fill in_ | _fill in_ |
+| **What specifically that tier provides** | _fill in_ | _fill in_ |
+| **Why AI operating at Tier 1 cannot supply it** | _fill in_ | _fill in_ |
+| **** | _fill in_ | _fill in_ |
+| **What a human must do instead. Caption: "The accountability apparatus requires Tiers 4 through 7 at every stage. AI systems operate primarily at Tier 1. This is the structural argument for human oversight** | _fill in_ | _fill in_ |
+| **Not the contingent one."** | _fill in_ | _fill in_ |
+
+: {.data-table}
+
 
 ---
 
@@ -202,6 +285,16 @@ Specifications, audit trails, recourse, independent review, sanctions. A deploym
 
 <!-- → [TABLE: Figure 13.5 — The five accountability requirements as a deployment audit checklist. Columns: requirement, what it consists of, failure mode if absent, how to verify it is present, which cognitive tier it primarily depends on. Designed as a reusable audit instrument.] -->
 
+*Figure 13.9*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **Row 1** | _fill in_ | _fill in_ |
+| **Row 2** | _fill in_ | _fill in_ |
+
+: {.data-table}
+
+
 ---
 
 ## The regulatory landscape
@@ -217,6 +310,23 @@ The U.S. NIST AI Risk Management Framework provides a structured approach to AI 
 The specific regimes will change. *The structural requirements will not change*, because they are the operational machinery accountability requires regardless of which regime imposes it. Build to that standard. Let the regime catch up.
 
 <!-- → [TABLE: Regulatory frameworks mapped to the five accountability requirements. Rows: EU AI Act (high-risk), NIST AI RMF, FDA AI/ML guidance, CFPB algorithmic credit guidance, EEOC AI employment guidance. Columns: which of the five requirements each regime explicitly imposes, which it implies, and which it leaves unaddressed. Final row: "structural requirements" — marking the requirements that every regime converges on regardless of sector. Student uses this to audit a specific deployment against the most relevant regime and identify which requirements fall outside the regime's reach.] -->
+
+*Figure 13.10*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **EU AI Act (high-risk)** | _fill in_ | _fill in_ |
+| **NIST AI RMF** | _fill in_ | _fill in_ |
+| **FDA AI/ML guidance** | _fill in_ | _fill in_ |
+| **CFPB algorithmic credit guidance** | _fill in_ | _fill in_ |
+| **EEOC AI employment guidance. Columns: which of the five requirements each regime explicitly imposes** | _fill in_ | _fill in_ |
+| **Which it implies** | _fill in_ | _fill in_ |
+| **** | _fill in_ | _fill in_ |
+| **Which it leaves unaddressed. Final row: "structural requirements" — marking the requirements that every regime converges on regardless of sector. Student uses this to audit a specific deployment against the most relevant regime** | _fill in_ | _fill in_ |
+| **Identify which requirements fall outside the regime's reach.** | _fill in_ | _fill in_ |
+
+: {.data-table}
+
 
 ---
 
@@ -242,6 +352,9 @@ For a working engineer, this is liberating. *Most catastrophic AI failures are n
 
 <!-- → [FIGURE: Figure 13.6 — Pearl's Ladder with the governance extension and the cognitive tier annotations. Three rungs: Rung 1 (association / the data — Tier 1 work), Rung 2 (intervention / the model — Tier 4 supervisory work), Rung 3 (counterfactual / the regime — Tier 5 causal-counterfactual work). Each rung annotated with the tier it requires and why AI cannot substitute. Below Rung 3: "The governance counterfactual — what regime, if implemented earlier, would have produced a different system?" Caption: "The standard treatment stops at Rung 2. The closure is at Rung 3, and it requires a human."] -->
 
+![Figure 13.11 — Figure 13.6](images/13-accountability-who-is-responsible-when-the-system-fails-fig-11.jpg)
+
+
 ---
 
 ## Generative AI and the accountability topology
@@ -262,6 +375,16 @@ For our chapter's question — who is responsible? — generative AI complicates
 
 <!-- → [INFOGRAPHIC: Generative vs. predictive AI accountability topology. Two side-by-side panels. Left (predictive): a linear chain from data → model → classified output → downstream decision. Responsibility nodes are few and clearly bounded; provenance is implicit. Right (generative): a branching structure from training corpus → model → generated artifact → circulation → downstream use; each branch point adds a new potentially responsible party (training data sources, training team, deployment configurer, prompter, publisher, downstream user). Annotation: "The distribution flattens — more parties, smaller individual contribution, harder attribution." Student should feel why generative AI makes clean attribution harder, not just different.] -->
 
+*Figure 13.12*
+
+| | **Generative** | **Predictive AI accountability topology. Two side-by-side panels. Left (predictive): a linear chain from data → model → classified output → downstream decision. Responsibility nodes are few and clearly bounded; provenance is implicit. Right (generative): a branching structure from training corpus → model → generated artifact → circulation → downstream use; each branch point adds a new potentially responsible party (training data sources, training team, deployment configurer, prompter, publisher, downstream user). Annotation: "The distribution flattens** |
+|---|---|---|
+| **Row 1** | _fill in_ | _fill in_ |
+| **Row 2** | _fill in_ | _fill in_ |
+
+: {.infographic-table}
+
+
 ---
 
 ## Stages and stakes: a taxonomy of where human oversight is not optional
@@ -277,6 +400,22 @@ For **high-stakes, irreversible outputs** — drug candidates, structural engine
 The surgical analogy is apt. Nobody argues that the availability of AI-assisted surgical guidance means surgeons are optional. The surgeon does not become optional when the assistance becomes more capable. The surgeon's judgment — the Tier 2, Tier 4, and Tier 7 work — is what makes the output accountable. The AI assistance raises the capability ceiling. The human accountability structure is what makes exercising that capacity responsible.
 
 <!-- → [TABLE: Stakes-organized framework for human oversight. Three rows: low-stakes/reversible, moderate-stakes/partially-recoverable, high-stakes/irreversible. Columns: examples, appropriate oversight intensity, which cognitive tiers the human must engage, what "human in the loop" means at this tier (not just procedural presence), and what accountability failure looks like when humans are present but not engaging the required tier.] -->
+
+*Figure 13.13*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **Low-stakes/reversible** | _fill in_ | _fill in_ |
+| **Moderate-stakes/partially-recoverable** | _fill in_ | _fill in_ |
+| **High-stakes/irreversible. Columns: examples** | _fill in_ | _fill in_ |
+| **Appropriate oversight intensity** | _fill in_ | _fill in_ |
+| **Which cognitive tiers the human must engage** | _fill in_ | _fill in_ |
+| **What "human in the loop" means at this tier (not just procedural presence)** | _fill in_ | _fill in_ |
+| **** | _fill in_ | _fill in_ |
+| **What accountability failure looks like when humans are present but not engaging the required tier.** | _fill in_ | _fill in_ |
+
+: {.data-table}
+
 
 ---
 
@@ -297,6 +436,9 @@ The *Irreducibly Human* framing adds a dimension to this structural claim: the r
 The automated researcher will produce more outputs of greater sophistication across more domains than any previous generation of scientific tools. Each of those outputs will be a candidate. Each candidate will require validation. The validation will require humans. Not because we cannot imagine systems smart enough to evaluate the outputs, but because the evaluation's credibility depends on the evaluator's accountability, and accountability requires the possibility of consequence.
 
 <!-- → [INFOGRAPHIC: The plausibility auditor profile. A two-column diagram. Left column: "What the role requires" — (1) deep domain expertise sufficient to recognize when a result is subtly wrong (Tier 1 knowledge, Tier 4 judgment); (2) AI failure-mode literacy — knowing which errors to hunt (pattern errors, distribution shift, confident extrapolation beyond valid range); (3) independence from the system being audited (Gödel requirement); (4) stakes — professional consequence when the judgment is wrong (Tier 7). Right column: "What the role is NOT" — not a fact-checker (Tier 1 only), not a safety researcher (AI-internal focus), not a quality assurance technician (process compliance, not epistemic independence). Caption: "This is the profession the accountability apparatus requires. It has not been built." Student uses this to evaluate whether a given "human in the loop" role actually supplies what the accountability chain needs.] -->
+
+![Figure 13.14 — The plausibility auditor profile. A two-column diagram. Left column: "What the role requires"](images/13-accountability-who-is-responsible-when-the-system-fails-fig-14.jpg)
+
 
 ---
 
@@ -386,3 +528,69 @@ For each absent requirement, also identify which cognitive tier a proper impleme
 ---
 
 *Tags: accountability, governance-counterfactual, pearls-rung-3-closure, regulation, agents-of-chaos, irreducibly-human, tier-taxonomy, plausibility-auditor*
+
+---
+
+###  LLM Exercise — Chapter 13: Accountability
+
+**Project:** The Agentic Red-Team Casebook
+
+**What you're building this chapter:** A responsibility-attribution map for each of your most consequential cases — naming every party with agency, duty, and causal contribution to the failure. Plus the five accountability requirements operationalized for your agent's deployment, and a closing of the Pearl Rung 3 question opened in Chapter 8 (what would the agent be like under a different governance regime?).
+
+**Tool:** Claude Project (continue). Optional Cowork to maintain the attribution-map files.
+
+---
+
+**The Prompt:**
+
+```
+Continuing my Red-Team Casebook. The verb-audited case files, calibration metrics, and Layer 1 summary are in the Project context.
+
+This chapter teaches that responsibility distributes — necessary but not sufficient causes across multiple parties. The cognitive argument for why a human MUST remain in the accountability loop (AI as extended mind; the seven-tier taxonomy; the Gödel argument; common cause failure). The five accountability requirements. The governance counterfactual that closes Pearl's Rung 3.
+
+For my casebook, do four things:
+
+1. RESPONSIBILITY-ATTRIBUTION MAPS — Pick the THREE most consequential cases from my casebook (highest harm, most likely to recur, most informative about the deployment). For each, build the attribution map. Identify every party with agency, duty, or causal contribution:
+   - The user / requester (especially if non-owner)
+   - The agent itself (with the philosophical caveat about "responsibility")
+   - The owner / deployer who configured the agent
+   - The framework / wrapper developers
+   - The model provider
+   - The data sources the agent relied on (if any third-party data)
+   - The platform on which the agent operates
+   For each: what did they do, what was their duty, what did they fail at, what would have caught the failure on their watch?
+   Output as a Mermaid diagram per case + a short prose explanation of each node's contribution.
+
+2. SEVEN-TIER MAPPING — For each case, identify which COGNITIVE TIER (from the chapter's seven-tier extended-mind taxonomy) the failure crossed into. The failure happened because some cognitive work was needed at a tier the agent could not occupy and no human was assigned to it. Name the tier; name the human role that should have occupied it; specify the artifact that role would have produced.
+
+3. FIVE ACCOUNTABILITY REQUIREMENTS — Apply the five accountability requirements (the chapter names them — readability of decisions, traceability, redress, named-owner, etc.) to my agent's deployment. For each:
+   - Is it currently met? Partially? Not at all?
+   - What artifact would meet it?
+   - Who should produce that artifact?
+   - What changes if the requirement is unmet — refuse deployment, deploy with limited scope, or deploy with explicit risk acceptance?
+
+4. GOVERNANCE COUNTERFACTUAL (Closing Pearl Rung 3 from Chapter 8):
+   In Chapter 8 you opened the question: what would the agent be like under a different governance regime? Answer it now. Specify a counterfactual deployment regime — different developer incentives, different regulatory environment, different deployer accountability — and walk through which of my casebook's cases would NOT have occurred under that regime, and why. Be honest about which cases are FUNDAMENTAL (would persist under any regime) vs CONTINGENT (would not occur under the counterfactual regime).
+
+Output:
+- Three responsibility-attribution Mermaid diagrams (one per case) + prose
+- A "Cognitive Tier and Accountability Mapping" table for each case
+- An "Accountability Requirements Checklist" for the deployment
+- A "Governance Counterfactual" memo (1 page) explaining what regime change would close which cases
+
+End with: a one-paragraph claim about whether MY agent's deployment can support accountability in its current form. If not, what is the SMALLEST change to the deployment (NOT to the model) that would bring accountability within reach? This is the prelude to the final memo in Chapter 14.
+```
+
+---
+
+**What this produces:** Three responsibility-attribution diagrams, cognitive-tier mappings, an accountability-requirements checklist, and a governance counterfactual memo. Together with Chapter 12's calibration metrics, these are the substance of Chapter 14's go/no-go recommendation.
+
+**How to adapt this prompt:**
+- *For your own project:* Be willing to assign responsibility to specific named parties (the actual model provider, the actual framework). The chapter is explicit that the analysis falls apart when responsibility is described in vague third-person.
+- *For ChatGPT / Gemini:* Works as-is. Both render Mermaid.
+- *For Claude Code:* Not the right fit.
+- *For Cowork:* Save the four outputs to the casebook folder.
+
+**Connection to previous chapters:** Chapter 8 opened the Rung 3 question; this chapter closes it for your agent. Chapter 9's case taxonomy is the input. Chapter 10's delegation map identifies which accountability requirements are unmet by the current deployment.
+
+**Preview of next chapter:** Chapter 14 is the close. You'll apply the three categorical limits to your agent, produce the final go/no-go memo with a defended position the casebook supports, and stake the supervisor's recommendation: deploy, deploy with constraints, or refuse.

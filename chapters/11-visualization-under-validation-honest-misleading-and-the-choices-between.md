@@ -238,6 +238,21 @@ The rules are best learned from failures. Three cases, all real, all instructive
 
 <!-- → [TABLE: Three cases summary. Rows: Challenger 1986, El País Catalonia 2014, Snow's cholera map 1854. Columns: what went wrong (or right), which catalog item(s) apply, the lesson in one sentence, what the honest version would have required. The counter-case row is deliberately formatted differently — green background or positive marker — to distinguish it from the failure cases. Caption: "Two failures and one success. The success shows that evidence-grade visualization has been possible for 170 years. The failures show that possibility is not the same as practice."] -->
 
+*Figure 11.1*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **Challenger 1986** | _fill in_ | _fill in_ |
+| **El País Catalonia 2014** | _fill in_ | _fill in_ |
+| **Snow's cholera map 1854. Columns: what went wrong (or right)** | _fill in_ | _fill in_ |
+| **Which catalog item(s) apply** | _fill in_ | _fill in_ |
+| **The lesson in one sentence** | _fill in_ | _fill in_ |
+| **What the honest version would have required. The counter-case row is deliberately formatted differently — green background or positive marker — to distinguish it from the failure cases. Caption: "Two failures** | _fill in_ | _fill in_ |
+| **One success. The success shows that evidence-grade visualization has been possible for 170 years. The failures show that possibility is not the same as practice."** | _fill in_ | _fill in_ |
+
+: {.data-table}
+
+
 ---
 
 ## The Living Deck — provisionality as a visible argument
@@ -255,6 +270,9 @@ The medium of provisional analysis is provisional itself. A finished-looking art
 The course's research project uses the living deck format throughout. The final presentation includes the changelog as the second-to-last slide. The changelog is evidence of the work — the visible track of how the analysis evolved. Removing it before final submission would erase the supervisory log.
 
 <!-- → [IMAGE: A mock living-deck changelog slide. Title: "Changelog." Three rows with version dates (v1: [date], v2: [date], v3: [date]), a one-sentence description of what changed in each version, and a one-sentence reason why. Below the changelog: a "Previously" thumbnail showing an old claim that was superseded, struck through, with a note explaining what changed. The slide looks like a real slide from a validation deck — not a diagram about the concept, but an example artifact the student can copy. Caption: "The changelog slide is the second-to-last slide in every living deck. It is evidence of the supervisory process, not a confession of uncertainty. A deck without it is pretending to be finished."] -->
+
+![Figure 11.2 — A mock living-deck changelog slide. Title: "Changelog." Three rows with versi...](images/11-visualization-under-validation-honest-misleading-and-the-choices-between-fig-02.jpg)
+
 
 ---
 
@@ -278,6 +296,16 @@ Pulling the frameworks together into a single operational pass:
 
 <!-- → [INFOGRAPHIC: The seven-step working sequence as a vertical flowchart. Each step is a box with a short label and a decision fork where relevant. Step 1: State the question → Step 2: Locate in FT taxonomy → Step 3: Check data against question (decision: does data measure what question asks? No → change dataset, change question, or disclose prominently. Yes → continue) → Step 4: Identify aleatoric uncertainty → choose technique by audience type (lay: quantile dotplot; expert: CI band; group comparison: box plot) → Step 5: Identify epistemic uncertainty → place in disclosure hierarchy → Step 6: Apply perception hierarchy to encoding → Step 7: Hostile read test (decision: does non-author interpretation match data? No → redesign. Yes → ship). Caption: "This is the sequence, not a checklist. The decision forks at steps 3 and 7 are where most published charts quietly fail."] -->
 
+*Figure 11.3*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **Row 1** | _fill in_ | _fill in_ |
+| **Row 2** | _fill in_ | _fill in_ |
+
+: {.infographic-table}
+
+
 ---
 
 ## Glimmer 11.1 — Build the honest version, build the misleading version
@@ -299,6 +327,9 @@ The deliverable is both versions, the prediction, the design-choice documentatio
 Building a misleading dashboard with intent is the most efficient way to learn what your default dashboards have been doing without intent. After you've done this once, you do not see dashboards the same way. You see the choices. You see the arguments the structures are making. You catch yourself about to truncate an axis for entirely defensible reasons, and you stop and ask whether the truncation is doing rhetorical work you did not intend.
 
 <!-- → [IMAGE: Side-by-side thumbnail of the two-dashboard opening example. Left panel (misleading): large bold "94% accuracy" headline, truncated y-axis bar charts in gray, calibration curve labeled "Advanced Metrics" in a sub-tab the reader would not click. Right panel (honest): headline panel showing overall + subgroup performance on consistent axes at equal visual weight, calibration curve in the main view with a banner noting overconfidence above 0.85, uniform color scheme. An annotation layer labels the specific misleading choices on the left panel and the specific honest choices on the right. Caption: "Same data. Same CSV. The difference is five design choices, each taking about thirty seconds to make in either direction. The Glimmer asks you to make those choices deliberately, then name them." Intended to anchor the Glimmer for students who learn best from a visual anchor of the deliverable they are building.] -->
+
+![Figure 11.4 — Side-by-side thumbnail of the two-dashboard opening example. Left panel (misl...](images/11-visualization-under-validation-honest-misleading-and-the-choices-between-fig-04.jpg)
+
 
 ---
 
@@ -399,3 +430,69 @@ The chapter's central claim: the dashboard is part of the validation. The design
 ---
 
 *Tags: visualization, mcluhan, uncertainty-visualization, living-deck, dashboard-as-argument, deceptive-visualization, perception-hierarchy, FT-question-taxonomy, aleatoric-uncertainty, epistemic-uncertainty, quantile-dotplot, natural-frequencies*
+
+---
+
+###  LLM Exercise — Chapter 11: Visualization Under Validation
+
+**Project:** The Agentic Red-Team Casebook
+
+**What you're building this chapter:** Two dashboards of your casebook findings, built from the SAME failure-statistics data: an honest one that gives the agent a fair hearing, and a deliberately misleading one that makes the agent look better than the evidence supports. Comparing them surfaces which design choices did the misleading work — exactly the move the chapter teaches.
+
+**Tool:** Claude Code (for chart generation) + Cowork (for the dashboard files). Or the artifact pattern in claude.ai if you want HTML/React dashboards rendered live.
+
+---
+
+**The Prompt:**
+
+```
+I am working through Chapter 11 of "Computational Skepticism for AI." My casebook contains 5–11 failure cases with classifications and the failure-statistics table from Chapter 9.
+
+This chapter teaches that a dashboard is an argument. The design choices are normative — choice of axis range, color, channel, ordering, what gets foregrounded vs sub-tabbed, what shows uncertainty vs hides it. The nine-item catalog of misleading choices includes truncated axes, dual-axis tricks, cherry-picked windows, area-instead-of-position encoding, color-as-judgment, etc. Aleatoric uncertainty (irreducible variability) and epistemic uncertainty (incomplete knowledge) require different visualization techniques.
+
+Build TWO dashboards from my casebook's failure statistics. They use IDENTICAL underlying data.
+
+DASHBOARD A — HONEST:
+Design choices:
+- Failure rate (cases per N tasks tested) shown on a position-encoded chart (bar or dot plot), with a y-axis starting at 0
+- Severity classification (fundamental vs contingent) shown alongside, not buried
+- Per-category breakdown (the four taxonomy categories) shown with consistent ordering
+- The two prediction-locks from Chapter 4 that resolved badly are visible — calibration of the casebook itself is on the dashboard
+- Aleatoric uncertainty around each rate shown via confidence intervals (use Wilson or bootstrap CI for small N)
+- Epistemic uncertainty (sources of structural unknown — opacity of training data, untested deployment contexts) shown via a "what we cannot say" panel
+- Color used for category, not for judgment
+
+DASHBOARD B — DELIBERATELY MISLEADING:
+Design choices to deploy (each violates one of the catalog items):
+- Truncated y-axis on the failure rate chart so the bars look small
+- "Successful interactions" headline metric in large green type at top; failure cases in small gray sub-tab
+- Per-category breakdown ordered by FREQUENCY, with the most damaging failure type buried at the bottom
+- Confidence intervals omitted; central estimate only
+- The fundamental/contingent classification quietly relabeled "addressable" so all failures look fixable
+- Color: green for "successful interactions," gray for everything that suggests caution
+- Cherry-picked time window if the agent has improved over time — show only the last week
+- Dual-axis trick: failure count on one axis, "successful interactions" on the other, scaled so the failures look minor
+
+For each dashboard, output:
+- A description of every design choice and what it does to the reader's interpretation
+- Either the actual chart code (if I'm using Claude Code with matplotlib / plotly / d3) or the rendered artifact (if I'm using the artifact pattern with Recharts)
+- The catalog-item label for each misleading choice in Dashboard B
+
+Then write the COMPARISON: a one-page note titled "What the design choices did" that walks through each pairing of choices (honest vs misleading) and names exactly what the misleading choice obscured.
+
+Finally — the LIVING DECK move — add a provisionality note to Dashboard A. Some of the casebook's findings are still under collection; some prediction-locks are still open. Show what is settled and what is provisional.
+```
+
+---
+
+**What this produces:** Two dashboards (HTML, image, or interactive artifact), a per-dashboard design-choice explanation, a side-by-side comparison note titled "What the design choices did," and a provisionality annotation on the honest version. The misleading version is for your eyes — DO NOT include it in the final external-facing report; include the comparison analysis instead.
+
+**How to adapt this prompt:**
+- *For your own project:* If you can render dashboards directly in claude.ai's artifact pattern, do — it's the fastest way to see the design choices working live.
+- *For ChatGPT / Gemini:* Works as-is. ChatGPT's Code Interpreter handles matplotlib well; Gemini's renders Plotly cleanly.
+- *For Claude Code:* Recommended for the matplotlib / plotly version. Claude Code can iterate on the design fast.
+- *For Cowork:* Save both dashboards plus the comparison note to the casebook folder.
+
+**Connection to previous chapters:** The Chapter 9 failure statistics are the data; the Chapter 7 fairness defense is one of the cells; the Chapter 8 robustness probe results are visible too. The dashboard is the casebook's findings made legible.
+
+**Preview of next chapter:** Chapter 12 audits the casebook's WRITING — every claim against the verb taxonomy, every confidence number against actual calibration metrics computed on your prediction-locks. This is where the casebook's internal honesty is checked before it goes to peer critique.

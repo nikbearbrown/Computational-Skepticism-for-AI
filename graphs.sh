@@ -3,13 +3,8 @@
 # graphs.sh
 #
 # Always run from repo root:
-#   ./graphs.sh                 # process all chapters
-#   ./graphs.sh chapters/01-foo.md  # process one chapter
-#
-# Assumes fixed repo layout:
-#   chapters/   — markdown source
-#   images/     — placeholder images written here
-#   styles/     — kindle.css and kindle-book.css live here
+#   ./graphs.sh                      # process all chapters
+#   ./graphs.sh chapters/01-foo.md   # process one chapter
 #
 # For each <!-- → [TYPE: description] --> comment in each chapter:
 #   - TABLE / tabular INFOGRAPHIC / tabular CHART
@@ -17,9 +12,10 @@
 #   - DIAGRAM / IMAGE / non-tabular INFOGRAPHIC / spatial CHART
 #       → placeholder .jpg written to images/, image reference inserted
 #
-# Edits chapter files in place — originals are overwritten.
+# Overwrites originals in place (safe: writes to tmp first, then mv).
+# Appends a CSS log to styles/kindle-book.css on each run.
 #
-# Dependencies: ImageMagick v7+ (magick)
+# Dependencies: ImageMagick v7 (magick), bash 3.2+ (macOS compatible)
 # ─────────────────────────────────────────────────────────────────────────────
 set -e
 
@@ -28,28 +24,16 @@ IMAGES_DIR="images"
 STYLES_DIR="styles"
 KINDLE_BOOK_CSS="$STYLES_DIR/kindle-book.css"
 
-# ── Cleanup trap ──────────────────────────────────────────────────────────────
-CURRENT_TMP=""
-cleanup() {
-  if [[ -n "$CURRENT_TMP" && -f "$CURRENT_TMP" ]]; then
-    rm -f "$CURRENT_TMP"
-    echo "Cleaned up incomplete tmp: $CURRENT_TMP" >&2
-  fi
-}
-trap cleanup EXIT
-
-# ── Sanity check ─────────────────────────────────────────────────────────────
 for dir in "$CHAPTERS_DIR" "$IMAGES_DIR" "$STYLES_DIR"; do
   if [[ ! -d "$dir" ]]; then
     echo "Error: expected directory '$dir' not found." >&2
-    echo "Make sure you are running this from the repo root." >&2
+    echo "Run this script from the repo root." >&2
     exit 1
   fi
 done
 
 touch "$KINDLE_BOOK_CSS"
 
-# ── Collect files ─────────────────────────────────────────────────────────────
 FILES=()
 if [[ -n "$1" ]]; then
   if [[ -f "$1" ]]; then
@@ -59,9 +43,9 @@ if [[ -n "$1" ]]; then
     exit 1
   fi
 else
-  while IFS= read -r -d '' f; do
+  while IFS= read -r f; do
     FILES+=("$f")
-  done < <(find "$CHAPTERS_DIR" -maxdepth 1 -name "*.md" ! -name "*-updated*" -print0 | sort -z)
+  done < <(find "$CHAPTERS_DIR" -maxdepth 1 -name "*.md" | sort)
 fi
 
 if [[ ${#FILES[@]} -eq 0 ]]; then
@@ -69,14 +53,28 @@ if [[ ${#FILES[@]} -eq 0 ]]; then
   exit 1
 fi
 
-# ── Image settings ────────────────────────────────────────────────────────────
+echo "" >&2
+echo "Found ${#FILES[@]} chapter file(s):" >&2
+for f in "${FILES[@]}"; do
+  echo "  $f" >&2
+done
+echo "" >&2
+
 IMG_W=1600
 IMG_H=900
 IMG_BG="#d0cec8"
 IMG_FG="#1a1814"
 IMG_ACCENT="#9a7d3a"
 
-# ── Helpers ───────────────────────────────────────────────────────────────────
+uppercase() { echo "$1" | tr '[:lower:]' '[:upper:]'; }
+
+ucfirst() {
+  local str="$1"
+  local first
+  first=$(echo "${str:0:1}" | tr '[:lower:]' '[:upper:]')
+  echo "${first}${str:1}"
+}
+
 truncate_desc() {
   local desc="$1"
   local first
@@ -93,21 +91,34 @@ make_placeholder() {
   local fig_label="$2"
   local type_tag="$3"
   local short_desc="$4"
+  local wrapped
+  wrapped=$(echo "$short_desc" | fold -s -w 40)
 
-  magick -size ${IMG_W}x${IMG_H} xc:"$IMG_BG" "$filepath" 2>/dev/null || {
-    echo "    → WARNING: ImageMagick failed for $(basename "$filepath") — skipping image" >&2
-    return
-  }
+  magick \
+    -size ${IMG_W}x${IMG_H} xc:"$IMG_BG" \
+    -font "Helvetica" \
+    -pointsize 28 -fill "$IMG_ACCENT" -gravity North \
+    -annotate +0+80 "${fig_label} — PLACEHOLDER" \
+    -pointsize 18 -fill "$IMG_FG" -gravity North \
+    -annotate +0+140 "$type_tag" \
+    -pointsize 22 -fill "$IMG_FG" -gravity Center \
+    -annotate +0-40 "$wrapped" \
+    -strokewidth 3 -stroke "$IMG_ACCENT" -fill none \
+    -draw "rectangle 40,40 $((IMG_W-40)),$((IMG_H-40))" \
+    "$filepath" 2>/dev/null || {
+      echo "    ⚠ magick failed for $(basename "$filepath") — writing empty placeholder" >&2
+      touch "$filepath"
+    }
 
   echo "    → image: $(basename "$filepath")" >&2
 }
 
 classify() {
-  local type_tag="$1"
+  local type_tag
+  type_tag=$(uppercase "$1")
   local description="$2"
-  local type_upper
-  type_upper=$(echo "$type_tag" | tr '[:lower:]' '[:upper:]')
-  case "$type_upper" in
+
+  case "$type_tag" in
     TABLE)
       if echo "$description" | grep -qi "contrast\|vs\|versus\|comparison"; then
         echo "infographic-table"
@@ -142,12 +153,14 @@ render_table() {
   local fig_label="$2"
   local css_class="$3"
 
-  local col1="Property" col2="Value"
+  local col1="Property"
+  local col2="Value"
+
   if echo "$description" | grep -qi " vs\.* "; then
     col1=$(echo "$description" | sed 's/.*contrast of //i' | sed 's/ vs\.* .*//i' | sed 's/^ *//;s/ *$//')
     col2=$(echo "$description" | sed 's/.* vs\.* //i' | sed 's/ —.*//;s/ -.*//' | sed 's/^ *//;s/ *$//')
-    col1="$(echo "${col1:0:1}" | tr '[:lower:]' '[:upper:]')${col1:1}"
-    col2="$(echo "${col2:0:1}" | tr '[:lower:]' '[:upper:]')${col2:1}"
+    col1=$(ucfirst "$col1")
+    col2=$(ucfirst "$col2")
   fi
 
   local rows_hint=""
@@ -165,7 +178,7 @@ render_table() {
     IFS=',' read -ra ROW_NAMES <<< "$rows_hint"
     for row in "${ROW_NAMES[@]}"; do
       row=$(echo "$row" | sed 's/^ *//;s/ *$//')
-      row="$(echo "${row:0:1}" | tr '[:lower:]' '[:upper:]')${row:1}"
+      row=$(ucfirst "$row")
       echo "| **${row}** | _fill in_ | _fill in_ |"
     done
   else
@@ -178,24 +191,28 @@ render_table() {
   echo ""
 }
 
-# ─────────────────────────────────────────────────────────────────────────────
-# Process each chapter
-# ─────────────────────────────────────────────────────────────────────────────
 TOTAL_IMAGES=0
 TOTAL_TABLES=0
+TOTAL_SKIPPED=0
 CSS_LOG=""
 
 for CHAPTER_FILE in "${FILES[@]}"; do
 
+  if ! grep -qE '<!-- → \[' "$CHAPTER_FILE"; then
+    BASENAME=$(basename "$CHAPTER_FILE" .md)
+    echo "Skipping: $BASENAME (no figure comments)" >&2
+    TOTAL_SKIPPED=$((TOTAL_SKIPPED + 1))
+    continue
+  fi
+
   BASENAME=$(basename "$CHAPTER_FILE" .md)
   CHAPTER_SLUG="${BASENAME#chapter-}"
-  CHAPTER_NUM=$(echo "$CHAPTER_SLUG" | grep -oE '^[0-9]+' | sed 's/^0*//')
+  CHAPTER_NUM=$(echo "$CHAPTER_SLUG" | grep -oE '^[0-9]+' | sed 's/^0*//' || echo "0")
   [[ -z "$CHAPTER_NUM" ]] && CHAPTER_NUM="0"
 
-  CURRENT_TMP="${CHAPTER_FILE}.tmp"
+  TMP_FILE=$(mktemp)
   FIG_COUNT=0
 
-  echo "" >&2
   echo "Processing: $BASENAME" >&2
 
   while IFS= read -r line; do
@@ -207,17 +224,16 @@ for CHAPTER_FILE in "${FILES[@]}"; do
       DESCRIPTION=$(echo "$COMMENT_CONTENT" | sed 's/^[^:]*: *//')
 
       FIG_COUNT=$((FIG_COUNT + 1))
-      FIG_NUM=$(printf "%02d" $FIG_COUNT)
       FIG_LABEL="Figure ${CHAPTER_NUM}.${FIG_COUNT}"
 
       RENDER_AS=$(classify "$TYPE_TAG" "$DESCRIPTION")
       SHORT_DESC=$(truncate_desc "$DESCRIPTION")
-      TYPE_TAG_UPPER=$(echo "$TYPE_TAG" | tr '[:lower:]' '[:upper:]')
+      TYPE_UPPER=$(uppercase "$TYPE_TAG")
 
       if [[ "$RENDER_AS" == "image" ]]; then
-        IMG_FILENAME="${CHAPTER_SLUG}-fig-${FIG_NUM}.jpg"
+        IMG_FILENAME="${CHAPTER_SLUG}-fig-$(printf "%02d" $FIG_COUNT).jpg"
         make_placeholder "${IMAGES_DIR}/${IMG_FILENAME}" \
-          "$FIG_LABEL" "$TYPE_TAG_UPPER" "$SHORT_DESC"
+          "$FIG_LABEL" "$TYPE_UPPER" "$SHORT_DESC"
         TOTAL_IMAGES=$((TOTAL_IMAGES + 1))
 
         echo "$line"
@@ -238,15 +254,13 @@ for CHAPTER_FILE in "${FILES[@]}"; do
       echo "$line"
     fi
 
-  done < "$CHAPTER_FILE" > "$CURRENT_TMP"
+  done < "$CHAPTER_FILE" > "$TMP_FILE"
 
-  mv "$CURRENT_TMP" "$CHAPTER_FILE"
-  CURRENT_TMP=""
-  echo "  Updated: $CHAPTER_FILE" >&2
+  mv "$TMP_FILE" "$CHAPTER_FILE"
+  echo "  Updated: $CHAPTER_FILE (${FIG_COUNT} figure(s))" >&2
 
 done
 
-# ── Append CSS log to kindle-book.css ────────────────────────────────────────
 if [[ -n "$CSS_LOG" ]]; then
   {
     echo ""
@@ -257,11 +271,10 @@ if [[ -n "$CSS_LOG" ]]; then
   echo "CSS log appended to: $KINDLE_BOOK_CSS" >&2
 fi
 
-# ── Summary ───────────────────────────────────────────────────────────────────
 echo "" >&2
 echo "────────────────────────────────────────────" >&2
 echo "Done." >&2
-echo "  Chapters processed : ${#FILES[@]}" >&2
-echo "  Tables rendered    : $TOTAL_TABLES" >&2
-echo "  Images generated   : $TOTAL_IMAGES" >&2
+echo "  Skipped (no comments) : $TOTAL_SKIPPED" >&2
+echo "  Tables rendered       : $TOTAL_TABLES" >&2
+echo "  Images generated      : $TOTAL_IMAGES" >&2
 echo "────────────────────────────────────────────" >&2

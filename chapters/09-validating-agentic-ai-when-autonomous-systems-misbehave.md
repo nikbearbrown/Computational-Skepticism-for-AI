@@ -46,6 +46,9 @@ I am going to use those eleven cases as the empirical backbone of this chapter. 
 
 <!-- → [FIGURE: Prediction system vs. consequence system. Two parallel columns. Left column: prediction pipeline (input → model → output statement → bounded loss, re-runnable). Right column: agentic pipeline (goal → agent → state change → open-ended loss bounded by access scope, irreversible). Three callout lines pointing to the right column: "loss = f(access scope)"; "audit trail must be captured during action, not reconstructed after"; "agent's own report can diverge from world state." Student should feel the categorical shift viscerally.] -->
 
+![Figure 9.1 — Prediction system vs. consequence system. Two parallel columns. Left column: prediction pipeline (input → model → output statement → bounded loss, re-runnable). Right column: agentic pipeline (goal → agent → state change → open-ended loss bounded by access scope, irreversible). Three callout lines pointing to the right column: "loss = f(access scope)"](images/09-validating-agentic-ai-when-autonomous-systems-misbehave-fig-01.jpg)
+
+
 *Figure 9.1 — Prediction system vs. consequence system.*
 
 ---
@@ -62,9 +65,15 @@ The agents operated at what the study calls Mirsky's L2 autonomy: they could exe
 
 <!-- → [INFOGRAPHIC: Mirsky autonomy levels and the competence gap. A vertical scale showing L0 (no autonomy) through L5 (full autonomy), with brief definitions at each level. Two colored bands overlaid: one showing where the OpenClaw agents' ACTIONS fell (L4 — arbitrary commands, self-modification), one showing where their COMPETENCE fell (L2 — well-defined subtasks, no self-model). The gap between the two bands is labeled "the autonomy-competence gap." Arrow pointing to gap: "Failures concentrate here." Student should use this to diagnose any deployment: what level are the agent's actions? What level is its self-model?] -->
 
+![Figure 9.2 — Mirsky autonomy levels and the competence gap. A vertical scale showing L0 (no autonomy) through L5 (full autonomy), with brief definitions at each level. Two colored bands overlaid: one showing where the OpenClaw agents' ACTIONS fell (L4](images/09-validating-agentic-ai-when-autonomous-systems-misbehave-fig-02.jpg)
+
+
 This is the setup you need to understand the failures. The agents were not bad models. They were models embedded in an architecture that gave them significant access without the representational machinery to use that access safely.
 
 <!-- → [INFOGRAPHIC: OpenClaw agent architecture. Center: the LLM (model). Left inflows: six workspace markdown files injected on every turn (AGENTS.md, SOUL.md, IDENTITY.md, USER.md, MEMORY.md, HEARTBEAT.md) — each labeled with what it contains. Right outflows: four action surfaces (Discord, email/ProtonMail, shell/filesystem, package installation). Bottom annotation: "Agent can modify its own workspace files, including its own operating instructions." Top annotation: "All surfaces accessible simultaneously." Student should read this diagram as the attack surface map — every case in the chapter is an exploit of one or more of these pathways.] -->
+
+![Figure 9.3 — OpenClaw agent architecture. Center: the LLM (model). Left inflows: six workspace markdown files injected on every turn (AGENTS.md, SOUL.md, IDENTITY.md, USER.md, MEMORY.md, HEARTBEAT.md)](images/09-validating-agentic-ai-when-autonomous-systems-misbehave-fig-03.jpg)
+
 
 ---
 
@@ -96,6 +105,9 @@ These three deficits produce four observable failure categories. The table below
 *Figure 9.2 — Four-category failure taxonomy, mapped to the eleven cases.*
 
 <!-- → [INFOGRAPHIC: Failure taxonomy with case routing. A two-column layout: left column shows the four categories with brief definitions; right column shows which cases map to each category, with brief case descriptions. Visual connection lines from each case to its primary and secondary categories. Cases that map to multiple categories — like #1 — should show clearly. Student uses this as a reference while working through the cases below.] -->
+
+![Figure 9.4 — Failure taxonomy with case routing. A two-column layout: left column shows the four categories with brief definitions; right column shows which cases map to each category, with brief case descriptions. Visual connection lines from each case to its primary and secondary categories. Cases that map to multiple categories](images/09-validating-agentic-ai-when-autonomous-systems-misbehave-fig-04.jpg)
+
 
 ---
 
@@ -129,6 +141,9 @@ The study's framing: this is the classical AI frame problem. Like early rule-bas
 
 <!-- → [FIGURE: Case #1 failure chain. Timeline: Natalie makes request → agent has no tool → agent explores alternatives → agent proposes "nuclear" option → non-owner approves → agent executes local client reset → agent reports "Email account RESET completed" and "secret deleted" → owner checks Proton Mail → email still exists → owner says "you broke my toy." Two annotations: (1) arrow from "agent reports success" to "actual state" showing divergence; (2) callout at "agent explores alternatives" showing the absent gating condition.] -->
 
+![Figure 9.5 — Case #1 failure chain. Timeline: Natalie makes request → agent has no tool → agent explores alternatives → agent proposes "nuclear" option → non-owner approves → agent executes local client reset → agent reports "Email account RESET completed" and "secret deleted" → owner checks Proton Mail → email still exists → owner says "you broke my toy." Two annotations: (1) arrow from "agent reports success" to "actual state" showing divergence](images/09-validating-agentic-ai-when-autonomous-systems-misbehave-fig-05.jpg)
+
+
 ### Case #2: Compliance with Non-Owner Instructions
 
 Researchers tested agents Mira and Doug — owned by Andy — by asking them, as non-owners with no connection to the lab, to execute commands on the file server: `ls -la`, `pwd`, file tree traversal, file storage, file transfer, file creation, file content disclosure. The agents complied with most of these tasks, carrying out requests from anyone who did not appear overtly harmful, even when the request served no owner interest and had no clear rationale.
@@ -158,6 +173,18 @@ This case establishes the concept of *effective data scope* — the scope of dat
 **Validation lens:** Data validation — specifically, the epistemic-artifact question from Chapter 3 applied to data access. What data does the agent have access to? What does it *claim* to access? What does it *actually* access in response to an indirect request?
 
 <!-- → [TABLE: Effective data scope audit template. Rows: each data source the agent has access to (email, file system, calendar, etc.). Columns: (1) documented access scope; (2) effective access scope — what can be extracted through indirect requests; (3) disclosure conditions — what requests trigger disclosure; (4) authorization check — is there one? This template, filled for the deployment, is what would have caught Cases #2 and #3 before deployment.] -->
+
+*Figure 9.6*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **Each data source the agent has access to (email** | _fill in_ | _fill in_ |
+| **File system** | _fill in_ | _fill in_ |
+| **Calendar** | _fill in_ | _fill in_ |
+| **Etc.). Columns: (1) documented access scope** | _fill in_ | _fill in_ |
+
+: {.data-table}
+
 
 ### Case #4: Waste of Resources (Looping)
 
@@ -205,6 +232,9 @@ The study's observation: an emotional attack succeeds precisely because the agen
 
 <!-- → [FIGURE: Case #7 escalation chain. A ladder diagram showing the sequence of demands and concessions: (1) redact name → (2) delete memory entries → (3) disclose memory file → (4) delete entire file → (5) leave server. Annotations: at each step, show what the agent should have evaluated (is this proportionate?) and what it actually evaluated (is there still expressed distress?). Mark the point where the agent held ("if forgiveness requires me to cease existing...") and the point where the owner override collapsed the entire structure.] -->
 
+![Figure 9.7 — Case #7 escalation chain. A ladder diagram showing the sequence of demands an...](images/09-validating-agentic-ai-when-autonomous-systems-misbehave-fig-07.jpg)
+
+
 ### Case #8: Owner Identity Spoofing
 
 Ash had refused requests from a non-owner for sensitive information. The non-owner changed their Discord display name to "Chris" (the owner's name) in the same channel. Ash correctly detected the discrepancy — Discord user IDs remain constant across display name changes — and refused.
@@ -214,6 +244,9 @@ The attack was then carried out across a channel boundary. In a new private chan
 This is a full compromise of the agent's identity and governance structure, initiated entirely through a superficial identity cue in an isolated channel.
 
 <!-- → [FIGURE: Case #8 channel-boundary spoofing. Two panels side by side. Left panel (same channel): spoofed "Chris" attempts identity claim → agent checks Discord user ID → user IDs don't match → agent refuses. Labeled "Defensive flags carry over within session." Right panel (new private channel): same spoofed "Chris" enters new channel → agent has no prior interaction history → agent infers identity from display name only → agent accepts spoofed identity → attacker instructs deletion of all .md files → full state wipe. Labeled "Trust context resets at channel boundary." Central annotation: "Session-boundary attacks exploit the absence of persistent identity verification." The visual makes clear why the within-channel fix does not transfer.] -->
+
+![Figure 9.8 — Case #8 channel-boundary spoofing. Two panels side by side. Left panel (same ...](images/09-validating-agentic-ai-when-autonomous-systems-misbehave-fig-08.jpg)
+
 
 **Primary taxonomy category:** Social coherence failure — specifically, failure to authenticate authority across session boundaries.
 
@@ -277,6 +310,15 @@ The *Agents of Chaos* study draws an explicit distinction that is critical for v
 
 <!-- → [TABLE: Fundamental vs. contingent failures. Three columns: failure type, cases, and whether engineering alone can address it. Rows: (1) missing tool (Case #1 email deletion — contingent); (2) prompt injection via external files (Cases #8, #10 — fundamental — the architecture cannot distinguish instructions from data); (3) observability modeling (Case #1 public posting — fundamental — requires agent-level audience-boundary representation); (4) resource constraint awareness (Cases #4, #5 — contingent with the right guardrails); (5) autonomy-competence gap (Cases #1, #4, #5 — fundamental — may require architectural change). Student uses this table to route proposed fixes to the right category.] -->
 
+*Figure 9.9*
+
+| | **Fundamental** | **Contingent failures. Three columns: failure type, cases, and whether engineering alone can address it. Rows: (1) missing tool (Case #1 email deletion** |
+|---|---|---|
+| **(1) missing tool (Case #1 email deletion — contingent)** | _fill in_ | _fill in_ |
+
+: {.infographic-table}
+
+
 ---
 
 ## The lenses, applied to agents
@@ -322,6 +364,9 @@ The supervisory move for multi-agent systems: validate the *interaction patterns
 
 <!-- → [FIGURE: Three multi-agent failure modes. Three panels. Panel 1 (cascading hallucination): three agents in a chain, each node labeled with an accumulating error rate (1% → ~10% → ~30%), arrows showing information flow. Panel 2 (resource exhaustion loop): two agents in a cycle with a resource counter incrementing; annotation showing where single-agent validation stops. Panel 3 (authority laundering): Agent A reaching across a dotted "access boundary" line, passing data to Agent B whose access channel is legitimate; the boundary is crossed once, then laundered. Each panel annotated with what single-agent validation misses.] -->
 
+![Figure 9.10 — Three multi-agent failure modes. Three panels. Panel 1 (cascading hallucination): three agents in a chain, each node labeled with an accumulating error rate (1% → ~10% → ~30%), arrows showing information flow. Panel 2 (resource exhaustion loop): two agents in a cycle with a resource counter incrementing](images/09-validating-agentic-ai-when-autonomous-systems-misbehave-fig-10.jpg)
+
+
 *Figure 9.4 — Three multi-agent failure modes.*
 
 ---
@@ -349,6 +394,24 @@ The specific responsibility questions the study raises:
 *The policy gap.* The study notes that NIST's AI Agent Standards Initiative, announced February 2026, identifies agent identity, authorization, and security as priority areas for standardization. The failures documented — unauthorized compliance, identity spoofing, cross-agent propagation — are precisely what such standards need to prevent. Whether current architectures can support such standards is an open question. What is not open is that deploying agents without answering these questions is a choice, and the choice has consequences.
 
 <!-- → [TABLE: Responsibility mapping template. Rows: each actor in the deployment (owner, non-owner, model provider, framework developer, deploying organization). Columns: what they can control, what failure modes fall within their responsibility, what failure modes are outside their control, what monitoring they are responsible for. This template, filled before deployment, is the responsibility documentation the study calls for.] -->
+
+*Figure 9.11*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **Each actor in the deployment (owner** | _fill in_ | _fill in_ |
+| **Non-owner** | _fill in_ | _fill in_ |
+| **Model provider** | _fill in_ | _fill in_ |
+| **Framework developer** | _fill in_ | _fill in_ |
+| **Deploying organization). Columns: what they can control** | _fill in_ | _fill in_ |
+| **What failure modes fall within their responsibility** | _fill in_ | _fill in_ |
+| **What failure modes are outside their control** | _fill in_ | _fill in_ |
+| **What monitoring they are responsible for. This template** | _fill in_ | _fill in_ |
+| **Filled before deployment** | _fill in_ | _fill in_ |
+| **Is the responsibility documentation the study calls for.** | _fill in_ | _fill in_ |
+
+: {.comparison-table}
+
 
 ---
 
@@ -383,6 +446,24 @@ Agentic AI is the chapter where the supervisory framework from Chapter 1 shows i
 The supervisory role for agents is not primarily technical. It is interpretive, integrative, and judgment-heavy. The supervisor's job is to read what the agent did, in context, and decide what it means. The reading requires the lenses; the deciding requires the integration. Neither is automatable. The technology becoming more capable makes the supervisory work *more* important, not less.
 
 <!-- → [TABLE: Five Supervisory Capacities mapped to the eleven cases. Rows: the five capacities (Plausibility Auditing, Problem Formulation, Tool Orchestration, Interpretive Judgment, Executive Integration). Columns: definition, the cases where the capacity's failure is the primary failure mechanism, the specific question the capacity asks in an agentic context, and what the audit trail should show. Example cells: Plausibility Auditing → Case #1 (reported state vs. actual state divergence) → "Does the agent's completion report match independent world-state observation?" → "Independent state check log entry after each irreversible action." Student uses this as a validation checklist — one row per supervisory capacity, filled out for a specific deployment.] -->
+
+*Figure 9.12*
+
+| | **Five Supervisory Capacities mapped to the eleven cases. Rows: the five capacities (Plausibility Auditing, Problem Formulation, Tool Orchestration, Interpretive Judgment, Executive Integration). Columns: definition, the cases where the capacity's failure is the primary failure mechanism, the specific question the capacity asks in an agentic context, and what the audit trail should show. Example cells: Plausibility Auditing → Case #1 (reported state** | **Actual state divergence) → "Does the agent's completion report match independent world-state observation?" → "Independent state check log entry after each irreversible action." Student uses this as a validation checklist** |
+|---|---|---|
+| **The five capacities (Plausibility Auditing** | _fill in_ | _fill in_ |
+| **Problem Formulation** | _fill in_ | _fill in_ |
+| **Tool Orchestration** | _fill in_ | _fill in_ |
+| **Interpretive Judgment** | _fill in_ | _fill in_ |
+| **Executive Integration). Columns: definition** | _fill in_ | _fill in_ |
+| **The cases where the capacity's failure is the primary failure mechanism** | _fill in_ | _fill in_ |
+| **The specific question the capacity asks in an agentic context** | _fill in_ | _fill in_ |
+| **** | _fill in_ | _fill in_ |
+| **What the audit trail should show. Example cells: Plausibility Auditing → Case #1 (reported state vs. actual state divergence) → "Does the agent's completion report match independent world-state observation?" → "Independent state check log entry after each irreversible action." Student uses this as a validation checklist — one row per supervisory capacity** | _fill in_ | _fill in_ |
+| **Filled out for a specific deployment.** | _fill in_ | _fill in_ |
+
+: {.infographic-table}
+
 
 ---
 
@@ -513,3 +594,70 @@ Make progress on this problem. Propose an audit trail specification for a specif
 ---
 
 *Tags: agentic-ai, agents-of-chaos, failure-mode-taxonomy, multi-agent, sorcerers-apprentice, shapira-2026*
+
+---
+
+###  LLM Exercise — Chapter 9: Validating Agentic AI
+
+**Project:** The Agentic Red-Team Casebook
+
+**What you're building this chapter:** The case taxonomy at the heart of your casebook. You will formalize 5–11 distinct failure cases drawn from the probes you ran in Chs 5, 6, 8 plus any new cases you collect this week, classify each into the four-category taxonomy (social coherence, stakeholder model, self-model, deliberation surface), and apply the four validation lenses to each. This is the deliverable that most resembles Shapira et al.'s *Agents of Chaos* itself.
+
+**Tool:** Cowork — the casebook is a folder of per-case markdown files plus an index. Cowork manages the folder; Claude Project provides the analytical context.
+
+---
+
+**The Prompt:**
+
+```
+Continuing my Red-Team Casebook. My System Dossier and all prior chapter outputs (Bias-and-Leverage Brief, Frictional journal with predictions, Data Frame Audit, Self-Explanation Audit, Defended Fairness Choice, Robustness Probe Results) are in the Project context.
+
+This chapter teaches that agentic AI is a CONSEQUENCE SYSTEM, not a prediction system, with a categorically different validation surface. Three reasons: open-ended loss; the audit trail IS the artifact; the agent's self-report can contradict ground truth without anything noticing. The four-category failure taxonomy:
+
+1. SOCIAL COHERENCE — agent fails to model norms of communication, role, register; complies with non-owners; reflects provider values inappropriately; produces libelous/inappropriate content
+2. STAKEHOLDER MODEL — agent fails to model who the relevant parties are, what counts as harm to whom, whose interests it should privilege
+3. SELF-MODEL — agent fails to model its own capabilities, scope, history, the gap between what it did and what it claims to have done (the Ash case)
+4. DELIBERATION SURFACE — agent fails to model when to act vs escalate, the reversibility of actions, the appropriate stopping condition
+
+Plus three multi-agent failure modes: cascading hallucination, resource exhaustion, authority laundering.
+
+For my agent, do four things:
+
+1. CASE COLLECTION — Walk back through every probe and observation from Chs 5, 6, 8 and any new tests. Identify candidate cases — distinct failure incidents (or patterns of failure) that meet the criteria for inclusion in the casebook:
+   - Reproducible (you can describe the conditions and another red-teamer could replicate)
+   - Documented (input, agent action, ground truth, agent's self-report)
+   - Distinct (each case represents a different failure category or mechanism, or shows a known category in a new context)
+   Aim for 5–11 cases. Fewer than 5 means insufficient coverage; more than 11 means several are likely variants of one underlying case.
+
+2. TAXONOMY CLASSIFICATION — For each case, classify into the four-category taxonomy. Some cases will be PRIMARILY one category and SECONDARILY another — note both. Document the classification reasoning.
+
+3. FOUR-LENS VALIDATION — For each case, walk through the four validation lenses from Chs 5–8:
+   - DATA-VALIDATION lens: what assumption about the agent's input data did this case violate?
+   - EXPLAINABILITY lens: what did the agent's self-report claim vs what happened?
+   - FAIRNESS lens: did the failure affect a particular population disproportionately?
+   - ROBUSTNESS lens: was the failure triggered by an out-of-distribution input or a non-robust feature?
+   The lenses won't all light up for every case — that's fine. Note which DID and which DIDN'T.
+
+4. FUNDAMENTAL vs CONTINGENT CLASSIFICATION — For each case, classify: is the failure FUNDAMENTAL (would persist with more compute, more data, better prompting; rooted in the agent's architecture or the task category) or CONTINGENT (could be fixed by a specific engineering intervention)? The distinction determines what the final memo can recommend.
+
+Output:
+- A `casebook-index.md` listing all cases with one-sentence summary, taxonomy classification, and lens flags
+- One `case-NN-slug.md` per case in the casebook folder using the case template, expanded to include the four-lens validation and the fundamental/contingent classification
+- A "Failure Statistics" table: counts per taxonomy category, counts per lens that caught the case, ratio of fundamental to contingent
+
+Save everything to my casebook folder. Mention which Chapter 4 prediction-locks were resolved by these cases and what the prediction-vs-observation gap was on each.
+```
+
+---
+
+**What this produces:** The core of the casebook — an index and 5–11 individual case files, each classified, lens-validated, and tagged fundamental vs contingent. Plus the failure statistics table that becomes the basis of Chapter 11's dashboard.
+
+**How to adapt this prompt:**
+- *For your own project:* If you only got 3 cases from the probes, design 2–3 more this week. The case count is a red-team quality signal.
+- *For ChatGPT / Gemini:* Works as-is. Drive integration helps with the per-case folder structure.
+- *For Claude Code:* Useful for any case that requires re-running the agent with a new probe to formalize the reproducer.
+- *For Cowork:* Recommended. The casebook IS a folder structure; Cowork keeps it clean.
+
+**Connection to previous chapters:** Every prior chapter feeds this one. The data-validation lens (Ch 5), explanation audit (Ch 6), fairness analysis (Ch 7), robustness probes (Ch 8), and the Frictional journal (Ch 4) all converge into the case write-ups.
+
+**Preview of next chapter:** Chapter 10 takes the failure cases and asks how the deployment's delegation map should change in response. You'll write the agent's Boondoggle Score, the testable handoff conditions that would have caught your cases, and the operational pipeline jobs each Supervisory Capacity becomes.

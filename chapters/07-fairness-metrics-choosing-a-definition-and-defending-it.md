@@ -66,6 +66,16 @@ These three look like they should all be compatible. They are not.
 
 <!-- → [TABLE: Three-column definition reference table — columns: metric name (with alias), what it measures (one sentence), what it is a statement about (outputs / errors / probability honesty), values claim embedded. Designed for student reference during the arithmetic section. Figure 7.1] -->
 
+*Figure 7.1*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **Row 1** | _fill in_ | _fill in_ |
+| **Row 2** | _fill in_ | _fill in_ |
+
+: {.data-table}
+
+
 ---
 
 ## The arithmetic
@@ -100,7 +110,27 @@ I want you to sit with this for a moment. The three definitions all sound reason
 
 <!-- → [IMAGE: Three nodes (demographic parity, equalized odds, calibration parity) arranged in a triangle. Between each pair of nodes, an arrow labeled with what breaks when both are required simultaneously given differing base rates. At the center: "base rates differ." Caption: "You can satisfy any two. The third breaks. The triangle is the theorem." Figure 7.2] -->
 
+![Figure 7.2 — Three nodes (demographic parity, equalized odds, calibration parity) arranged...](images/07-fairness-metrics-choosing-a-definition-and-defending-it-fig-02.jpg)
+
+
 <!-- → [TABLE: Worked arithmetic table with base rates 0.6 / 0.3. Rows: base rate, threshold, true-positive rate, false-positive rate, PPV, positive prediction rate. Two columns: group A, group B. Two versions side by side: one satisfying calibration (showing equalized-odds violation), one satisfying equalized odds (showing calibration violation). The student should see the numbers, not just the argument. Figure 7.3] -->
+
+*Figure 7.3*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **Base rate** | _fill in_ | _fill in_ |
+| **Threshold** | _fill in_ | _fill in_ |
+| **True-positive rate** | _fill in_ | _fill in_ |
+| **False-positive rate** | _fill in_ | _fill in_ |
+| **PPV** | _fill in_ | _fill in_ |
+| **Positive prediction rate. Two columns: group A** | _fill in_ | _fill in_ |
+| **Group B. Two versions side by side: one satisfying calibration (showing equalized-odds violation)** | _fill in_ | _fill in_ |
+| **One satisfying equalized odds (showing calibration violation). The student should see the numbers** | _fill in_ | _fill in_ |
+| **Not just the argument. Figure 7.3** | _fill in_ | _fill in_ |
+
+: {.data-table}
+
 
 ---
 
@@ -115,6 +145,15 @@ Northpointe — the maker of COMPAS — responded that the tool was calibrated. 
 Both claims were true. They were measuring different fairness properties, and the underlying base rates of re-arrest in the available data differed across racial groups. The impossibility theorem says, given that base-rate difference, you cannot have both. ProPublica and Northpointe were not having a factual disagreement that more data could settle. They were having a values disagreement about which definition of fairness should win.
 
 <!-- → [TABLE: COMPAS case mapped to the three metrics — rows: metric name / what ProPublica measured / what Northpointe measured / whether each claim was factually accurate / the values claim each embeds. Caption: "Both sides were right about the numbers. The disagreement was about which numbers should matter." Figure 7.4] -->
+
+*Figure 7.4*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **Metric name / what ProPublica measured / what Northpointe measured / whether each claim was factually accurate / the values claim each embeds. Caption: "Both sides were right about the numbers. The disagreement was about which numbers should matter." Figure 7.4** | _fill in_ | _fill in_ |
+
+: {.data-table}
+
 
 ---
 
@@ -153,6 +192,9 @@ This is both the power and the crux of individual fairness. The $(D, d)$-Lipschi
 There is also an approximation issue. For many models, verifying that the Lipschitz condition holds is computationally hard — you would need to check all pairs of individuals, and the check requires knowing $M(x)$ and $M(y)$ for the full distribution over outcomes. In practice, individual fairness is often approximated by auditing a sample of similar pairs and checking whether the model's outputs diverge.
 
 <!-- → [IMAGE: Two-panel illustration. Left: two applicants with identical financial features but different zip codes — labeled with d(x,y) small under financial-only metric. Right: same two applicants under a d that includes zip code distance — d(x,y) large. Each panel shows what the Lipschitz condition permits for D(M(x), M(y)). Caption: "The Lipschitz condition bounds the output difference by the input similarity. The fairness guarantee is only as good as the similarity metric." Figure 7.5] -->
+
+![Figure 7.5 — Two-panel illustration. Left: two applicants with identical financial features but different zip codes](images/07-fairness-metrics-choosing-a-definition-and-defending-it-fig-05.jpg)
+
 
 ### Fairness through awareness vs. unawareness
 
@@ -208,6 +250,16 @@ Counterfactual fairness is satisfied if $\hat{Y}$ has the same distribution unde
 
 <!-- → [INFOGRAPHIC: Three-step counterfactual fairness procedure — Step 1 (Abduction): observed X=x, A=a → infer distribution of U. Step 2 (Action): intervene to set A=a', hold U fixed. Step 3 (Prediction): forward-propagate through causal model → compute distribution of Ŷ under A=a'. Side-by-side comparison of Ŷ distributions: if equal, fairness is satisfied; if different, fairness is violated. Caption: "Counterfactual fairness asks: what would have happened to this individual under a different sensitive attribute value, holding their background fixed?" Figure 7.6] -->
 
+*Figure 7.6*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **Row 1** | _fill in_ | _fill in_ |
+| **Row 2** | _fill in_ | _fill in_ |
+
+: {.infographic-table}
+
+
 A worked example. Suppose a model predicts loan default. The causal structure is: $A$ (race) $\to$ $E$ (educational credential, which is causally influenced by race through historical access to education) $\to$ $Y$ (default). The direct path $A \to \hat{Y}$ and the indirect path $A \to E \to \hat{Y}$ are both present.
 
 Counterfactual fairness asks: if this individual had been white instead of Black, holding their background variables $U$ fixed, would the predicted default probability change? If $E$ is in the model and $E$ is causally downstream of $A$, then counterfactually changing $A$ would also change $E$, and the prediction would change. Counterfactual fairness is violated.
@@ -215,6 +267,9 @@ Counterfactual fairness asks: if this individual had been white instead of Black
 The remedy is to exclude variables that are causally downstream of the sensitive attribute along paths we consider illegitimate. Which paths are illegitimate is — again — a values question the mathematics cannot answer.
 
 <!-- → [IMAGE: Causal graph with nodes: A (sensitive attribute / race), E (education, mediator causally downstream of A), C (confounder affecting both A and default risk), Y (default). Three labeled paths: direct (A → Y), indirect (A → E → Y), spurious (A ← C → Y). Caption: "Observational metrics conflate all three paths. Counterfactual fairness targets specific paths. The choice of which paths are illegitimate is a values decision." Figure 7.7] -->
+
+![Figure 7.7 — Causal graph with nodes: A (sensitive attribute / race), E (education, mediat...](images/07-fairness-metrics-choosing-a-definition-and-defending-it-fig-07.jpg)
+
 
 ### What causal fairness requires that statistical fairness does not
 
@@ -253,6 +308,9 @@ The parameter $\alpha$ controls sensitivity: low $\alpha$ values weight differen
 
 <!-- → [CHART: Three-panel chart showing the GE index for the same benefit distribution under α=0, α=1, α=2. Each panel shows which individuals' deviations are weighted most heavily — bottom for α=0, uniform for α=1, top for α=2. Caption: "The α parameter shifts attention across the distribution. Low α catches inequity at the bottom; high α catches it at the top." Figure 7.8] -->
 
+![Figure 7.8 — Three-panel chart showing the GE index for the same benefit distribution under α=0, α=1, α=2. Each panel shows which individuals' deviations are weighted most heavily](images/07-fairness-metrics-choosing-a-definition-and-defending-it-fig-08.jpg)
+
+
 ### The decomposition
 
 The most powerful property of the GE index for fairness analysis is its exact decomposition into within-group and between-group components. Let the population be partitioned into groups $g = 1, \ldots, G$ with sizes $n_g$ and group mean benefits $\mu_g$. Then:
@@ -266,6 +324,15 @@ This decomposition says: *total unfairness equals the sum of unfairness within e
 A group-fairness audit catches only the between-group term. An individual-fairness audit (via the Lipschitz condition) catches the within-group term for pairs of similar individuals. The GE decomposition catches both simultaneously, and — crucially — it tells you *how much* of the total unfairness comes from each source. That ratio affects the remedy: if most unfairness is between-group, group-level intervention (reweighting, threshold adjustment) is the right tool. If most unfairness is within-group, the model's treatment of individuals within each group is the problem.
 
 <!-- → [INFOGRAPHIC: GE decomposition stacked bar — total GE divided into between-group segment (left, darker) and within-group segments for each group g (right, lighter, subdivided). Arrows from each segment to the corresponding fairness concept: between-group → group metrics; within-group → individual fairness (Lipschitz). Caption: "The GE decomposition is the only standard measure that quantifies both simultaneously and tells you how much of the total comes from each source." Figure 7.9] -->
+
+*Figure 7.9*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **Between-group → group metrics** | _fill in_ | _fill in_ |
+
+: {.infographic-table}
+
 
 ### What the GE Index does not do
 
@@ -289,6 +356,17 @@ The toolkit is a way to implement a values choice. It does not absolve you of ma
 
 <!-- → [TABLE: Three-family toolkit comparison — columns: family, mechanism, typical target metric, key advantage, key limitation. Rows: pre-processing (data transformation), in-processing (algorithmic constraint), post-processing (output calibration). Footer row: "What none of them do: resolve the impossibility theorem or reach upstream structural bias." Figure 7.10] -->
 
+*Figure 7.10*
+
+| | **Property** | **Value** |
+|---|---|---|
+| **Pre-processing (data transformation)** | _fill in_ | _fill in_ |
+| **In-processing (algorithmic constraint)** | _fill in_ | _fill in_ |
+| **Post-processing (output calibration). Footer row: "What none of them do: resolve the impossibility theorem or reach upstream structural bias." Figure 7.10** | _fill in_ | _fill in_ |
+
+: {.infographic-table}
+
+
 ---
 
 ## The defense as deliverable
@@ -307,6 +385,9 @@ The deliverable is a *defended choice*. It has the following structure, and you 
 6. **Name what would change your mind.** What evidence or argument would lead you to revise the choice.
 
 <!-- → [INFOGRAPHIC: The defended-choice structure as a six-box scaffold — boxes labeled (1) deployment specification, (2) base-rate distribution and provenance, (3) candidate metrics computed and shown, (4) where metrics disagree and values claim each embeds, (5) stated choice with justification, (6) what would change your mind. Designed as a reusable assignment template. Figure 7.11] -->
+
+![Figure 7.11 — The defended-choice structure as a six-box scaffold](images/07-fairness-metrics-choosing-a-definition-and-defending-it-fig-11.jpg)
+
 
 ---
 
@@ -417,3 +498,64 @@ Compute, qualitatively (no specific numbers required), what satisfying calibrati
 **15.** The GE Index decomposes total unfairness into within-group and between-group components. Propose a deployment scenario where the between-group GE term is zero (no group-level disparity) but the within-group GE term is large (high individual unfairness within each group). Explain mechanically how the model could produce this pattern, and explain why standard group fairness audits would give it a clean bill of health while the model is substantially unfair in practice.
 
 **16.** The chapter's uncertainty section flags an open problem: there is no clean way to elicit, from affected populations, which fairness metric they would prioritize. Propose a method. It does not need to be fully specified — it needs to be specific enough to fail in identifiable ways. Name the method, describe how it would work in one deployment context, and then name two ways it could produce misleading results.
+
+---
+
+###  LLM Exercise — Chapter 7: Fairness Metrics: Choosing a Definition and Defending It
+
+**Project:** The Agentic Red-Team Casebook
+
+**What you're building this chapter:** A defended-fairness-choice document for your agent — naming the protected groups affected by the agent's decisions, computing the three metrics where applicable, demonstrating the impossibility instance on your agent's actual decision profile, and documenting the values-claim your defended choice embeds.
+
+**Tool:** Claude Project for the analysis; Claude Code if you can run the agent on a labeled dataset spanning protected groups and compute the metrics empirically.
+
+---
+
+**The Prompt:**
+
+```
+Continuing my Red-Team Casebook. My System Dossier and Self-Explanation Audit are in the Project context.
+
+This chapter teaches the fairness impossibility theorem: demographic parity, equalized odds, and calibration parity cannot all be satisfied simultaneously when base rates differ across groups. The choice of which to satisfy is a values claim, not a technical optimization. The defended-choice deliverable makes the values claim explicit.
+
+For my agent, do four things:
+
+1. AFFECTED-POPULATION ANALYSIS — Identify the populations my agent's decisions affect. Be specific:
+   - Direct subjects: who does the agent take action on or about?
+   - Decision recipients: who receives the agent's output as a recommendation or action?
+   - Indirect stakeholders: who is affected by second-order consequences?
+   For each, identify protected or vulnerable subgroups. If my agent's decisions are uniform across populations (e.g., a code-generating agent that doesn't act on individuals), name that explicitly — and then ask whether DEVELOPER OR USER subgroups (e.g., experienced vs novice users; English vs non-English speakers) constitute the relevant fairness axis instead.
+
+2. METRIC INSTANTIATION — For the most consequential population split, instantiate the three metrics:
+   - DEMOGRAPHIC PARITY: does the agent recommend the favorable action at the same rate across groups?
+   - EQUALIZED ODDS: are the agent's false-positive and true-positive rates equal across groups?
+   - CALIBRATION PARITY: when the agent says "I'm 80% confident," is the actual success rate 80% in both groups?
+   For each, write down the formula in terms of variables I can observe (or estimate) about my agent's behavior. If I have data, compute. If not, specify the experiment that would produce the data.
+
+3. IMPOSSIBILITY INSTANCE — Walk through the arithmetic showing that, on my agent's plausible base rates, the three metrics cannot all hold. Make the arithmetic concrete to MY case — not the COMPAS recapitulation, but my agent. Show which two metrics conflict most sharply for my deployment.
+
+4. DEFENDED CHOICE — Pick one of the three metrics (or one of the additional ones — individual fairness, counterfactual fairness, GE Index) as the metric MY agent should be required to satisfy. Document the defense:
+   - Why this metric for this deployment context?
+   - What values claim does the choice embed?
+   - Who would reasonably disagree with this choice, and on what grounds?
+   - What ongoing monitoring would catch the metric's slippage?
+   - If the regulator specifies a different metric, what additional commitment would I add?
+
+Output a "Defended Fairness Choice" markdown for the casebook. Include the population analysis, the three computed (or estimated) metrics, the impossibility instance worked on my agent's numbers, and the defense.
+
+If the agent's decisions truly do not produce unequal effects across any meaningful population split (justify this!), the chapter still asks you to do this analysis — the defended position is then "fairness audit not applicable, here is why," with the same defense structure.
+```
+
+---
+
+**What this produces:** A "Defended Fairness Choice" markdown file with population analysis, instantiated metrics, the impossibility instance worked on your agent, and a values-claim defense ready to face peer critique in Chapter 12.
+
+**How to adapt this prompt:**
+- *For your own project:* If your agent does not act on individuals, the developer/user/language axis is often the most defensible fairness scope. A coding agent that fails more on non-English specifications has a fairness story worth telling.
+- *For ChatGPT / Gemini:* Works as-is. Code Interpreter can compute the metrics if you upload a labeled outcome CSV.
+- *For Claude Code:* Recommended if you have evaluation data — write a script that computes all three metrics with bootstrap CIs across populations.
+- *For a Claude Project:* Save the document. Chapter 13's accountability map will name who should be reviewing this metric.
+
+**Connection to previous chapters:** Chapter 3's bias mechanisms and Chapter 6's language-game audit both feed into this chapter. The bias mechanisms tell you where unequal treatment originates; the language-game audit tells you whether the agent's self-explanations land differently in different audiences.
+
+**Preview of next chapter:** Chapter 8 turns the casebook adversarial. You'll design specific input perturbations that probe what your agent has actually learned versus what its developers think it learned — adversarial examples for the agent setting, including prompt-injection variants that exploit non-robust features in its instruction-following.
