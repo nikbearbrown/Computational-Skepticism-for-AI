@@ -38,15 +38,47 @@ When I say *skepticism*, I do not mean the disposition. I do not mean the rollin
 
 I mean a method. Skepticism in this book is a set of moves you can perform on a claim, and the moves can be taught, and you can see whether someone did them. Three philosophers donate moves to the toolkit. None of them gets credit beyond the move itself; the move is the thing.
 
+But before I hand you the three moves, I want to say something about what skepticism is *for*, because this is the part that gets dropped in most technical education, and dropping it is precisely what makes engineers trust AI outputs they should not trust.
+
+Skepticism is not the rejection of evidence. That would be insane. I have excellent evidence, accumulated over decades, that the chair I am sitting on will hold my weight. I do not doubt the chair. Skepticism is not the refusal to form beliefs. It is the *discipline of knowing how you formed them*, so you can notice when the conditions that made them reliable have changed. When the conditions change and you do not notice — when the model's confidence carries forward unchanged into a world the model has never seen — that is not just a technical failure. That is a failure of method. The method is what this chapter teaches.
+
+Here is the thing that took me years to really feel, and I want you to feel it too rather than just nod at it: the difficulty is not in performing the moves when you know something is suspicious. The difficulty is in performing them when the output looks right. When it is fluent, when it is specific, when it arrives in a format that pattern-matches to "trustworthy answer" — that is when the moves matter most, and that is exactly when the instinct to perform them is weakest. We are going to come back to this in the section on the fluency trap. For now: keep it in the back of your mind that the primary enemy of skepticism is not laziness. It is confidence.
+
 **Descartes** donates *radical doubt*. You take a claim — say, the triage score of "low-acuity" — and you ask: what would have to be true for this claim to be wrong about the patient in front of me? Not as a ranking exercise. As a diagnostic. If the answer is "well, the score is the score," then you have confused the artifact for the world, and we are back where we started. If the answer is "the training data would have had to underweight cases like this one, or the input features would have to be missing the relevant signal, or the deployment context would have to differ from the validation context" — *now* you have something. You have a list of conditions you can check.
 
-**Hume** donates *the limit of induction*. Here is the thing about induction that I want you to feel in your bones, because most engineers have heard the words and not really felt the thing. The model has been right thousands of times. Each one of those correct predictions adds *zero logical guarantee* that the next prediction will be right. None. Zero. The reason induction works in practice is that the world is doing some of the work for you — the distribution is stable, the patterns persist — and the working is invisible until it stops working. When it stops working, the model is exactly as confident as it was the day before, and the confidence is now a lie. Hume's move is to remember, every time, that the model's confidence is a property of the model and not a property of the world.
+Descartes used this move in the seventeenth century for a different purpose — he was trying to find something he could be certain of, and he ended up at the famous *cogito*, the one thing left standing when he doubted everything else. I am not teaching you Cartesian philosophy. I am teaching you the move, which is this: *treat every claim as a conjecture and ask what it would take to falsify it, before the world does the falsifying for you.* The triage nurse who asks "what would have to be true for this score to be wrong?" is performing Descartes's move. The one who trusts the score because it was right the last eight hundred times is performing no move at all.
+
+What makes the Cartesian move powerful is that it produces a *checklist*. When you ask "what would have to be true for this to be wrong?", the answers are checkable. The training data either underrepresented cases like this one or it did not. The input features either include the relevant signal or they do not. The deployment context either matches the validation context or it does not. None of these are metaphysical questions. They are engineering questions. Descartes hands you a method for turning philosophical doubt into a practical inspection protocol.
+
+<!-- → [INFOGRAPHIC: Cartesian doubt as an inspection protocol — the single question "what would have to be true for this to be wrong?" branching into three checkable engineering conditions: (1) training data representation, (2) input feature completeness, (3) deployment/validation context match. Each branch terminates in a yes/no check. Positioned here as a companion to the prose before the Hume paragraph.] -->
+
+**Hume** donates *the limit of induction*. Here is the thing about induction that I want you to feel in your bones, because most engineers have heard the words and not really felt the thing. The model has been right thousands of times. Each one of those correct predictions adds *zero logical guarantee* that the next prediction will be right. None. Zero. The reason induction works in practice is that the world is doing some of the work for you — the distribution is stable, the patterns persist — and the working is invisible until it stops working. When it stops working, the model is exactly as confident as it was the day before, and the confidence is now a lie.
+
+Nassim Taleb gives a version of this problem that I find harder to shake than the philosophical formulation. A turkey is fed every morning for a thousand days. Each morning of feeding increases the turkey's confidence that tomorrow will also involve feeding. By day nine hundred and ninety-nine, the turkey's model of the world assigns very high probability to a meal on day one thousand. On day one thousand, the farmer arrives with an axe.
+
+<!-- → [IMAGE: The turkey problem as a confidence timeline — x-axis: days 1 through 1000, y-axis: turkey's model confidence that tomorrow involves feeding. Confidence rises smoothly toward 1.0, then a vertical drop and termination at day 1000. A small annotation at the peak: "maximum confidence, maximum wrongness." This is the single most important image in the Hume section; it should be sized generously.] -->
+
+The problem is not that the turkey was foolish. The problem is that the turkey had genuinely good evidence, correctly processed, leading to a prediction that happened to be catastrophically wrong because the turkey's model had no representation of the causal structure underneath the pattern. The turkey knew the correlation. The turkey did not know the mechanism. When the mechanism changed — when the calendar flipped to late November — the correlation model had no way to notice.
+
+An AI trained on a hospital's historical cases is doing exactly what the turkey did. It has learned the correlations in its training data. It has not learned the causal mechanisms underneath them. When the patient population shifts, when a new pathogen arrives, when the demographics of the neighborhood change — the model does not notice, because it cannot notice. It was not built to notice. It was built to find patterns. Patterns and mechanisms are not the same thing, and Hume's move is to remember that difference, every time, before trusting that a pattern will persist.
+
+Hume's move is to remember, every time, that the model's confidence is a property of the model and not a property of the world.
+
+Say that again, because it is the kind of sentence that sounds obvious and is in fact very hard to internalize: the model's confidence is a property of the model, not a property of the world. The world is under no obligation to match the model's expectations. The model has no mechanism for detecting when it doesn't. The human supervising the model is the only thing in the system that can perform that check — and the human can only perform it if they remember that the check is necessary.
 
 **Popper** donates *falsifiability*. A claim that cannot be wrong is not yet a claim. "The model performs well in production." Well — what would performing badly look like? On which metric? With what threshold? Counted how, over what window? If you cannot specify the conditions under which the claim would be falsified, then the claim is not engineering. It is rhetoric. We are going to use Popper's move on a great many claims in this book, and a surprising number of them will turn out to be rhetoric.
 
+Popper noticed something asymmetric and elegant about how science actually works, and it is worth holding for a moment because it changes how you think about testing. You can never verify a universal claim by accumulating examples. Every white swan you count increases your confidence that all swans are white, but no finite number of white swans proves it — one black swan destroys it. This asymmetry runs in only one direction: confirming instances pile up without providing certainty, but a single falsifying instance provides certainty in the other direction. You can't prove a model works in all cases. You can prove it fails in this one.
+
+What this means for engineering is subtle but important. The project of testing a deployed AI system should not be organized around accumulating evidence that it works. It should be organized around trying to find evidence that it fails. These are not the same project, and they do not produce the same systems. An organization that evaluates its AI by counting correct predictions in favorable conditions will produce systems that look good until they catastrophically don't. An organization that evaluates by aggressively probing failure conditions will produce systems that still fail — everything fails — but fails in ways the organization anticipated and bounded. Popper's move is to ask, before you trust a claim: *under what conditions would I expect this to be wrong, and have I looked for evidence of those conditions?*
+
+There is a related discipline here that Popper called the demarcation between science and rhetoric. The rhetorical claim is structured to be compatible with every outcome. "The system is robust" — what would non-robust look like? "The model provides high-quality results" — what would low-quality look like? "The migration was a success" — what would failure look like? If the claim is compatible with every possible observation, it is not a claim at all. It is a noise that sounds like a claim. Popper's move is to refuse to treat noise as a claim, even when the noise arrives in technical language, on a dashboard, with confidence intervals attached.
+
+<!-- → [TABLE: Rhetorical claims vs. their Popperian engineering corrections — left column: "The system is robust," "The model performs well," "The migration was a success," "We have mitigated drift." Right column: the same claims rewritten with specific metric, threshold, and measurement window. The point is that the right column is checkable and the left column is not. Student should immediately see the structural difference.] -->
+
 I want to be clear about something. You do not have to think Descartes was right about anything to use his move. You do not have to be a Humean or a Popperian. The moves are tools. A structural engineer does not have to believe in the metaphysics of steel to perform a load test on a beam. You perform the move. The move either reveals something or it does not. If it does, you have learned something about the system. If it does not, you have learned that this particular check came back clean. Either is useful.
 
-<!-- FIGURE: The three moves as a portable checklist — Cartesian doubt (what would make this wrong?), Humean induction limit (what if the distribution shifted?), Popperian falsifiability (what would failure look like, specified). Designed for margin reference or pull-quote treatment — the kind of thing students photograph and tape to monitors. [Figure 1.1 — from Doc 1] -->
+<!-- → [INFOGRAPHIC: The three moves as a portable checklist — Cartesian doubt (what would make this wrong? → produces a checkable list of conditions), Humean induction limit (confidence is a property of the model, not the world → check whether the distribution has shifted), Popperian falsifiability (what would failure look like, specified in metrics, thresholds, and windows → refuse claims that are compatible with every outcome). Designed for margin reference or pull-quote treatment — the kind of thing students photograph and tape to monitors. [Figure 1.1]] -->
 
 ---
 
@@ -64,7 +96,7 @@ You will perform this move every time you encounter a model output for the rest 
 
 The triage system produced a score. The score was the artifact. The patient had a clot. The clot was the world. When the engineers reviewed the deployment, they reviewed the artifact — the score, the model, the validation set, the metrics — and they did not review the world. The world was on a gurney in the waiting room.
 
-<!-- FIGURE: Two-column split — left column labeled "The Artifact" (model, score, validation metrics, deployment review), right column labeled "The World" (patient, clot, waiting room, outcome). A dotted line connects them labeled "statistical relationship." A bold caption beneath: "The engineers reviewed the left column. The patient was in the right column." [Figure 1.2 — from Doc 1] -->
+<!-- → [IMAGE: Two-column split — left column labeled "The Artifact" (model, score, validation metrics, deployment review), right column labeled "The World" (patient, clot, waiting room, outcome). A dotted line connects them labeled "statistical relationship." A bold caption beneath: "The engineers reviewed the left column. The patient was in the right column." [Figure 1.2]] -->
 
 ---
 
@@ -82,7 +114,7 @@ If you do not budget for verification, you will not get verification. The system
 
 Most of this book is about how to verify cheaply enough that verification scales. The answer is *never* "automate the verification" — because that is just another model, with the same problem, sitting one layer up. The answer is always: design the system so that the verification a human can perform tells you what you need to know.
 
-<!-- FIGURE: Cost asymmetry diagram — horizontal axis: "AI task type" (triage scoring, loan decisioning, email management, medical imaging), vertical axis: "relative cost." Two bars per task: production cost (near-zero) vs. verification cost (variable, always higher). The gap is not uniform — verification cost varies by domain, but production cost does not. [Figure 1.3 — from Doc 1; table placeholder in source replaced with this figure note] -->
+<!-- → [CHART: Cost asymmetry bar chart — horizontal axis: AI task type (triage scoring, loan decisioning, autonomous email management, medical imaging). Vertical axis: relative cost (log scale). Two bars per task: production cost (near-zero, consistent across all domains) vs. verification cost (variable, always higher, domain-dependent). The visual point is that production cost is flat and verification cost is not — the gap is the problem. [Figure 1.3]] -->
 
 ---
 
@@ -104,7 +136,7 @@ I count five, and the rest of the book is in some sense an operationalization of
 
 These five are vocabulary for now. By the end of the book you will be able to look at any AI deployment and name, for each step, which capacity is being exercised and by whom. Where you cannot name it, you have found a gap. Gaps are where the patients die.
 
-<!-- FIGURE: Table — The five supervisory capacities with columns: capacity name, what it is, what failure looks like, which chapter develops it. Use as navigational spine — students should return to it at the start of each chapter. [Figure 1.4 — from Doc 1; table placeholder in source replaced with this figure note] -->
+<!-- → [TABLE: The five supervisory capacities — columns: capacity name | what the supervisor does | what failure looks like | chapter that develops it. Rows: plausibility auditing, problem formulation, tool orchestration, interpretive judgment, executive integration. This table is the navigational spine of the book; students should bookmark it and return at the start of each chapter. [Figure 1.4]] -->
 
 ---
 
@@ -120,7 +152,33 @@ Ash's agent produced a fluent, well-formed report. The email had been deleted. T
 
 The point is not to distrust fluent outputs. Fluent outputs are, on average, more useful than non-fluent ones. The point is to *not let fluency do epistemic work.* When you find yourself accepting an output because it sounds right, stop. Ask what would have to be true for it to be wrong. Run Descartes's move. Run Popper's. Look at the artifact and look at the world and ask what the relationship is.
 
-<!-- FIGURE: The fluency trap as a two-stage mechanism — Stage 1: fluent output → elevated confidence in output. Stage 2: elevated confidence in output → elevated confidence in own evaluation. Caption: "Fluency boosts wrong evaluations as readily as right ones. The shape of a sentence is not evidence about its truth." [Figure 1.5 — from Doc 1] -->
+Now I want to be more specific about the mechanism, because naming it is what makes it interruptible.
+
+The fluency trap operates on a confusion between two different things: *form* and *content*. A well-formed sentence looks like a sentence produced by someone who knows what they are talking about, because in human communication, well-formed sentences usually are. This is a reliable heuristic for evaluating human speech. When your colleague says something in clear, precise, organized prose, it generally means they have thought about it. The clarity is evidence of the thinking.
+
+AI systems have broken this heuristic. An AI can produce clear, precise, organized prose about things it has no understanding of. The form is generated by a statistical process that learned what well-formed prose looks like. The content is whatever that process produces given the input. These are independent. A sentence can be maximally fluent and maximally wrong simultaneously, and there is no way to tell from the fluency alone.
+
+This is not a flaw that will be fixed in the next model. It is a structural feature of how these systems work. They learn to produce outputs that resemble correct outputs. In domains where correctness and resemblance-to-correctness track each other closely, this works well. In domains where they diverge — novel situations, edge cases, out-of-distribution inputs, anything the training data underrepresented — the system keeps producing fluent output, confidently, in exactly the shape that makes you trust it, about things it has no basis to say.
+
+The Popperian move helps here. Before you read the output: specify what a wrong answer would look like. Not vaguely — specifically. "A wrong answer would assign low risk to a patient with this combination of presenting symptoms and demographic profile." Then read the output. The prior specification is your anchor. Without it, you are reading the output with no criterion except fluency, and fluency is the trap.
+
+<!-- → [INFOGRAPHIC: The fluency trap as a two-stage mechanism — Stage 1: fluent output → elevated confidence in output. Stage 2: elevated confidence in output → elevated confidence in own evaluation. A third annotation breaking out the form/content independence: "in human speech, form tracks content; in AI output, they are generated by separate processes." Caption: "Fluency boosts wrong evaluations as readily as right ones. The shape of a sentence is not evidence about its truth." [Figure 1.5]] -->
+
+---
+
+## Skepticism as a team practice
+
+I have been writing about the skeptical moves as if they are performed by one person, alone, in the moment before a decision. They can be. But the most durable deployments I have encountered use these moves as *organizational discipline*, not individual habit, and the difference matters.
+
+Individual skepticism is fragile. It depends on whether a particular person, on a particular day, under time pressure, remembers to run the moves. People forget. People are tired. People are under pressure from managers who want decisions made quickly. The single clinician who remembers to ask "what would have to be true for this score to be wrong?" is doing the right thing. But she should not be the only thing standing between the triage model and the patient.
+
+Institutional skepticism encodes the moves into the workflow. The question "what would have to be true for this output to be wrong?" gets written into the deployment checklist. The specification of falsification conditions gets built into the monitoring dashboard. The checklist for potential distribution shift — is this patient population represented in the training data? are the input features complete? has the deployment context changed since validation? — gets embedded in the handoff protocol between the AI system and the human decision-maker.
+
+This is not a bureaucratic point. It is an architectural one. When you design a system that deploys AI outputs to humans, you are making choices about where the skeptical moves happen, by whom, in what order. If you do not design for those moves, they will not happen reliably. If they do not happen reliably, the failures in this chapter will happen in your organization.
+
+The five supervisory capacities are a framework for thinking about this architecture. For each capacity, the design question is: where in the workflow is this capacity exercised? Who exercises it? What do they see, and when, that makes exercising it possible? If the answer to any of those questions is "nobody" or "we haven't thought about that," you have found an undefended gap. Undefended gaps are where the patients die.
+
+<!-- → [IMAGE: Workflow diagram — a horizontal pipeline: input → model → output → human review → decision. Each stage annotated with which supervisory capacity lives there: problem formulation (before input), tool orchestration (at model selection), plausibility auditing (at human review), interpretive judgment (also at human review), executive integration (at decision). Red gap markers at the stages most commonly left unoccupied in real deployments. [Figure 1.6]] -->
 
 ---
 
@@ -214,6 +272,3 @@ The first time most engineers do this exercise honestly, the result is uncomfort
 **10.** The chapter presents skepticism as a *method* — a set of moves — rather than a disposition. But some deployments operate under time pressure severe enough that the four moves cannot all be executed before action is required. Design a *triage protocol for skeptical moves*: given ten seconds, which one move do you run? Given two minutes? Given twenty? Justify your ordering using the concepts from this chapter.
 
 **11.** The chapter closes with an open question: when should a supervisor trust the model *anyway*, in high-pressure deployments where verification time is not available? Without Chapters 2 and 10: frame the question as precisely as you can. What variables determine the answer? What would a principled decision rule look like, even in rough form? What information would you need that this chapter does not yet provide?
-
----
-
