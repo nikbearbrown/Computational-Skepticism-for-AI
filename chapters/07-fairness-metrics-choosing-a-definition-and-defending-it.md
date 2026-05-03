@@ -1,4 +1,3 @@
-
 # Chapter 7 — Fairness Metrics: Choosing a Definition and Defending It
 *Three reasonable definitions. One dataset. Pick one.*
 
@@ -28,9 +27,12 @@ The chapter has two jobs. First, I want you to feel why the impossibility is tru
 - Define demographic parity, equalized odds, and calibration parity in formal terms and explain the values claim each embeds
 - Work through the arithmetic that shows why satisfying calibration parity forces a violation of equalized odds when base rates differ
 - Apply the COMPAS case as an instance of the theorem playing out with real consequences
+- State the $(D, d)$-Lipschitz condition for individual fairness and explain what it requires and why its central challenge is the choice of $d$
+- Derive the counterfactual fairness criterion and explain why it requires a causal model, not just data
+- Compute the Generalized Entropy Index and interpret its decomposition into within-group and between-group components
 - Produce a defended metric choice for a specified deployment — the structured format the chapter defines
 
-**Prerequisites:** Chapter 2's probability foundations and Chapter 3's data-provenance material are both relevant here. Chapter 2 gives you the probabilistic language the metrics require. Chapter 3 established why base-rate differences exist in real data and why they may not be correctable within the model.
+**Prerequisites:** Chapter 2's probability foundations and Chapter 3's data-provenance material are both relevant here. Chapter 2 gives you the probabilistic language the metrics require. Chapter 3 established why base-rate differences exist in real data and why they may not be correctable within the model. Chapter 6's treatment of Pearl's causal ladder is needed for the counterfactual fairness section.
 
 **Where this fits:** Chapters 5 and 6 audited data and model performance. This chapter asks a different question: not whether the model is accurate, but whether its errors and predictions are distributed equitably. The fairness question is not downstream of the accuracy question. It is structurally distinct from it.
 
@@ -42,53 +44,63 @@ Let me write the three definitions tighter, with the formal notation.
 
 *Demographic parity* — sometimes called statistical parity — says the rate of positive predictions does not depend on group membership:
 
-P(Ŷ = 1 | group = A) = P(Ŷ = 1 | group = B)
+$$P(\hat{Y} = 1 \mid A = a) = P(\hat{Y} = 1 \mid A = b)$$
 
-The probability that the model predicts yes, given that the input is from group A, equals the same probability for group B. This is a statement about the model's *outputs*, before anyone has compared them to the ground truth.
+The probability that the model predicts yes, given that the input is from group $a$, equals the same probability for group $b$. This is a statement about the model's *outputs*, before anyone has compared them to the ground truth.
 
 *Equalized odds* says the model's error rates do not depend on group. The true-positive rate — among those who actually were positive, the fraction the model correctly flagged — is the same in both groups. The false-positive rate — among those who actually were not positive, the fraction the model incorrectly flagged — is also the same:
 
-P(Ŷ = 1 | Y = 1, group = A) = P(Ŷ = 1 | Y = 1, group = B)
+$$P(\hat{Y} = 1 \mid Y = 1, A = a) = P(\hat{Y} = 1 \mid Y = 1, A = b)$$
 
-P(Ŷ = 1 | Y = 0, group = A) = P(Ŷ = 1 | Y = 0, group = B)
+$$P(\hat{Y} = 1 \mid Y = 0, A = a) = P(\hat{Y} = 1 \mid Y = 0, A = b)$$
 
 This is a statement about the model's *errors*, conditional on the truth.
 
 *Calibration parity* — sometimes called predictive parity — says the model's stated probabilities track empirical frequencies equally well in both groups:
 
-P(Y = 1 | P̂ = p, group = A) = P(Y = 1 | P̂ = p, group = B), for all p
+$$P(Y = 1 \mid \hat{P} = p, A = a) = P(Y = 1 \mid \hat{P} = p, A = b) = p \quad \forall p$$
 
-When the model assigns probability p to a case from group A, the realized positive rate among such cases is p; the same holds for group B. This is a statement about whether the *probability outputs are honest*, in the same way for everyone.
+When the model assigns probability $p$ to a case from group $a$, the realized positive rate among such cases is $p$; the same holds for group $b$. This is a statement about whether the *probability outputs are honest*, in the same way for everyone.
 
 These three look like they should all be compatible. They are not.
 
-<!-- FIGURE: Figure 7.1 — Three-column definition reference table: metric name (with alias) / what it measures (one sentence) / what it is a statement about (outputs / errors / probability honesty) / the values claim it embeds. Designed for student reference during the arithmetic section. [Empty placeholder in Doc 5 — needs content before publication.] -->
+<!-- → [TABLE: Three-column definition reference table — columns: metric name (with alias), what it measures (one sentence), what it is a statement about (outputs / errors / probability honesty), values claim embedded. Designed for student reference during the arithmetic section. Figure 7.1] -->
 
 ---
 
 ## The arithmetic
 
-Let me show you why. I will use specific numbers to make the arithmetic visible. Suppose the underlying base rate of positives is 0.6 in group A and 0.3 in group B. Sixty percent of group A has the positive ground truth; thirty percent of group B does. Pick any context where this might hold — different prevalence rates of an outcome in two populations, for whatever historical or structural reason. Set the reasons aside for the moment. We are working out what the math forces.
+Let me show you why. I will use specific numbers to make the arithmetic visible. Suppose the underlying base rate of positives is $p_a = 0.6$ in group $a$ and $p_b = 0.3$ in group $b$. Sixty percent of group $a$ has the positive ground truth; thirty percent of group $b$ does.
 
-Suppose the classifier is calibrated. Among everyone the model assigns probability p, the realized positive rate is p, and this holds in both groups separately. Among group A members assigned probability 0.7, seventy percent are actually positive. Among group B members assigned probability 0.7, seventy percent are actually positive. The model is honest about probabilities, and equally honest across groups.
+Suppose the classifier is calibrated — among everyone assigned probability $\hat{p}$, the realized positive rate is $\hat{p}$, and this holds in both groups separately.
 
-Now ask: among everyone the model predicts positive at some threshold, what fraction are *actually* positive? In group A, where the underlying base rate is 0.6, there are many true positives to find; the predicted-positive set will be heavily populated by them. In group B, where the underlying base rate is 0.3, there are fewer true positives in the population at all; whatever the model flags will be drawn from a thinner pool.
+Now set a threshold $\tau = 0.5$ and ask: among those the model predicts positive, what fraction are actually positive? For group $a$, where the base rate is 0.6, there are many true positives to find. For group $b$, where the base rate is 0.3, there are fewer. Maintaining calibration forces the model to be honest about these differences.
 
-Watch what happens. Among those flagged positive, the share that are *actually* positive — the precision — will be higher in group A and lower in group B. By the same arithmetic, among those *not* actually positive, a larger fraction will be wrongly flagged in group B than in group A. The false-positive rate is higher in group B.
+Let $\text{TPR}$, $\text{FPR}$ denote the true- and false-positive rates for a group. For calibrated scores, the precision (positive predictive value) is:
 
-Calibration is satisfied. It cannot help being satisfied — we built it in. But equalized odds is now violated, because the false-positive rates are unequal across groups. And they have to be unequal — not because of model design, not because of bad data, but because base rates differ and we required the probabilities to mean the same thing in both groups. The conjunction of those two requirements *forces* unequal error rates.
+$$\text{PPV} = \frac{p \cdot \text{TPR}}{p \cdot \text{TPR} + (1-p) \cdot \text{FPR}}$$
 
-You can run the same reasoning the other way. Suppose you require equalized odds — false-positive and true-positive rates equal across groups. Then, with different base rates, the precision cannot be the same across groups. Calibration is broken.
+If we require $\text{PPV}$ to be equal across groups (calibration parity), and $p_a \neq p_b$, then the ratio $\text{TPR}/\text{FPR}$ must differ across groups. Different $\text{TPR}/\text{FPR}$ ratios mean that either TPR, FPR, or both must differ — which violates equalized odds. The only escape is $p_a = p_b$ (equal base rates) or perfect prediction ($\text{TPR} = 1$, $\text{FPR} = 0$).
+
+Chouldechova formalizes this exactly. From Bayes' theorem, if a classifier has PPV $v$, true-positive rate $t$, false-positive rate $f$, and base rate $p$, these are related by:
+
+$$\frac{v}{1 - v} = \frac{p}{1-p} \cdot \frac{t}{f}$$
+
+If group $a$ has base rate $p_a$ and group $b$ has base rate $p_b \neq p_a$, then equal PPV across groups requires:
+
+$$\frac{t_a}{f_a} = \frac{p_b(1-p_a)}{p_a(1-p_b)} \cdot \frac{t_b}{f_b}$$
+
+Unless $p_a = p_b$, the ratio $t/f$ must differ across groups. Since equalized odds requires $t_a = t_b$ and $f_a = f_b$ simultaneously, and since those constraints force $t_a/f_a = t_b/f_b$, we cannot have both equal PPV and equalized odds unless base rates are equal. The constraint is algebraically inescapable.
+
+You can run the same reasoning the other way. Suppose you require equalized odds — false-positive and true-positive rates equal across groups. Then, with different base rates, the PPV cannot be the same across groups. Calibration is broken.
 
 And demographic parity adds yet another constraint — the rate of positive predictions equal in both groups — that, in general, breaks both calibration and equalized odds.
 
-The full proof is in Kleinberg, Mullainathan, and Raghavan (2016) and Chouldechova (2017). ([verify] both references, dates, and titles.) The intuition is what I want you to carry: *the theorem is not about which model you train. It is about what is mathematically possible at all.* You can satisfy any two of the three, given non-trivial base-rate differences. You cannot satisfy all three.
-
 I want you to sit with this for a moment. The three definitions all sound reasonable. They cannot all hold. *One of them has to give.* And which one gives is not a technical question.
 
-<!-- FIGURE: Figure 7.2 — Three nodes (demographic parity, equalized odds, calibration parity) arranged in a triangle. Between each pair of nodes, an arrow labeled with what breaks when both are required simultaneously given differing base rates. At the center: "base rates differ." Caption: "You can satisfy any two. The third breaks. The triangle is the theorem." Insert image: images/07-fairness-metrics-choosing-a-definition-and-defending-it-fig-02.jpg -->
+<!-- → [IMAGE: Three nodes (demographic parity, equalized odds, calibration parity) arranged in a triangle. Between each pair of nodes, an arrow labeled with what breaks when both are required simultaneously given differing base rates. At the center: "base rates differ." Caption: "You can satisfy any two. The third breaks. The triangle is the theorem." Figure 7.2] -->
 
-<!-- FIGURE: Figure 7.3 — Worked arithmetic table with base rates 0.6 / 0.3. Rows: base rate, threshold, true-positive rate, false-positive rate, precision, positive prediction rate. Two columns: group A, group B. Two versions: one satisfying calibration (showing equalized-odds violation), one satisfying equalized odds (showing calibration violation). Student should see the numbers, not just the argument. [Empty placeholder in Doc 5 — needs content before publication.] -->
+<!-- → [TABLE: Worked arithmetic table with base rates 0.6 / 0.3. Rows: base rate, threshold, true-positive rate, false-positive rate, PPV, positive prediction rate. Two columns: group A, group B. Two versions side by side: one satisfying calibration (showing equalized-odds violation), one satisfying equalized odds (showing calibration violation). The student should see the numbers, not just the argument. Figure 7.3] -->
 
 ---
 
@@ -102,9 +114,7 @@ Northpointe — the maker of COMPAS — responded that the tool was calibrated. 
 
 Both claims were true. They were measuring different fairness properties, and the underlying base rates of re-arrest in the available data differed across racial groups. The impossibility theorem says, given that base-rate difference, you cannot have both. ProPublica and Northpointe were not having a factual disagreement that more data could settle. They were having a values disagreement about which definition of fairness should win.
 
-The COMPAS debate is the canonical case for one reason. It shows that the impossibility theorem is not a chalkboard curiosity. It is the structural fact behind a real public argument with real consequences for real people. And it shows that the choice between metrics is not a technical choice. It is a values claim about which kind of fairness matters more in this deployment.
-
-<!-- FIGURE: Figure 7.4 — COMPAS case mapped to the three metrics. Rows: metric name / what ProPublica measured / what Northpointe measured / what each claimed / whether each claim was factually accurate / the values claim each embeds. Caption: "Both sides were right about the numbers. The disagreement was about which numbers should matter." [Empty placeholder in Doc 5 — needs content before publication.] -->
+<!-- → [TABLE: COMPAS case mapped to the three metrics — rows: metric name / what ProPublica measured / what Northpointe measured / whether each claim was factually accurate / the values claim each embeds. Caption: "Both sides were right about the numbers. The disagreement was about which numbers should matter." Figure 7.4] -->
 
 ---
 
@@ -112,17 +122,154 @@ The COMPAS debate is the canonical case for one reason. It shows that the imposs
 
 Let me make the values claims explicit, because the chapter's main lesson lives here.
 
-*Demographic parity* embeds the claim: equal rates of positive prediction matter, independent of underlying base-rate differences. This is a strong claim. It says, in effect, that we will not let the model's positive-prediction rate diverge across groups even if the underlying outcome rates differ — because the prediction itself, irrespective of accuracy, has consequences (a job, a loan, a medical procedure) that should be allocated equally.
+*Demographic parity* embeds the claim: equal rates of positive prediction matter, independent of underlying base-rate differences. This says, in effect, that we will not let the model's positive-prediction rate diverge across groups even if the underlying outcome rates differ — because the prediction itself has consequences (a job, a loan, a medical procedure) that should be allocated equally.
 
-*Equalized odds* embeds the claim: equal error rates matter. The harm of being wrongly flagged should fall equally on both groups. The benefit of being correctly identified should be allocated equally. The model should not make systematic mistakes that differ by group.
+*Equalized odds* embeds the claim: equal error rates matter. The harm of being wrongly flagged should fall equally on both groups. The model should not make systematic mistakes that differ by group.
 
-*Calibration parity* embeds the claim: the probabilities should mean the same thing for everyone. A 70% prediction should mean a 70% chance regardless of group membership, so that downstream decision-makers using the probability as input can treat it the same way.
+*Calibration parity* embeds the claim: the probabilities should mean the same thing for everyone. A 70% prediction should mean a 70% chance regardless of group membership, so that downstream decision-makers can treat it uniformly.
 
-Each of these is a coherent value. None is the obvious correct one. The choice among them depends on the deployment: who is using the prediction, what decisions they are making, who bears the cost of error, whether the underlying base-rate difference is itself something the deploying organization has any stance on.
+Each of these is a coherent value. None is the obvious correct one. The choice depends on the deployment: who is using the prediction, what decisions they are making, who bears the cost of error, and whether the underlying base-rate difference is itself something the deploying organization has any stance on.
 
-For COMPAS specifically, the answers matter materially. The use case is bail and sentencing. The cost of a false positive is detention or a harsher sentence for someone who would not have re-offended. The cost of a false negative is release of someone who does. These costs fall on different people. Calibration parity treats the probability as informational input and trusts downstream decision-makers to weigh it. Equalized odds says the *errors* should fall equally, regardless of the probability values. The two embed different theories of where in the system the fairness obligation sits — at the level of the score, or at the level of the decision the score informs.
+---
 
-This is the argument. There is no technical resolution. The argument has to be made and defended.
+## Beyond group metrics: individual fairness
+
+Group fairness — the three metrics above — asks whether demographic subgroups are treated equitably in aggregate. But it is silent about individual cases. A model can satisfy demographic parity while treating two nearly-identical individuals radically differently, provided the aggregate rates balance. This gap motivated a different framing.
+
+Individual fairness is grounded in an Aristotelian intuition: *similar individuals should be treated similarly*. The precision comes from formalizing what "similar" means and what "treated similarly" means.
+
+### The $(D, d)$-Lipschitz condition
+
+Dwork et al. (2012) proposed a formal condition. Let $\mathcal{X}$ be the space of individuals and $\Delta(\mathcal{A})$ the set of probability distributions over outcomes. A mapping $M: \mathcal{X} \to \Delta(\mathcal{A})$ satisfies individual fairness if it is $(D, d)$-Lipschitz:
+
+$$D(M(x), M(y)) \leq d(x, y) \quad \forall x, y \in \mathcal{X}$$
+
+Here $D$ is a distance metric over outcome distributions — for example, total variation distance $D_{\text{TV}}(P, Q) = \frac{1}{2}\sum_a |P(a) - Q(a)|$ — and $d$ is a task-specific similarity metric over individuals. The condition says the *difference in how two individuals are treated* is bounded by *how different the individuals are*.
+
+A worked example clarifies the structure. Suppose two loan applicants have identical credit histories, income levels, and debt-to-income ratios, but different zip codes. If $d$ is defined on the financial variables and ignores zip code, then $d(x, y)$ is small, and the Lipschitz condition requires $D(M(x), M(y))$ to be small — the model must treat them similarly. If instead $d$ encodes zip code distance, then the condition permits different treatment. The same mathematical structure produces different fairness guarantees depending on which $d$ you choose.
+
+This is both the power and the crux of individual fairness. The $(D, d)$-Lipschitz condition is elegant. But the metric $d$ must encode problem-specific intuition about comparability. Who decides which individuals are comparable for this task? That decision is not in the mathematics. It is a values choice that precedes the mathematics — and it is at least as consequential as the choice among group metrics. A $d$ that treats two people as similar when one has historically been denied access to the resources that generate the features the model uses will encode the structural inequity into the fairness condition itself.
+
+There is also an approximation issue. For many models, verifying that the Lipschitz condition holds is computationally hard — you would need to check all pairs of individuals, and the check requires knowing $M(x)$ and $M(y)$ for the full distribution over outcomes. In practice, individual fairness is often approximated by auditing a sample of similar pairs and checking whether the model's outputs diverge.
+
+<!-- → [IMAGE: Two-panel illustration. Left: two applicants with identical financial features but different zip codes — labeled with d(x,y) small under financial-only metric. Right: same two applicants under a d that includes zip code distance — d(x,y) large. Each panel shows what the Lipschitz condition permits for D(M(x), M(y)). Caption: "The Lipschitz condition bounds the output difference by the input similarity. The fairness guarantee is only as good as the similarity metric." Figure 7.5] -->
+
+### Fairness through awareness vs. unawareness
+
+Individual fairness requires explicit specification of $d$, which often means reasoning explicitly about the sensitive attribute — how much does group membership enter the similarity calculation? This is *fairness through awareness* (FTA).
+
+The simpler approach is *fairness through unawareness* (FTU): exclude sensitive attributes from the model entirely. FTU is intuitively appealing but mathematically weak. Sensitive attributes can often be reconstructed from proxy variables — zip code, surname, occupation — that are correlated with protected group membership. A model that omits race but includes zip code may effectively use race. FTU prevents the direct use of a sensitive attribute; it does not prevent indirect discrimination through correlated features.
+
+The implication for practitioners: FTU is not a fairness guarantee. It is a documentation choice. Auditing for individual fairness requires computing $d$ and checking the Lipschitz condition explicitly, not simply confirming that the sensitive attribute was not included as a feature.
+
+---
+
+## Causal fairness: what the data cannot tell you
+
+Group and individual fairness metrics are computed from the model's outputs and the data. They are, in Pearl's terms, Rung 1 and low Rung 2 — observational and interventional in form. But some fairness questions require a causal model of how the world generates the data. Without that model, we cannot distinguish discrimination from justified disparities that arise through legitimate paths.
+
+### Structural causal models and the fairness question
+
+A Structural Causal Model (SCM) represents the world as a set of variables connected by causal relationships. For fairness, the relevant variables are:
+
+- $A$: the sensitive attribute (race, gender, etc.)
+- $X$: other observed features
+- $U$: latent background variables
+- $Y$: the outcome
+- $\hat{Y}$: the model's prediction
+
+The causal graph encodes which variables directly cause which. Consider three distinct causal paths from $A$ to $\hat{Y}$:
+
+- **Direct effect**: $A \to \hat{Y}$ — the prediction changes because of the sensitive attribute alone, holding all else fixed.
+- **Indirect effect**: $A \to M \to \hat{Y}$ — the prediction changes because the sensitive attribute affects mediators $M$ (education, employment history), which affect the prediction.
+- **Spurious effect**: $A \leftarrow C \to \hat{Y}$ — a shared confounder $C$ creates a correlation between $A$ and $\hat{Y}$ without any causal path from $A$.
+
+The legal distinction between disparate treatment (direct) and disparate impact (indirect through legitimate mediators) maps onto this causal structure. A model can show a statistical correlation between $A$ and $\hat{Y}$ for all three reasons, and the appropriate policy response differs for each. Observational metrics cannot distinguish them.
+
+### Counterfactual fairness
+
+Kusner et al. (2017) proposed a causal fairness criterion at the individual level: *counterfactual fairness*. The question is not "are error rates equal across groups?" but "would this specific individual have received the same decision if they had belonged to a different group, all else being equal?"
+
+Formally, a predictor $\hat{Y}$ satisfies counterfactual fairness if, for all individuals $x$ and all values of the sensitive attribute $a, a'$:
+
+$$P\!\left(\hat{Y}_{A \leftarrow a}(U) = y \;\Big|\; X = x, A = a\right) = P\!\left(\hat{Y}_{A \leftarrow a'}(U) = y \;\Big|\; X = x, A = a\right)$$
+
+The notation $\hat{Y}_{A \leftarrow a}(U)$ means: the value $\hat{Y}$ takes when we intervene to set $A = a$, given background variables $U$. This is a do-calculus intervention — a Rung 2 operation — applied to the individual rather than to a distribution.
+
+Computing this requires a three-step procedure:
+
+**Step 1 — Abduction.** Given the observed $X = x$ and $A = a$, infer the distribution of the latent background variables $U$. This step uses the causal model to back out what values of $U$ are consistent with the observed data.
+
+**Step 2 — Action.** Intervene on the model by setting $A$ to the counterfactual value $a'$. Hold $U$ fixed at the distribution inferred in step 1.
+
+**Step 3 — Prediction.** Forward-propagate through the causal model with the new $A = a'$ and the fixed $U$ to compute the distribution of $\hat{Y}$.
+
+Counterfactual fairness is satisfied if $\hat{Y}$ has the same distribution under $A = a$ and $A = a'$, for all individuals.
+
+<!-- → [INFOGRAPHIC: Three-step counterfactual fairness procedure — Step 1 (Abduction): observed X=x, A=a → infer distribution of U. Step 2 (Action): intervene to set A=a', hold U fixed. Step 3 (Prediction): forward-propagate through causal model → compute distribution of Ŷ under A=a'. Side-by-side comparison of Ŷ distributions: if equal, fairness is satisfied; if different, fairness is violated. Caption: "Counterfactual fairness asks: what would have happened to this individual under a different sensitive attribute value, holding their background fixed?" Figure 7.6] -->
+
+A worked example. Suppose a model predicts loan default. The causal structure is: $A$ (race) $\to$ $E$ (educational credential, which is causally influenced by race through historical access to education) $\to$ $Y$ (default). The direct path $A \to \hat{Y}$ and the indirect path $A \to E \to \hat{Y}$ are both present.
+
+Counterfactual fairness asks: if this individual had been white instead of Black, holding their background variables $U$ fixed, would the predicted default probability change? If $E$ is in the model and $E$ is causally downstream of $A$, then counterfactually changing $A$ would also change $E$, and the prediction would change. Counterfactual fairness is violated.
+
+The remedy is to exclude variables that are causally downstream of the sensitive attribute along paths we consider illegitimate. Which paths are illegitimate is — again — a values question the mathematics cannot answer.
+
+<!-- → [IMAGE: Causal graph with nodes: A (sensitive attribute / race), E (education, mediator causally downstream of A), C (confounder affecting both A and default risk), Y (default). Three labeled paths: direct (A → Y), indirect (A → E → Y), spurious (A ← C → Y). Caption: "Observational metrics conflate all three paths. Counterfactual fairness targets specific paths. The choice of which paths are illegitimate is a values decision." Figure 7.7] -->
+
+### What causal fairness requires that statistical fairness does not
+
+| Question | Group metrics | Individual fairness | Counterfactual fairness |
+|---|---|---|---|
+| Are aggregate error rates equal across groups? | Yes | No | No |
+| Are similar individuals treated similarly? | No | Yes (given $d$) | Partially |
+| Does the sensitive attribute causally affect the prediction? | No | No | Yes (given causal model) |
+| Is the disparity through a mediator or confounder? | No | No | Yes (given causal model) |
+
+The key requirement that causal fairness adds: you need a causal model. You need to know — or be willing to commit to a position on — which variables cause which. This is more knowledge than the data alone provides.
+
+---
+
+## The Generalized Entropy Index
+
+Group fairness metrics give you a binary verdict: this metric is satisfied or it isn't, within tolerance. They do not give you a continuous measure of *how much* unfairness exists, nor a way to decompose it into components. The Generalized Entropy (GE) Index fills this gap.
+
+GE originates in income inequality measurement, where economists wanted to quantify how unequally income is distributed across a population. The key insight for fairness is that "benefit" or "error burden" distributes across individuals the way income distributes, and the same mathematics applies.
+
+### The formula
+
+Let $N$ be the population size and $b_i$ the benefit received by individual $i$ — in a machine learning context, this might be the model's score, the predicted probability, or an error indicator (1 if misclassified, 0 otherwise). Let $\mu = \frac{1}{N}\sum_i b_i$ be the mean benefit. The GE index with parameter $\alpha$ is:
+
+$$GE(\alpha) = \frac{1}{N \alpha (\alpha - 1)} \sum_{i=1}^{N} \left[\left(\frac{b_i}{\mu}\right)^\alpha - 1\right]$$
+
+for $\alpha \neq 0, 1$. Special cases at the boundary:
+
+$$GE(0) = \frac{1}{N} \sum_{i=1}^{N} \ln\!\left(\frac{\mu}{b_i}\right) \quad \text{(Mean Log Deviation)}$$
+
+$$GE(1) = \frac{1}{N} \sum_{i=1}^{N} \frac{b_i}{\mu} \ln\!\left(\frac{b_i}{\mu}\right) \quad \text{(Theil Index)}$$
+
+$$GE(2) = \frac{1}{2N\mu^2} \sum_{i=1}^{N} (b_i - \mu)^2 = \frac{1}{2}\left(\frac{\sigma}{\mu}\right)^2 \quad \text{(Half the squared CV)}$$
+
+The parameter $\alpha$ controls sensitivity: low $\alpha$ values weight differences at the bottom of the distribution more heavily; high $\alpha$ values weight differences at the top.
+
+<!-- → [CHART: Three-panel chart showing the GE index for the same benefit distribution under α=0, α=1, α=2. Each panel shows which individuals' deviations are weighted most heavily — bottom for α=0, uniform for α=1, top for α=2. Caption: "The α parameter shifts attention across the distribution. Low α catches inequity at the bottom; high α catches it at the top." Figure 7.8] -->
+
+### The decomposition
+
+The most powerful property of the GE index for fairness analysis is its exact decomposition into within-group and between-group components. Let the population be partitioned into groups $g = 1, \ldots, G$ with sizes $n_g$ and group mean benefits $\mu_g$. Then:
+
+$$GE(\alpha) = \underbrace{\sum_{g} \frac{n_g}{N} \left(\frac{\mu_g}{\mu}\right)^\alpha GE_g(\alpha)}_{\text{within-group unfairness}} + \underbrace{GE(\alpha)\bigg|_{\text{between-group}}}_{\text{between-group unfairness}}$$
+
+where $GE_g(\alpha)$ is the GE index computed within group $g$ alone, and the between-group term is the GE index computed as if every individual in group $g$ received exactly $\mu_g$.
+
+This decomposition says: *total unfairness equals the sum of unfairness within each group plus the unfairness between groups.* In the individual fairness language, within-group unfairness captures whether similar individuals are treated differently within the same demographic group. Between-group unfairness captures whether groups receive different average benefits — the kind of disparity group metrics measure.
+
+A group-fairness audit catches only the between-group term. An individual-fairness audit (via the Lipschitz condition) catches the within-group term for pairs of similar individuals. The GE decomposition catches both simultaneously, and — crucially — it tells you *how much* of the total unfairness comes from each source. That ratio affects the remedy: if most unfairness is between-group, group-level intervention (reweighting, threshold adjustment) is the right tool. If most unfairness is within-group, the model's treatment of individuals within each group is the problem.
+
+<!-- → [INFOGRAPHIC: GE decomposition stacked bar — total GE divided into between-group segment (left, darker) and within-group segments for each group g (right, lighter, subdivided). Arrows from each segment to the corresponding fairness concept: between-group → group metrics; within-group → individual fairness (Lipschitz). Caption: "The GE decomposition is the only standard measure that quantifies both simultaneously and tells you how much of the total comes from each source." Figure 7.9] -->
+
+### What the GE Index does not do
+
+Two limits worth stating clearly. First, GE requires a cardinal measure of benefit — a number, not just a prediction class. If the model produces only a yes/no decision, you need to define what $b_i$ is. The choice of $b_i$ is itself a values choice. Second, GE is not a causal measure. It tells you *how much* unfairness exists and *where* (within or between groups), but not *why* — whether it arises from direct discrimination, mediator paths, or confounding. For the causal attribution, you need the tools from the counterfactual fairness section.
 
 ---
 
@@ -136,9 +283,11 @@ There are tools for adjusting models to satisfy fairness metrics. They generally
 
 *Post-processing* modifies the predictions after the fact — adjusting thresholds, calibrating per group. The advantage: simple, easy to explain. The disadvantage: explicit group-conditional thresholds may not be legally permissible in some jurisdictions, and the post-processing does not change the model — it changes the deployment.
 
-What this toolkit cannot do is resolve the impossibility theorem. It can let you choose which metric to satisfy, at the cost of others. It cannot give you all three. It also cannot address structural bias upstream of the data you are training on — Chapter 3's lesson, returning here with a specific application. And there is a harder version of that limit: *Agents of Chaos* Case #6 concerns a deployment where the bias is in the model provider's training, upstream of any deploying engineer's pipeline. No item in the debiasing toolkit touches that bias, because the toolkit operates on the deploying engineer's data and model. The bias is not in those.
+What this toolkit cannot do is resolve the impossibility theorem. It can let you choose which metric to satisfy, at the cost of others. It cannot give you all three. It also cannot address structural bias upstream of the data you are training on — Chapter 3's lesson, returning here with a specific application. And no item in the debiasing toolkit touches bias embedded in the model provider's upstream training data. The toolkit operates on the deploying engineer's data and model. The bias is not always there.
 
 The toolkit is a way to implement a values choice. It does not absolve you of making the choice.
+
+<!-- → [TABLE: Three-family toolkit comparison — columns: family, mechanism, typical target metric, key advantage, key limitation. Rows: pre-processing (data transformation), in-processing (algorithmic constraint), post-processing (output calibration). Footer row: "What none of them do: resolve the impossibility theorem or reach upstream structural bias." Figure 7.10] -->
 
 ---
 
@@ -148,7 +297,7 @@ So we arrive at the question: what do you actually deliver?
 
 The standard answer in machine learning training is a number. A model. A metric satisfying some target. This is not enough. The impossibility theorem makes it not enough, because the choice of metric is not a technical choice and the model alone does not show the work.
 
-The deliverable in this domain is a *defended choice*. It has the following structure, and you will produce something in this form on every fairness deliverable from here forward.
+The deliverable is a *defended choice*. It has the following structure, and you will produce something in this form on every fairness deliverable from here forward.
 
 1. **Specify the deployment.** Who is using the prediction. What decisions are being made. Who bears the cost of error. What the base-rate distribution looks like, and as much as you can say about why it looks that way.
 2. **Compute the candidate metrics.** Demographic parity, equalized odds, calibration parity, and any others relevant. Show the values. Show the trade-offs explicitly.
@@ -157,9 +306,7 @@ The deliverable in this domain is a *defended choice*. It has the following stru
 5. **Defend the choice in writing.** Why this metric, in this deployment, given who bears the costs and who benefits. The defense connects the metric to the deployment, the cost-bearers, and the construct the deployment is supposed to serve.
 6. **Name what would change your mind.** What evidence or argument would lead you to revise the choice.
 
-This is not a familiar deliverable in engineering training. It looks, on the surface, like an essay. It is not. It is the form of an *engineering decision under value pluralism*, and producing it is the supervisory capacity at work. Engineers will be defending choices like this in adoption committees, regulatory submissions, and internal review processes for the rest of their careers. The defense is the deliverable not because we are simulating a paper. The defense is what the job requires.
-
-<!-- FIGURE: Figure 7.5 — The defended-choice structure as a six-section checklist template: (1) deployment specification, (2) base-rate distribution and provenance, (3) candidate metrics computed and shown, (4) where metrics disagree and what each embeds, (5) stated choice with justification, (6) what would change your mind. Designed as a reusable scaffold for student assignments. Insert image: images/07-fairness-metrics-choosing-a-definition-and-defending-it-fig-05.jpg -->
+<!-- → [INFOGRAPHIC: The defended-choice structure as a six-box scaffold — boxes labeled (1) deployment specification, (2) base-rate distribution and provenance, (3) candidate metrics computed and shown, (4) where metrics disagree and values claim each embeds, (5) stated choice with justification, (6) what would change your mind. Designed as a reusable assignment template. Figure 7.11] -->
 
 ---
 
@@ -167,11 +314,11 @@ This is not a familiar deliverable in engineering training. It looks, on the sur
 
 Two of the nine Botspeak pillars (treated in full in Appendix A) do specific work in this chapter.
 
-*Ethical Reasoning* is the capacity to engage with the values question — which fairness do we prioritize? — as a structural part of the engineering work, rather than offloading it to ethicists or compliance teams. The defense in the section above is Ethical Reasoning made operational. The defense is not a supplement to the engineering work. It is the engineering work.
+*Ethical Reasoning* is the capacity to engage with the values question — which fairness do we prioritize? — as a structural part of the engineering work, rather than offloading it to ethicists or compliance teams. The defense in the section above is Ethical Reasoning made operational.
 
 *Stochastic Reasoning* is the capacity to think about base rates, error distributions, and the statistical structure that produces the impossibility theorem. Without it, the metric choice is an arbitrary preference. With it, the choice is grounded in what the metrics are actually measuring and why they conflict.
 
-The two pillars together produce the supervisory move: understand the math, choose the values, defend the integration. Engineers who skip either step produce defenses that are either rigorous and arbitrary or coherent and unmoored from the numbers.
+The two pillars together produce the supervisory move: understand the math, choose the values, defend the integration.
 
 ---
 
@@ -179,7 +326,9 @@ The two pillars together produce the supervisory move: understand the math, choo
 
 A clean statement of what fairness metrics cannot do, before moving on.
 
-Fairness metrics tell you whether the model's outputs differ across groups in specified ways. They do not tell you whether the prediction task is itself fair to formulate — a model that perfectly predicts re-arrest is doing well on a metric of re-arrest, but re-arrest is not the construct society cares about, and the gap between re-arrest and "future criminal behavior" is upstream of any metric we can compute. They do not tell you whether the deployment will produce a fair outcome — the metric is on the prediction; the outcome depends on the decision process the prediction feeds into. And they do not tell you whether the affected populations consider the model's behavior fair — the metrics formalize specific senses of fair, and people may have other senses (procedural fairness, fairness of opportunity, fairness as participation in the design) that the metrics do not capture.
+Group fairness metrics tell you whether aggregate error or outcome rates differ across demographics. They cannot tell you whether two similar individuals are treated consistently — individual fairness requires a similarity metric $d$ that group metrics do not use. Individual fairness tells you whether similar individuals are treated similarly, but requires a $d$ that encodes values about comparability. Causal fairness tells you whether the sensitive attribute causes the prediction through specific paths, but requires a structural causal model that the data alone cannot provide.
+
+And none of these metrics can tell you whether the prediction task is itself fair to formulate — a model that perfectly predicts re-arrest is doing well on re-arrest metrics, but re-arrest is not the construct society cares about, and the gap between re-arrest and "future criminal behavior" is upstream of any metric we can compute. They do not tell you whether affected populations consider the model's behavior fair — the metrics formalize specific senses of fair, and people may have other senses (procedural fairness, fairness of opportunity, fairness as participation in the design) that the metrics do not capture.
 
 These are limits on what fairness metrics can do, not failures of the metrics. The supervisory work continues past the metric, into the construct, the deployment, and the participation. We will revisit the construct gap in Chapter 14.
 
@@ -187,7 +336,9 @@ These are limits on what fairness metrics can do, not failures of the metrics. T
 
 ## The shape of the rest
 
-Three formally distinct fairness metrics can be incompatible on the same dataset when base rates differ. The impossibility is structural, not a tooling artifact. Each metric embeds a values claim. The toolkit lets you implement a chosen metric; it does not absolve you of the choice. The defense is the deliverable, and the defense connects the metric to the deployment, the cost-bearers, and the construct the deployment is supposed to serve.
+Three formally distinct group fairness metrics can be incompatible on the same dataset when base rates differ. The impossibility is structural, not a tooling artifact. Individual fairness adds a complementary requirement — similar individuals treated similarly — whose power depends entirely on the similarity metric $d$, which encodes the most consequential values choice in the framework. Causal fairness asks whether the sensitive attribute causes the prediction through specific paths, and requires a structural model of the world that statistical analysis cannot replace. The GE Index provides a continuous measure of total unfairness that decomposes into within-group (individual) and between-group (group) components, enabling diagnosis of where the unfairness comes from.
+
+The defense is the deliverable, and the defense connects the chosen metric to the deployment, the cost-bearers, and the construct the deployment is supposed to serve. The toolkit lets you implement a choice. It does not make the choice for you.
 
 The Pebble makes a brief appearance in this chapter — *Agents of Chaos* Case #6, where the bias sits in the model provider's training rather than in the deploying engineer's pipeline. We return to that contrast in Chapter 13's accountability discussion: who is responsible when the bias is structurally upstream of everyone in the deployment chain?
 
@@ -195,9 +346,9 @@ The next chapter takes a different cut at what the model knows. Fairness metrics
 
 ---
 
-**What would change my mind.** If a fairness metric were proposed that demonstrably escaped the impossibility theorem in realistic base-rate regimes — without trivializing one of its constituent claims — the "defense as deliverable" framing would be less essential. To my reading, no such metric has been proposed. The metric proposals I have seen (see Mehrabi et al. 2021 for a survey — [verify] full citation) all sit within the trade-off space the theorem defines.
+**What would change my mind.** If a fairness metric were proposed that demonstrably escaped the impossibility theorem in realistic base-rate regimes — without trivializing one of its constituent claims — the "defense as deliverable" framing would be less essential. To my reading, no such metric has been proposed. The metric proposals I have seen sit within the trade-off space the theorem defines. On causal fairness: if the causal structure of a domain could be reliably recovered from observational data alone, the requirement to bring a structural model would weaken. I do not believe this is generally possible, and the identifiability conditions for causal discovery are strict.
 
-**Still puzzling.** I do not have a clean way to elicit, from affected populations at scale, which fairness metric they would prioritize for a deployment that affects them. Engineering practice tends to make the choice on the engineer's authority, sometimes with input from compliance or ethics review. This is not satisfactory and I do not yet have a working alternative. Some recent work on participatory design (e.g., Sloane et al. 2022 — [verify]) may be the direction this comes from. The integration with the technical defense remains underspecified, and I am working on it.
+**Still puzzling.** I do not have a clean way to elicit, from affected populations at scale, which fairness metric they would prioritize for a deployment that affects them. Engineering practice tends to make the choice on the engineer's authority, sometimes with input from compliance or ethics review. This is not satisfactory and I do not yet have a working alternative. The integration of participatory design with the technical defense remains underspecified, and I am working on it.
 
 ---
 
@@ -207,10 +358,10 @@ The next chapter takes a different cut at what the model knows. Fairness metrics
 
 **Glimmer 7.1 — Two definitions, one dataset, one defended position**
 
-1. Take a real dataset where the impossibility shows up. The COMPAS dataset is canonical and openly available. ([verify] dataset link from ProPublica's GitHub.) Other options: the German credit dataset, the adult-income dataset, the Folktables benchmark.
+1. Take a real dataset where the impossibility shows up. The COMPAS dataset is canonical and openly available. Other options: the German credit dataset, the adult-income dataset, the Folktables benchmark.
 2. Specify a deployment context. Be specific: who is using the prediction, what decisions are being made, who bears the cost of error. If the dataset's natural deployment is clear, use that. If not, construct a plausible one and document your construction.
 3. *Lock your prediction:* before computing, predict which two of the three metrics will conflict most sharply, and which one you intend to prioritize.
-4. Compute all three metrics on the dataset. Document the values. Show the trade-offs explicitly.
+4. Compute all three group metrics on the dataset. Document the values. Show the trade-offs explicitly.
 5. Apply at least one debiasing intervention. Re-compute. Document what changed.
 6. Write the defense using the six-step structure from the chapter. Use the numbered structure literally.
 7. Reflect on the gap between your locked prediction and what the metrics actually showed, and on whether your defended choice survives the actual numbers.
@@ -227,37 +378,42 @@ The deliverable is the metrics, the intervention, the defense, and the reflectio
 
 **3.** In the COMPAS case, ProPublica and Northpointe were both correct about the numbers they reported. Explain specifically how both can be correct and still be in disagreement. What kind of disagreement were they having?
 
+**4.** The $(D, d)$-Lipschitz condition is written $D(M(x), M(y)) \leq d(x, y)$. Identify each symbol and explain in plain English what the condition requires. Why does the fairness guarantee depend entirely on the choice of $d$?
+
+**5.** The GE Index with $\alpha = 2$ simplifies to $\frac{1}{2}(\sigma/\mu)^2$ — half the squared coefficient of variation. If a model assigns benefit scores with mean $\mu = 0.6$ and standard deviation $\sigma = 0.3$, compute $GE(2)$. What does this number tell you, and what does it not tell you?
+
 ---
 
 ### Application
 
-**4.** A healthcare system deploys a model to predict which patients are likely to need intensive follow-up care in the next 30 days. The model is used to allocate limited care-coordinator capacity. The underlying rate of high-need patients is 40% in population X and 20% in population Y — a difference reflecting documented disparities in social determinants of health.
+**6.** A healthcare system deploys a model to predict which patients are likely to need intensive follow-up care in the next 30 days. The model is used to allocate limited care-coordinator capacity. The underlying rate of high-need patients is 40% in population X and 20% in population Y — a difference reflecting documented disparities in social determinants of health.
 
-Compute, qualitatively (no specific numbers required), what satisfying calibration parity implies for the false-positive rate across groups. Then state which of the three metrics you would prioritize for this deployment and defend the choice in two paragraphs, using the defended-choice structure from the chapter.
+Compute, qualitatively (no specific numbers required), what satisfying calibration parity implies for the false-positive rate across groups. Then state which of the three group metrics you would prioritize for this deployment and defend the choice in two paragraphs, using the defended-choice structure from the chapter.
 
-**5.** The chapter distinguishes three families of fairness-adjustment tools: pre-processing, in-processing, and post-processing. For each family, give one concrete example of a technique and explain what specific fairness metric it is typically used to implement. Then explain, for each, why the toolkit does not resolve the impossibility theorem — only implements a choice within it.
+**7.** The chapter distinguishes three families of fairness-adjustment tools: pre-processing, in-processing, and post-processing. For each family, give one concrete example of a technique and explain what specific fairness metric it is typically used to implement. Then explain, for each, why the toolkit does not resolve the impossibility theorem — only implements a choice within it.
 
-**6.** A colleague argues: "We should just use demographic parity everywhere — equal positive-prediction rates is the most intuitive definition of fairness, and it is easy to audit." Construct the strongest counterargument you can. Under what deployment conditions would demographic parity actually produce outcomes that most people would consider *less* fair than a calibrated model would?
+**8.** A colleague argues: "We should just use demographic parity everywhere — equal positive-prediction rates is the most intuitive definition of fairness, and it is easy to audit." Construct the strongest counterargument you can. Under what deployment conditions would demographic parity actually produce outcomes that most people would consider *less* fair than a calibrated model would?
 
-**7.** The chapter states that the pre-processing, in-processing, and post-processing toolkit "cannot address structural bias upstream of the data you are training on." Explain what upstream structural bias means, give one example of how it would appear in training data, and explain why no fairness metric computed on model outputs can detect or correct it.
+**9.** Two loan applicants have identical credit histories, income levels, and debt-to-income ratios but different zip codes. Define a similarity metric $d$ such that the Lipschitz condition would require the model to treat them nearly identically. Then define a different $d$ under which different treatment would be permissible. What values claim does each choice of $d$ embed?
+
+**10.** A hiring model's benefit scores have the following structure: Group A ($n = 200$, $\mu_A = 0.65$, $GE_A(2) = 0.05$); Group B ($n = 200$, $\mu_B = 0.45$, $GE_B(2) = 0.04$). Overall mean $\mu = 0.55$. Compute the between-group component of $GE(2)$. Is the dominant source of unfairness within-group or between-group? What intervention type does each diagnosis call for?
 
 ---
 
 ### Synthesis
 
-**8.** The chapter argues that "the defense is the deliverable." Using Chapter 1's five supervisory capacities — plausibility auditing, problem formulation, tool orchestration, interpretive judgment, and executive integration — map each step of the defended-choice structure onto one or more of those capacities. Which step is most clearly an act of problem formulation? Which is most clearly executive integration? Are any steps in the defense not covered by the five capacities?
+**11.** The chapter presents four fairness frameworks: group fairness (demographic parity, equalized odds, calibration parity), individual fairness (Lipschitz), causal fairness (counterfactual), and the GE Index. For a recidivism prediction system used in sentencing, describe what each framework would flag as a fairness failure and what it would miss. Is there a deployment where all four are jointly satisfied? What would that deployment require?
 
-**9.** The chapter closes with two acknowledged limits of fairness metrics: they do not evaluate whether the prediction task is fair to formulate, and they do not capture what affected populations actually consider fair. For a hiring-screen classifier, describe concretely what each limit looks like in practice: (a) what would make the prediction task itself unfair to formulate, regardless of which metric the model satisfies, and (b) what a participatory fairness assessment might elicit that none of the three metrics would capture.
+**12.** Counterfactual fairness requires specifying which causal paths from the sensitive attribute $A$ to the prediction $\hat{Y}$ are considered illegitimate. Consider a model predicting college admission success trained on historical data where $A$ = first-generation college student. Three paths exist: $A \to \text{SAT score} \to \hat{Y}$ (SAT score is causally affected by first-gen status through resource access); $A \to \hat{Y}$ (direct use of first-gen status); $A \leftarrow \text{family income} \to \hat{Y}$ (confounding). For each path, state whether it should be blocked for counterfactual fairness and defend your position in one sentence. What do your choices collectively imply about the model you are permitted to build?
+
+**13.** The chapter argues that "the defense is the deliverable." Using Chapter 1's five supervisory capacities — plausibility auditing, problem formulation, tool orchestration, interpretive judgment, and executive integration — map each step of the defended-choice structure onto one or more of those capacities. Which step is most clearly an act of problem formulation? Which is most clearly executive integration? Are any steps in the defense not covered by the five capacities?
 
 ---
 
 ### Challenge
 
-**10.** The chapter frames the choice among fairness metrics as a values decision that engineers must make and defend. But in regulated industries, the regulator may specify which metric to satisfy — removing the engineer's discretion. Does regulatory specification resolve the problem the chapter describes, or does it relocate it? If a regulator specifies equalized odds for a credit-scoring model, what questions remain that the specification does not answer?
+**14.** The chapter frames the choice among fairness metrics as a values decision that engineers must make and defend. But in regulated industries, the regulator may specify which metric to satisfy — removing the engineer's discretion. Does regulatory specification resolve the problem the chapter describes, or does it relocate it? If a regulator specifies equalized odds for a credit-scoring model, what questions remain that the specification does not answer?
 
-**11.** The chapter's uncertainty section flags an open problem: there is no clean way to elicit, from affected populations, which fairness metric they would prioritize. Propose a method. It does not need to be fully specified — it needs to be specific enough to fail in identifiable ways. Name the method, describe how it would work in one deployment context, and then name two ways it could produce misleading results.
+**15.** The GE Index decomposes total unfairness into within-group and between-group components. Propose a deployment scenario where the between-group GE term is zero (no group-level disparity) but the within-group GE term is large (high individual unfairness within each group). Explain mechanically how the model could produce this pattern, and explain why standard group fairness audits would give it a clean bill of health while the model is substantially unfair in practice.
 
----
-
-*Tags: fairness, impossibility-theorem, compas, values-claim, defense-as-deliverable*
-
+**16.** The chapter's uncertainty section flags an open problem: there is no clean way to elicit, from affected populations, which fairness metric they would prioritize. Propose a method. It does not need to be fully specified — it needs to be specific enough to fail in identifiable ways. Name the method, describe how it would work in one deployment context, and then name two ways it could produce misleading results.
