@@ -74,7 +74,14 @@ What this means for engineering is subtle but important. The project of testing 
 
 There is a related discipline here that Popper called the demarcation between science and rhetoric. The rhetorical claim is structured to be compatible with every outcome. "The system is robust" — what would non-robust look like? "The model provides high-quality results" — what would low-quality look like? "The migration was a success" — what would failure look like? If the claim is compatible with every possible observation, it is not a claim at all. It is a noise that sounds like a claim. Popper's move is to refuse to treat noise as a claim, even when the noise arrives in technical language, on a dashboard, with confidence intervals attached.
 
-<!-- → [TABLE: Rhetorical claims vs. their Popperian engineering corrections — left column: "The system is robust," "The model performs well," "The migration was a success," "We have mitigated drift." Right column: the same claims rewritten with specific metric, threshold, and measurement window. The point is that the right column is checkable and the left column is not. Student should immediately see the structural difference.] -->
+| Rhetorical claim | Popperian engineering correction |
+|---|---|
+| "The system is robust." | Error rate on out-of-distribution inputs remains below 2% across a 30-day rolling window in production. |
+| "The model performs well." | Precision ≥ 0.91 and recall ≥ 0.88 on the held-out test set, evaluated monthly against a refreshed sample. |
+| "The migration was a success." | Zero data-loss events confirmed by row-count reconciliation; p95 query latency ≤ 120 ms at 48 hours post-cutover. |
+| "We have mitigated drift." | PSI on the three highest-weight input features stays below 0.10 week-over-week; alert fires and triggers human review if breached. |
+
+The left column is compatible with any outcome. The right column specifies the conditions under which the claim would be *false* — which is the only form in which it counts as a claim.
 
 I want to be clear about something. You do not have to think Descartes was right about anything to use his move. You do not have to be a Humean or a Popperian. The moves are tools. A structural engineer does not have to believe in the metaphysics of steel to perform a load test on a beam. You perform the move. The move either reveals something or it does not. If it does, you have learned something about the system. If it does not, you have learned that this particular check came back clean. Either is useful.
 
@@ -136,9 +143,15 @@ I count five, and the rest of the book is in some sense an operationalization of
 
 These five are vocabulary for now. By the end of the book you will be able to look at any AI deployment and name, for each step, which capacity is being exercised and by whom. Where you cannot name it, you have found a gap. Gaps are where the patients die.
 
-<!-- → [TABLE: The five supervisory capacities — columns: capacity name | what the supervisor does | what failure looks like | chapter that develops it. Rows: plausibility auditing, problem formulation, tool orchestration, interpretive judgment, executive integration. This table is the navigational spine of the book; students should bookmark it and return at the start of each chapter. [Figure 1.4]] -->
+| Capacity | What the supervisor does | What failure looks like | Chapter |
+|---|---|---|---|
+| **Plausibility auditing** | Checks whether the output is the kind of thing that could be true, given accumulated domain knowledge — the experienced "twitch" that flags outputs inconsistent with known priors before any formal analysis begins | No one asks whether the output makes sense on its face; a clinician accepts a low-acuity score for a patient with a swollen leg because the score arrived in a credible format | Ch. 3 |
+| **Problem formulation** | Specifies the exact question the system is being asked to answer, and verifies that the model's question matches the decision-maker's actual need before deployment, not after the harm | The model answers a different question than the one that matters; *triage scoring* answers statistical category while the clinical need is life-threatening risk — different questions, never reconciled | Ch. 4 |
+| **Tool orchestration** | Decides which tool — AI, human judgment, a different model, or no tool yet — is appropriate for each sub-problem, including the hardest call: this system is not ready to be deployed here | AI is used because it is available, not because it is correct for the task; the "no tool yet" decision is never made because no one has the authority or the mandate to make it | Ch. 6 |
+| **Interpretive judgment** | Reads an output in the context of the deployment domain; the same number means different things in different fields, and the supervisor holds that meaning | Numbers are read off a dashboard without domain translation; a 5% false-positive rate acceptable in spam filtering is applied uncritically to a cancer screen because the threshold looked reasonable on paper | Ch. 8 |
+| **Executive integration** | Synthesizes outputs from multiple tools, models, and humans into a decision the integrating system can stand behind; this is where the buck stops — and it must stop somewhere | The pipeline produces decisions but no single person or body owns them; when something goes wrong, accountability dissolves into the architecture | Ch. 13 |
 
----
+
 
 ## The fluency trap
 
