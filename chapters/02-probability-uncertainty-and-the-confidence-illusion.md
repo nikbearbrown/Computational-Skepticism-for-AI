@@ -55,7 +55,13 @@ That is the entire foundation. Everything else — conditional probability, Baye
 
 Two useful consequences follow immediately. First, $P(\emptyset) = 0$: the probability of nothing happening is zero. Second, $P(A^c) = 1 - P(A)$: the probability of $A$ not happening is one minus the probability of it happening.
 
-<!-- → [TABLE: Three-column reference table — Axiom | Formal Statement | Plain English Meaning. Row 1: Nonnegativity | P(A) ≥ 0 | "Probabilities are never negative." Row 2: Normalization | P(Ω) = 1 | "Something must happen — the total is always 1." Row 3: Additivity | P(A∪B) = P(A) + P(B) for disjoint A, B | "Probabilities of mutually exclusive outcomes add directly." Footer: "Every probability calculation in this book is a consequence of these three rules." Placed immediately after the axiom list so students have a visual anchor before the consequences are derived.] -->
+| Axiom | Formal Statement | Plain English Meaning |
+|---|---|---|
+| **Nonnegativity** | $P(A) \geq 0$ | Probabilities are never negative. |
+| **Normalization** | $P(\Omega) = 1$ | Something must happen — the total is always 1. |
+| **Additivity** | $P(A \cup B) = P(A) + P(B)$ for disjoint $A, B$ | Probabilities of mutually exclusive outcomes add directly. |
+
+*Every probability calculation in this book is a consequence of these three rules.*
 
 ### Classical and frequentist probability
 
@@ -77,7 +83,11 @@ Neither interpretation, by itself, handles the question a deployed AI system rou
 
 For AI deployment, you will use all three. Use whichever fits the question. Do not get tribal about it.
 
-<!-- → [TABLE: Three-column comparison table — Interpretation | Best suited for | Key limitation. Row 1: Classical | Equally-likely discrete outcomes (dice, cards, fair coins) | Requires symmetry; fails when outcomes aren't equally likely. Row 2: Frequentist | Stable repeatable processes, A/B tests, quality control | Cannot assign probability to one-off events or unknown priors. Row 3: Bayesian | One-off decisions, belief updating, AI deployment inference | Requires specifying a prior; result depends on that choice. Placed at the end of the three-interpretation section, before the conditional probability heading, to crystallize which tool to reach for in which situation.] -->
+| Interpretation | Best suited for | Key limitation |
+|---|---|---|
+| **Classical** | Equally-likely discrete outcomes (dice, cards, fair coins) | Requires symmetry; fails when outcomes aren't equally likely |
+| **Frequentist** | Stable repeatable processes, A/B tests, quality control | Cannot assign probability to one-off events or unknown priors |
+| **Bayesian** | One-off decisions, belief updating, AI deployment inference | Requires specifying a prior; result depends on that choice |
 
 ---
 
@@ -271,7 +281,14 @@ $$= \frac{0.0001 \times 0.99}{0.0001 \times 0.99 + 0.9999 \times 0.01} \approx \
 
 About one percent. Same answer as before.
 
-<!-- → [TABLE: Four-row reference table — Term | Plain English Name | Value in the Disease Example | Role in the Formula. P(positive | disease) | Sensitivity / true positive rate | 0.99 | Numerator factor: how strongly evidence supports hypothesis. P(disease) | Base rate / prior | 0.0001 | Numerator factor: what we believed before seeing evidence. P(disease | positive) | Posterior | ≈0.0099 | What we actually want — belief after evidence. P(positive) | Total positive rate | ≈0.0101 | Denominator: normalizes so probabilities sum to 1. Footer note: "The prior sits in the numerator with the same weight as the test's sensitivity. Drop it and you have thrown away half the equation." Placed immediately after the disease calculation, before "The thing the formula makes unmissable."'] -->
+| Term | Plain English Name | Value in the Disease Example | Role in the Formula |
+|---|---|---|---|
+| $P(\text{positive} \mid \text{disease})$ | Sensitivity / true positive rate | 0.99 | Numerator factor: how strongly the evidence supports the hypothesis |
+| $P(\text{disease})$ | Base rate / prior | 0.0001 | Numerator factor: what we believed before seeing the evidence |
+| $P(\text{disease} \mid \text{positive})$ | Posterior | ≈ 0.0099 | What we actually want — belief after the evidence |
+| $P(\text{positive})$ | Total positive rate | ≈ 0.0101 | Denominator: normalizes so probabilities sum to 1 |
+
+*The prior sits in the numerator with the same weight as the test's sensitivity. Drop it and you have thrown away half the equation.*
 
 The thing the formula makes unmissable is this: the posterior — what you believe after seeing the evidence — is proportional to the prior times the likelihood. The prior is in the numerator, with the same weight as the quality of the evidence. You cannot legitimately ignore it.
 
@@ -297,7 +314,13 @@ Similarly: $P(A \mid D) = \frac{0.008}{0.032} = 0.25$ and $P(B \mid D) = \frac{0
 
 A concrete quality-control conclusion: if you observe a defect, the most likely culprit is machine C, even though it is not the largest producer.
 
-<!-- → [TABLE: Side-by-side comparison table for the factory example — Machine | Share of total output | Defect rate | Share of defectives (posterior). Machine A | 40% | 2% | 25%. Machine B | 30% | 3% | 28%. Machine C | 30% | 5% | 47%. Footer: "The machine that produces the most defectives is not the largest machine — it's the one with the highest defect rate. Bayes makes this visible." Placed after the P(A|D) and P(B|D) calculations, before "A concrete quality-control conclusion."'] -->
+| Machine | Share of total output | Defect rate | Share of defectives (posterior) |
+|---|---|---|---|
+| **Machine A** | 40% | 2% | 25% |
+| **Machine B** | 30% | 3% | 28% |
+| **Machine C** | 30% | 5% | 47% |
+
+*The machine that produces the most defectives is not the largest machine — it's the one with the highest defect rate. Bayes makes this visible.*
 
 ### The false-positive structure is everywhere
 
@@ -311,7 +334,15 @@ What happens in practice when you build a system like this and deploy it? The an
 
 This is why we started with base rates. Not because the math is hard. Because forgetting the prior is the single most common mistake in interpreting probabilistic system outputs, and the consequences are not theoretical.
 
-<!-- → [TABLE: Five-row deployment mapping — Domain | What is rare | Typical base rate | Consequence of ignoring prior. Fraud detection | Fraudulent transactions | ~0.1–1% | Analyst alert fatigue; real fraud ignored. Security monitoring | Malicious logins | ~0.01–0.1% | Teams disable or ignore automated alerts. Medical screening | Target disease (rare condition) | ~0.01–1% | Unnecessary downstream procedures, patient harm. Content moderation | Genuinely harmful posts | ~0.01–0.1% | Moderation teams overwhelmed with false positives. AI jailbreak detection | Adversarial inputs | ~0.001–0.01% | High false-positive load undermines trust in the detector. Footer: "The structure is the same in every row. The math does not care about the domain." Placed after the paragraph ending "the consequences are not theoretical," before the "From Boolean to probabilistic" section heading.] -->
+| Domain | What is rare | Typical base rate | Consequence of ignoring the prior |
+|---|---|---|---|
+| **Fraud detection** | Fraudulent transactions | ~0.1–1% | Analyst alert fatigue; real fraud ignored |
+| **Security monitoring** | Malicious logins | ~0.01–0.1% | Teams disable or ignore automated alerts |
+| **Medical screening** | Target disease (rare condition) | ~0.01–1% | Unnecessary downstream procedures, patient harm |
+| **Content moderation** | Genuinely harmful posts | ~0.01–0.1% | Moderation teams overwhelmed with false positives |
+| **AI jailbreak detection** | Adversarial inputs | ~0.001–0.01% | High false-positive load undermines trust in the detector |
+
+*The structure is the same in every row. The math does not care about the domain.*
 
 ---
 
@@ -572,20 +603,23 @@ End with: a one-page "Probabilistic Baseline" appendix to my casebook. Include t
 
 ## 🕰️ AI Wayback Machine
 
-The ideas in this chapter didn't appear from nowhere. **Sarah Lichtenstein** documented the calibration illusion — that experts and lay people alike systematically overestimate their own confidence — decades before AI systems made the same mistake at scale. Here's a prompt to find out more — and then make it better.
+The ideas in this chapter didn't appear from nowhere. **Frank Ramsey** died at twenty-six, in 1930, having already worked out — in *Truth and Probability* (1926) — the foundational case for treating probability as a property of a *person's* belief rather than a property of the world: a number you can elicit, score, and improve by checking your bets against outcomes. The calibration disciplines this chapter installs are Ramsey's, applied to AI systems whose reported confidence the user has been treating as a property of the world rather than a property of the model's belief.
+
+![Frank P. Ramsey, c. 1925. AI-generated portrait based on a public domain photograph (Wikimedia Commons).](images/frank-ramsey.jpg)
+*Frank P. Ramsey, c. 1925. AI-generated portrait based on a public domain photograph.*
 
 **Run this:**
 
 ```
-Who was Sarah Lichtenstein, and how does her work on calibration of subjective probability connect to the problem of an AI that reports high confidence when it should not? Keep it to three paragraphs. End with the single most surprising thing about her career or ideas.
+Who was Frank Ramsey, and how does his account of *subjective probability* — probability as a coherent number attached to a person's belief, scored by checking bets against outcomes — connect to the problem of an AI that reports high confidence when it should not? Keep it to three paragraphs. End with the single most surprising thing about his career or ideas.
 ```
 
-→ Search **"Sarah Lichtenstein"** on Wikipedia after you run this. See what the model got right, got wrong, or left out.
+→ Search **"Frank Ramsey philosopher"** on Wikipedia after you run this. See what the model got right, got wrong, or left out.
 
 **Now make the prompt better.** Try one of these:
 
-- Ask it to explain "calibration" in plain language, as if you've never thought about whether probabilities map to frequencies
-- Ask it to compare Lichtenstein's findings on overconfidence in human experts to LLM confidence-token miscalibration
-- Add a constraint: "Answer as if you're writing the opening case study for a calibration chapter"
+- Ask it to explain *Dutch book arguments* in plain language, as if you've never seen a probability axiom
+- Ask it to compare Ramsey's elicit-and-score method to the calibration loop this chapter requires
+- Add a constraint: "Answer as if you're writing the rationale for measuring an LLM's calibration with a Brier score"
 
 What changes? What gets better? What gets worse?

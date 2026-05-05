@@ -96,7 +96,16 @@ Neither account is complete on its own. But together they give you a working int
 
 The adversarial attack literature has expanded well beyond the simple image-perturbation case. Knowing the taxonomy matters because each attack class reveals a different thing about the model, and the appropriate defensive response depends on which attack you are defending against.
 
-<!-- → [TABLE: Six-row taxonomy table — Attack Class | What it requires from the attacker | What it exploits in the model | Domains where it applies | Key defensive response. Row 1: Gradient-based (white-box) | Full access to model weights and gradients | The specific geometry of this model's loss surface | Image, audio, any differentiable model | Adversarial training, input certification. Row 2: Query-based (black-box) | Access to model outputs only; no weights visible | Approximate gradient estimation from output probing | API-deployed models, LLMs | Output monitoring, query rate limiting. Row 3: Transfer-based | A surrogate model; no access to target model | Shared proxy feature manifolds across models trained on similar data | Hidden architectures, proprietary models | Representation diversity, ensemble defenses. Row 4: Patch / physical | Ability to modify input in the physical world (sticker, glasses, printed pattern) | Spatial localization — high-magnitude perturbation in a small region | Autonomous vehicles, facial recognition, physical access control | Spatial input validation, physical environment monitoring. Row 5: Natural adversarial | No modification — naturally occurring long-tail inputs | Model's failure to generalize beyond training manifold | Real-world safety benchmarks, OOD monitoring | Distribution shift monitoring, holdout on tail populations. Row 6: Prompt injection (agentic) | Ability to insert adversarial text into a processing pipeline | Conflation of instructions and data in the same input stream | LLMs, agentic pipelines with tool access | Instruction-data separation, output sandboxing. Caption: "The taxonomy matters because each class reveals a different gap. The correct defensive response depends on which attack is present in your threat model — not on which attack appears most in the research literature."] -->
+| Attack Class | What it requires from the attacker | What it exploits in the model | Domains where it applies | Key defensive response |
+|---|---|---|---|---|
+| **Gradient-based (white-box)** | Full access to model weights and gradients | The specific geometry of this model's loss surface | Image, audio, any differentiable model | Adversarial training, input certification |
+| **Query-based (black-box)** | Access to model outputs only; no weights visible | Approximate gradient estimation from output probing | API-deployed models, LLMs | Output monitoring, query rate limiting |
+| **Transfer-based** | A surrogate model; no access to the target | Shared proxy feature manifolds across models trained on similar data | Hidden architectures, proprietary models | Representation diversity, ensemble defenses |
+| **Patch / physical** | Ability to modify input in the physical world (sticker, glasses, printed pattern) | Spatial localization — high-magnitude perturbation in a small region | Autonomous vehicles, facial recognition, physical access control | Spatial input validation, environment monitoring |
+| **Natural adversarial** | No modification — naturally occurring long-tail inputs | Model's failure to generalize beyond the training manifold | Real-world safety benchmarks, OOD monitoring | Distribution-shift monitoring, holdout on tail populations |
+| **Prompt injection (agentic)** | Ability to insert adversarial text into a processing pipeline | Conflation of instructions and data in the same input stream | LLMs, agentic pipelines with tool access | Instruction-data separation, output sandboxing |
+
+*The taxonomy matters because each class reveals a different gap. The correct defensive response depends on which attack is present in your threat model — not on which attack appears most in the research literature.*
 
 Two distinctions in this taxonomy are worth dwelling on.
 
@@ -128,7 +137,16 @@ The supervisory move that follows: *robustness is not a single number*. It is a 
 
 Now the engineering. There is a robustness toolkit, and I want to walk through it systematically, because each tool has a use and a limit, and the limits add up to the picture I'm trying to draw.
 
-<!-- → [TABLE: Six-row toolkit reference table — Tool | What it does | Key cost | What it cannot do. Row 1: Adversarial training (PGD-AT) | Incorporates adversarially perturbed inputs into training loop, flattening loss surface | Clean accuracy drops; ≈9× more expensive than standard training; robustness transfers imperfectly to other attack types | Does not change the model's representation — moves attack surface without closing the proxy gap. Row 2: Certified defenses (randomized smoothing) | Transforms base classifier into a smoothed classifier with provable stability within a specified radius R | Requires thousands of Monte Carlo samples per prediction; high σ degrades clean accuracy; certified radius shrinks in high dimensions | Cannot certify against attacks outside the radius; prohibitively slow for real-time use. Row 3: Lipschitz-constrained architectures | Enforces a bounded rate of output change per unit input change; "verifiable by design" | Currently lower clean accuracy than unconstrained baselines; requires removing LayerNorm and modifying attention | Does not specify which inputs are sensitive — only bounds maximum sensitivity everywhere. Row 4: Formal verification (α,β-CROWN) | Proves mathematically that a property holds for all inputs in a defined region | Scales only to narrow properties on models up to millions of parameters; does not scale to frontier models or open-ended properties | Cannot verify natural language properties; cannot scale to the models most practitioners actually deploy. Row 5: Detection-based defenses | Identifies adversarial inputs as outliers and routes to fallback or human review | Adaptive attacks can target detector and classifier simultaneously (obfuscated gradients / BPDA); adds latency | Does not improve the model's representation — routes failures, does not eliminate them. Row 6: Input preprocessing | Removes perturbation signal before it reaches the model (denoising, quantization, smoothing) | Adaptive attackers aware of preprocessing can optimize perturbations that survive it; blunts but rarely eliminates exposure | Fails against attackers with knowledge of preprocessing; does not address transfer attacks or prompt injection. Caption: "There is no single tool. Every entry has a bounded scope and an honest cost. Deployment-grade robustness comes from layering these tools and documenting what each layer does not cover."] -->
+| Tool | What it does | Key cost | What it cannot do |
+|---|---|---|---|
+| **Adversarial training (PGD-AT)** | Incorporates adversarially perturbed inputs into the training loop, flattening the loss surface | Clean accuracy drops; ≈9× more expensive than standard training; robustness transfers imperfectly to other attack types | Does not change the model's representation — moves the attack surface without closing the proxy gap |
+| **Certified defenses (randomized smoothing)** | Transforms a base classifier into a smoothed classifier with provable stability within radius $R$ | Requires thousands of Monte Carlo samples per prediction; high $\sigma$ degrades clean accuracy; certified radius shrinks in high dimensions | Cannot certify against attacks outside the radius; prohibitively slow for real-time use |
+| **Lipschitz-constrained architectures** | Enforces a bounded rate of output change per unit input change; "verifiable by design" | Currently lower clean accuracy than unconstrained baselines; requires removing LayerNorm and modifying attention | Does not specify which inputs are sensitive — only bounds maximum sensitivity everywhere |
+| **Formal verification (α,β-CROWN)** | Proves mathematically that a property holds for all inputs in a defined region | Scales only to narrow properties on models up to millions of parameters; does not scale to frontier models or open-ended properties | Cannot verify natural-language properties; cannot scale to the models most practitioners actually deploy |
+| **Detection-based defenses** | Identifies adversarial inputs as outliers and routes to fallback or human review | Adaptive attacks can target detector and classifier simultaneously (BPDA / obfuscated gradients); adds latency | Does not improve the model's representation — routes failures, does not eliminate them |
+| **Input preprocessing** | Removes perturbation signal before it reaches the model (denoising, quantization, smoothing) | Adaptive attackers aware of preprocessing can optimize perturbations that survive it; blunts but rarely eliminates exposure | Fails against attackers with knowledge of preprocessing; does not address transfer attacks or prompt injection |
+
+*There is no single tool. Every entry has a bounded scope and an honest cost. Deployment-grade robustness comes from layering these tools and documenting what each layer does not cover.*
 
 ### Adversarial training and its scaling limits
 
@@ -204,7 +222,14 @@ For tabular robustness, the question is: which features are immutable (age, birt
 
 **In agentic systems.** We return to this in detail in Chapter 9, but the structure is the same. The agent has learned proxy signals for concepts like "owner," "authorized action," "trusted source." Those proxies are attackable through the inputs the agent processes — messages, documents, tool outputs. The attack is not a pixel perturbation; it is a crafted message that presents the attacker's signal in the form that the agent's proxy feature responds to. The remediation is identical in structure to the image case: identify what the proxy is, identify the human-relevant feature it approximates, and redesign the system to load-bear on the human-relevant feature rather than the proxy.
 
-<!-- → [TABLE: Cross-domain transfer reference — four columns: Domain | What the model learns as proxy | The human-relevant feature it approximates | Primary attack vector | Robustness measure. Row 1: Image classification | High-frequency pixel statistics co-occurring with class label | Object shape and structural semantics | Gradient-based L∞ perturbation | Adversarial training, input certification. Row 2: NLP / LLM | Surface-level token co-occurrence and syntactic patterns | Semantic meaning and communicative intent | Paraphrase attacks, Unicode insertion, prompt injection | Semantic invariance testing, instruction-data separation. Row 3: Tabular (credit/fraud) | Mutable feature combinations that correlate with outcome on training data | Fundamental creditworthiness or fraud risk | Strategic feature manipulation within feasibility constraints | Domain-constrained adversarial evaluation, feature immutability audits. Row 4: Agentic systems | Conversational and display-layer identity signals (display name, tone, phrasing) | Verified social-legal ownership and authorization | Proxy spoofing via crafted messages in the agent's information stream | Cryptographic credentials, output sandboxing, adversarial prompting. Caption: "Same structure, different surface. In every domain: a learnable proxy, an attackable proxy, a human-relevant feature left untouched. The appropriate defense differs by domain; the diagnostic question is always the same."] -->
+| Domain | What the model learns as proxy | The human-relevant feature it approximates | Primary attack vector | Robustness measure |
+|---|---|---|---|---|
+| **Image classification** | High-frequency pixel statistics co-occurring with the class label | Object shape and structural semantics | Gradient-based $L_\infty$ perturbation | Adversarial training, input certification |
+| **NLP / LLM** | Surface-level token co-occurrence and syntactic patterns | Semantic meaning and communicative intent | Paraphrase attacks, Unicode insertion, prompt injection | Semantic invariance testing, instruction-data separation |
+| **Tabular (credit / fraud)** | Mutable feature combinations that correlate with outcome on training data | Fundamental creditworthiness or fraud risk | Strategic feature manipulation within feasibility constraints | Domain-constrained adversarial evaluation, feature-immutability audits |
+| **Agentic systems** | Conversational and display-layer identity signals (display name, tone, phrasing) | Verified social-legal ownership and authorization | Proxy spoofing via crafted messages in the agent's information stream | Cryptographic credentials, output sandboxing, adversarial prompting |
+
+*Same structure, different surface. In every domain: a learnable proxy, an attackable proxy, a human-relevant feature left untouched. The appropriate defense differs by domain; the diagnostic question is always the same.*
 
 ---
 
@@ -278,7 +303,29 @@ What this means practically for deployment documentation: a robustness claim in 
 
 This is not extra paperwork. It is the difference between a deployment that knows what it is and one that doesn't. The former can be safely operated. The latter cannot.
 
-<!-- → [TABLE: Robustness disclosure template — three-section table. Section 1 "Robustness profile": columns Attack class tested | Perturbation budget used | Clean accuracy | Robust accuracy at budget | Notes. Three example rows (to be filled in): L∞ white-box (FGSM/PGD) | ε = 0.03 | 94% | 71% | Standard benchmark. Transfer attack | Surrogate: ResNet-50 | 94% | 58% | Surrogate trained on same data. Natural distribution shift | Domain: Q4 2023 vs Q1 2024 | 94% | 87% | Time-shift only. Section 2 "Residual risk": plain text block: "The following attack classes were not evaluated or mitigated: [list]. The following distribution shifts are known but not covered: [list]." Section 3 "Monitoring specification": plain text block: "In production, the following signals will be monitored: [list]. The trigger for human review is: [condition]. The rollback criterion is: [condition]." Caption: "A robustness profile is a table, not a sentence. A claim without this structure is not a claim."] -->
+**Section 1 — Robustness profile**
+
+| Attack class tested | Perturbation budget used | Clean accuracy | Robust accuracy at budget | Notes |
+|---|---|---|---|---|
+| **$L_\infty$ white-box** (FGSM / PGD) | $\epsilon = 0.03$ | 94% | 71% | Standard benchmark |
+| **Transfer attack** | Surrogate: ResNet-50 | 94% | 58% | Surrogate trained on same data |
+| **Natural distribution shift** | Domain: Q4 2023 vs Q1 2024 | 94% | 87% | Time-shift only |
+
+**Section 2 — Residual risk**
+
+The following attack classes were *not* evaluated or mitigated: _________________
+
+The following distribution shifts are known but *not* covered: _________________
+
+**Section 3 — Monitoring specification**
+
+Production-time signals to monitor: _________________
+
+Trigger for human review: _________________
+
+Rollback criterion: _________________
+
+*A robustness profile is a table, not a sentence. A claim without this structure is not a claim.*
 
 ---
 
@@ -467,20 +514,23 @@ End with: a one-paragraph note on what these probes reveal about the agent's NON
 
 ## 🕰️ AI Wayback Machine
 
-The ideas in this chapter didn't appear from nowhere. **Dawn Song** has spent her career on the boundary between security and machine learning — including the question of why a single pixel change can reliably break a model that aces every benchmark. Here's a prompt to find out more — and then make it better.
+The ideas in this chapter didn't appear from nowhere. **John von Neumann** co-wrote *Theory of Games and Economic Behavior* in 1944 — the formal account of what happens when a system optimizes against another system that is optimizing against it. Adversarial robustness is a game-theoretic problem before it is an ML problem: a model that aces the clean benchmark and fails on a one-pixel perturbation has not been beaten by random noise. It has been beaten by an adversary that searched the model's input space for the cheapest move that changes the output. Von Neumann's framework is the older language for what the chapter is teaching: the model's accuracy on a held-out set is a strategy that holds up against a non-adversarial nature, not against a player.
+
+![John von Neumann, c. 1940s. AI-generated portrait based on a public domain photograph (Wikimedia Commons).](images/john-von-neumann.jpg)
+*John von Neumann, c. 1940s. AI-generated portrait based on a public domain photograph.*
 
 **Run this:**
 
 ```
-Who is Dawn Song, and how does her work on adversarial robustness and ML security connect to the idea that a model's accuracy on a clean benchmark is not the same thing as understanding? Keep it to three paragraphs. End with the single most surprising thing about her career or ideas.
+Who was John von Neumann, and how does the game-theoretic framing he co-developed in *Theory of Games and Economic Behavior* connect to the idea that a model's accuracy on a clean benchmark is not the same thing as understanding — that it is a strategy against a non-adversarial environment, not against a player? Keep it to three paragraphs. End with the single most surprising thing about his career or ideas.
 ```
 
-→ Search **"Dawn Song"** on Wikipedia after you run this. See what the model got right, got wrong, or left out.
+→ Search **"John von Neumann"** on Wikipedia after you run this. See what the model got right, got wrong, or left out.
 
 **Now make the prompt better.** Try one of these:
 
-- Ask it to explain what an adversarial example is in plain language, as if you've never seen a perturbation plot
-- Ask it to compare Song's threat-model framing to a robustness audit you could run on a deployed classifier
-- Add a constraint: "Answer as if you're writing the opening case for a chapter called 'a pixel can break the model'"
+- Ask it to explain *minimax* in plain language, as if you've never seen game theory
+- Ask it to compare a one-pixel adversarial attack to a minimax search in the input space
+- Add a constraint: "Answer as if you're writing the threat model for a deployed image classifier"
 
 What changes? What gets better? What gets worse?

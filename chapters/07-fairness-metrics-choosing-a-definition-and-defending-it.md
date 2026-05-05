@@ -64,7 +64,11 @@ When the model assigns probability $p$ to a case from group $a$, the realized po
 
 These three look like they should all be compatible. They are not.
 
-<!-- → [TABLE: Three-column definition reference table — columns: metric name (with alias), what it measures (one sentence), what it is a statement about (outputs / errors / probability honesty), values claim embedded. Designed for student reference during the arithmetic section. Figure 7.1] -->
+| Metric (alias) | What it measures | What it is a statement about | Values claim embedded |
+|---|---|---|---|
+| **Calibration / Predictive parity** | Whether a score $s$ corresponds to the same probability of a positive outcome across groups | The model's *probability honesty* — its outputs as probabilities | If you act on the score, the meaning of the score should not depend on group membership |
+| **Equalized odds (TPR / FPR parity)** | Whether the false-positive and true-positive rates are equal across groups | The model's *errors* — costs distributed across groups | Costs of errors should be borne equally; group membership should not change risk of being wronged |
+| **Demographic parity (statistical parity)** | Whether the rate of positive predictions is equal across groups | The model's *outputs* — visible decisions | Outcomes should be proportional regardless of underlying base rates; structural redress over conditional accuracy |
 
 ---
 
@@ -100,7 +104,29 @@ I want you to sit with this for a moment. The three definitions all sound reason
 
 <!-- → [IMAGE: Three nodes (demographic parity, equalized odds, calibration parity) arranged in a triangle. Between each pair of nodes, an arrow labeled with what breaks when both are required simultaneously given differing base rates. At the center: "base rates differ." Caption: "You can satisfy any two. The third breaks. The triangle is the theorem." Figure 7.2] -->
 
-<!-- → [TABLE: Worked arithmetic table with base rates 0.6 / 0.3. Rows: base rate, threshold, true-positive rate, false-positive rate, PPV, positive prediction rate. Two columns: group A, group B. Two versions side by side: one satisfying calibration (showing equalized-odds violation), one satisfying equalized odds (showing calibration violation). The student should see the numbers, not just the argument. Figure 7.3] -->
+**Calibration-satisfying version (equalized-odds violation visible)**
+
+| Quantity | Group A (base rate 0.6) | Group B (base rate 0.3) |
+|---|---|---|
+| **Base rate** | 0.6 | 0.3 |
+| **Threshold** | 0.5 | 0.5 |
+| **True-positive rate (TPR)** | 0.83 | 0.50 |
+| **False-positive rate (FPR)** | 0.20 | 0.10 |
+| **Positive predictive value (PPV)** | 0.86 | 0.83 |
+| **Positive prediction rate** | 0.55 | 0.20 |
+
+**Equalized-odds-satisfying version (calibration violation visible)**
+
+| Quantity | Group A (base rate 0.6) | Group B (base rate 0.3) |
+|---|---|---|
+| **Base rate** | 0.6 | 0.3 |
+| **Threshold** | 0.5 | 0.6 |
+| **True-positive rate (TPR)** | 0.70 | 0.70 |
+| **False-positive rate (FPR)** | 0.15 | 0.15 |
+| **Positive predictive value (PPV)** | 0.88 | 0.67 |
+| **Positive prediction rate** | 0.47 | 0.27 |
+
+*Same model, different threshold choices. Calibration parity and equalized odds cannot both hold while base rates differ.*
 
 ---
 
@@ -114,7 +140,13 @@ Northpointe — the maker of COMPAS — responded that the tool was calibrated. 
 
 Both claims were true. They were measuring different fairness properties, and the underlying base rates of re-arrest in the available data differed across racial groups. The impossibility theorem says, given that base-rate difference, you cannot have both. ProPublica and Northpointe were not having a factual disagreement that more data could settle. They were having a values disagreement about which definition of fairness should win.
 
-<!-- → [TABLE: COMPAS case mapped to the three metrics — rows: metric name / what ProPublica measured / what Northpointe measured / whether each claim was factually accurate / the values claim each embeds. Caption: "Both sides were right about the numbers. The disagreement was about which numbers should matter." Figure 7.4] -->
+| Metric | What ProPublica measured | What Northpointe measured | Was the claim factually accurate? | Values claim each side embeds |
+|---|---|---|---|---|
+| **Equalized odds (TPR / FPR)** | Black defendants had ~2× the FPR of white defendants — the rate at which non-recidivists were labeled high-risk | (Not the metric Northpointe reported on) | **Yes** — the FPR disparity was real | Costs of being wrongly flagged should be borne equally |
+| **Calibration / predictive parity** | (Not their primary metric) | At every score, the same fraction of Black and white defendants reoffended | **Yes** — the score had the same meaning across groups | Acting on the score should not require group-specific reinterpretation |
+| **Demographic parity** | (Not directly measured) | (Not directly measured) | — | — |
+
+*Both sides were right about the numbers. The disagreement was about which numbers should matter.*
 
 ---
 
@@ -287,7 +319,13 @@ What this toolkit cannot do is resolve the impossibility theorem. It can let you
 
 The toolkit is a way to implement a values choice. It does not absolve you of making the choice.
 
-<!-- → [TABLE: Three-family toolkit comparison — columns: family, mechanism, typical target metric, key advantage, key limitation. Rows: pre-processing (data transformation), in-processing (algorithmic constraint), post-processing (output calibration). Footer row: "What none of them do: resolve the impossibility theorem or reach upstream structural bias." Figure 7.10] -->
+| Family | Mechanism | Typical target metric | Key advantage | Key limitation |
+|---|---|---|---|---|
+| **Pre-processing** | Reweight, resample, or transform the training data before training | Demographic parity, base-rate equalization | Model-agnostic; intervention is upstream of model choice | Cannot reach what is measured but mis-recorded; relies on group labels at training time |
+| **In-processing** | Add fairness as a constraint or regularizer in the training objective | Equalized odds, calibration | Fairness becomes part of the model's learned representation | Requires modifying training infrastructure; tradeoff with accuracy is locked in at train time |
+| **Post-processing** | Adjust thresholds, scores, or decision rules after training | Group-specific TPR/FPR targets | Can be applied to a frozen model; transparent | Requires group labels at deployment; per-group thresholds invite separate-treatment objections |
+
+*What none of them do: resolve the impossibility theorem, or reach upstream structural bias in the data-generating process.*
 
 ---
 
@@ -484,20 +522,23 @@ If the agent's decisions truly do not produce unequal effects across any meaning
 
 ## 🕰️ AI Wayback Machine
 
-The ideas in this chapter didn't appear from nowhere. **Cynthia Dwork** co-introduced differential privacy and then "Fairness Through Awareness" — a paper that named the tension between individual and group definitions of fair treatment well before fairness audits became routine. Here's a prompt to find out more — and then make it better.
+The ideas in this chapter didn't appear from nowhere. **John Stuart Mill** spent the middle of the nineteenth century arguing that *fairness* is not a single quantity. *Utilitarianism* (1861) defends the claim that the right act maximizes aggregate well-being; *On Liberty* (1859) argues that some individual claims cannot be overridden no matter how much aggregate well-being would result. The two arguments are not reconcilable in a single metric — and Mill knew it. The chapter's central move is the same one Mill modeled: choose the fairness definition that fits the harm structure of your specific problem, defend the choice in writing, and accept that the alternative definitions you ruled out would also have been defensible under a different harm structure.
+
+![John Stuart Mill, c. 1860s. AI-generated portrait based on a public domain photograph (Wikimedia Commons).](images/john-stuart-mill.jpg)
+*John Stuart Mill, c. 1860s. AI-generated portrait based on a public domain photograph.*
 
 **Run this:**
 
 ```
-Who is Cynthia Dwork, and how does her work on individual versus group fairness connect to the problem of choosing one fairness metric and defending it against the alternatives? Keep it to three paragraphs. End with the single most surprising thing about her career or ideas.
+Who was John Stuart Mill, and how does the unresolved tension between his *Utilitarianism* and *On Liberty* connect to choosing one fairness metric for an ML system and defending it against the alternatives that a different harm structure would have privileged? Keep it to three paragraphs. End with the single most surprising thing about his career or ideas.
 ```
 
-→ Search **"Cynthia Dwork"** on Wikipedia after you run this. See what the model got right, got wrong, or left out.
+→ Search **"John Stuart Mill"** on Wikipedia after you run this. See what the model got right, got wrong, or left out.
 
 **Now make the prompt better.** Try one of these:
 
-- Ask it to explain "individual fairness" in plain language, as if you've never read an algorithmic-fairness paper
-- Ask it to compare Dwork's individual-fairness framework to a real fairness-metric incompatibility result you'd have to navigate
-- Add a constraint: "Answer as if you're writing a memo to a team that has to pick one fairness metric and defend it"
+- Ask it to explain why an *aggregate-welfare* fairness metric and an *individual-claim* fairness metric can both be defensible, in plain language
+- Ask it to compare Mill's harm-principle to the case for individual fairness over group fairness in a specific deployment
+- Add a constraint: "Answer as if you're writing the *defense* paragraph in a model card's fairness section"
 
 What changes? What gets better? What gets worse?

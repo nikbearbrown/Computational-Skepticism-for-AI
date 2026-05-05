@@ -127,7 +127,13 @@ The second is the **performative journal**. The student writes elaborate, well-f
 
 The Frictional method works under one condition: the entries are written in the moment, before observation, and the gap is allowed to stand. The method falls apart when either the prediction or the reflection is faked. We are explicit with students about this. The failure modes are identifiable. The grade is on whether the journal traces a real cognitive process — not whether the cognitive process was always correct.
 
-<!-- → [TABLE: Three-column comparison. Columns: "Retrospective journal" / "Performative journal" / "Authentic journal." Rows: surface appearance, timestamp pattern, prediction quality, gap analysis specificity, diagnostic tell for the grader. Useful for faculty calibration as well as student self-diagnosis. Figure 4.4] -->
+| Diagnostic dimension | Retrospective journal | Performative journal | Authentic journal |
+|---|---|---|---|
+| **Surface appearance** | Smooth, polished, written from a settled vantage | Visibly performs reflection — emotional adjectives, hedge phrases | Uneven; stops, starts, revises in place |
+| **Timestamp pattern** | Single submission near deadline | Tightly clustered just before submission | Distributed across the work session — entries before, during, after |
+| **Prediction quality** | Predictions match outcomes too well to be plausible | Predictions are vague and unfalsifiable | Predictions are sharp and sometimes wrong |
+| **Gap analysis specificity** | Generic ("I learned to think more carefully") | Generic but emotional ("I struggled, then grew") | Specific to a sentence the student misjudged and now can name precisely |
+| **Diagnostic tell for the grader** | No revision marks; impossible to mistake for in-flight thinking | Disclosure language without disclosure content | Real prediction errors visible on the page |
 
 ---
 
@@ -257,7 +263,15 @@ For the Frictional journal, the predict move (move one) implements a primitive v
 
 <!-- → [CHART: Bar chart with three bar groups: "no hint (h₀)," "partial hint (h₁)," "full hint (h₂)." Two series per group: genuine learning (dark) and borrowed certainty (light). Genuine learning: large jump from h₀ to h₁, small additional gain from h₁ to h₂ — the partial hint found purchase. Borrowed certainty: no gain from h₀ to h₁, large gain from h₁ to h₂ — nothing for the partial hint to connect to. Caption: "Y₇ measures the Zone of Proximal Development as a ratio. High Y₇ means partial structure exists; low Y₇ means it does not." Figure 4.9] -->
 
-<!-- → [TABLE: Seven components reference card — columns: component name, abbreviation, neurobiological basis, operational formula, genuine learning signature, borrowed certainty signature, primary data source, Frictional journal move that captures it. This table is the compact reference for the entire GLP section; designed for bookmark use across the course. Figure 4.10] -->
+| Component | Abbr. | Neurobiological basis | Operational formula | Genuine learning signature | Borrowed-certainty signature | Primary data source | Frictional journal move that captures it |
+|---|---|---|---|---|---|---|---|
+| **Engagement** | E | Dopaminergic reward, novelty response | Time-on-task × difficulty match | Sustained attention with productive struggle | Drift to easier substitute task | Session timestamps + difficulty self-report | "Where did I get stuck and why?" |
+| **Curiosity** | C | Information-gap activation | Questions generated per concept introduced | Original questions tied to the specific text | Generic questions copied from the prompt | Question log | "What did I want to know that the source didn't say?" |
+| **Prediction** | P | Cerebellar / cortical predictive coding | Predictions made before observation | Concrete forecast with stakes named | Vague forecast or post-hoc claim | Pre-observation entries | "Before running it, I expected X because…" |
+| **Error correction** | EC | Anterior cingulate, error monitoring | Predictions revised after disconfirmation | Specific gap named, revision recorded | Generic regret without revision | Diff between pre- and post-observation entries | "I was wrong because I assumed…; now I see…" |
+| **Practice** | Pr | Striatal procedural learning | Repetitions of a constrained drill | Same move tried 3+ times with variation | Single attempt, generic reflection | Practice log | "Reps of this move so far:…" |
+| **Encoding** | En | Hippocampal consolidation | Independent restatement after a delay | Restated in own words days later, accurate | Restated immediately by paraphrase | Spaced-restatement entries | "A week later: here is what I retained without looking…" |
+| **Transfer** | T | Cross-domain pattern abstraction | Application of the concept to a fresh domain | Concrete second-domain example, working out details | Abstract claim that the concept "applies broadly" | Transfer-attempt entries | "I tried this on [unrelated problem] and here is what happened…" |
 
 ---
 
@@ -468,6 +482,9 @@ End with: a one-paragraph note on the cognitive risk of using AI to analyze AI �
 
 The ideas in this chapter didn't appear from nowhere. **Lev Vygotsky** was theorizing that learning happens specifically in the gap between what you can do alone and what you can do with a more competent partner — long before the question became how to tell whether the AI is the partner or the substitute. Here's a prompt to find out more — and then make it better.
 
+![Lev Vygotsky, c. 1930. AI-generated portrait based on a public domain photograph (Wikimedia Commons).](images/lev-vygotsky.jpg)
+*Lev Vygotsky, c. 1930. AI-generated portrait based on a public domain photograph.*
+
 **Run this:**
 
 ```
@@ -483,3 +500,4 @@ Who was Lev Vygotsky, and how does his Zone of Proximal Development connect to d
 - Add a constraint: "Answer as if you're writing a footnote explaining where the Frictional Method's psychology comes from"
 
 What changes? What gets better? What gets worse?
+

@@ -48,7 +48,13 @@ And it does not show what would happen if X were different. The attribution is o
 
 For a practitioner reading SHAP output, the operational risk is to treat the attribution as causal. It is not. It is descriptive of the model's internal accounting, and the model's internal accounting is not the world.
 
-<!-- → [TABLE: SHAP capability matrix — rows: (1) additive feature contribution to prediction, (2) causal relationship between feature and outcome, (3) whether the model is correct on this case, (4) what would happen if feature X changed, (5) whether the feature is a confounder vs. a cause. Columns: SHAP support (yes/no), Pearl rung, what you'd need instead. The table makes the ceiling explicit. Figure 6.2] -->
+| Question SHAP is asked | SHAP can answer? | Pearl rung | What you'd need instead |
+|---|---|---|---|
+| Additive feature contribution to *this prediction* | **Yes** | Rung 1 (observational) | — |
+| Causal relationship between feature and outcome | No | Rung 2 (interventional) | Causal model + intervention experiment |
+| Whether the model is correct on *this case* | No | Out of frame | Ground truth + chart review |
+| What would happen if feature $X$ changed | No (despite appearance) | Rung 2 | Counterfactual simulator that refits or reasons over the joint distribution |
+| Whether the feature is a confounder vs. a cause | No | Rung 2/3 | Causal-discovery / structural model |
 
 ---
 
@@ -124,7 +130,12 @@ $$\text{If } v_{\text{combined}}(S) = v_A(S) + v_B(S), \text{ then } \phi_i^{\te
 
 This is why SHAP attributions for a random forest can be computed per tree and then averaged: each tree is a sub-game, and Additivity guarantees the results compose correctly.
 
-<!-- → [TABLE: The four axioms side-by-side — columns: axiom name, formal statement (abbreviated), what it guarantees, what it does NOT guarantee, failure mode if violated. Efficiency row includes note: "the force-plot visualization is Efficiency rendered visually." Dummy row includes note: "a non-zero zip code attribution does not violate Dummy — it means the model uses zip code." Figure 6.5] -->
+| Axiom | Formal statement (abbreviated) | What it guarantees | What it does NOT guarantee | Failure mode if violated |
+|---|---|---|---|---|
+| **Efficiency** | $\sum_i \phi_i = f(x) - E[f(X)]$ | Attributions add up to the prediction's deviation from the baseline. *(The force-plot visualization is Efficiency rendered visually.)* | That any individual attribution is causal | Attributions don't sum to the prediction; the visualization is meaningless |
+| **Symmetry** | If two features are identical to the model, they get equal attribution | Two interchangeable features cannot be assigned different importance | That the underlying causal roles of the two features are equivalent | One of two identical features gets blamed; the other vanishes from the report |
+| **Dummy** | A feature the model does not use gets zero attribution | A feature truly unused gets credit zero. *(A non-zero zip-code attribution does not violate Dummy — it means the model uses zip code.)* | That every non-zero attribution corresponds to a feature the practitioner intended the model to use | An unused feature is reported as important; the audit is misled |
+| **Linearity** | Attributions for $f + g$ equal the sum of attributions for $f$ and $g$ | Compositional consistency across model ensembles | That stacking two models produces an additive explanation of their behavior | Attributions for a stacked model can't be decomposed cleanly; ensemble outputs aren't auditable |
 
 ### A worked example
 
@@ -165,7 +176,12 @@ where $S_m$ is the set of features appearing before $i$ in the $m$-th random per
 
 **TreeSHAP.** For tree-based models — decision trees, random forests, gradient-boosted trees — the tree structure can be exploited to compute exact Shapley values in $O(T L D)$ time, where $T$ is the number of trees, $L$ is the maximum leaves in any tree, and $D$ is the maximum depth. The key insight: a decision tree has a small, bounded number of distinct prediction paths, so instead of enumerating all $2^{|F|}$ coalitions, we walk the tree paths that actually change predictions, weight them correctly, and combine. This is orders of magnitude faster than KernelSHAP for large forests.
 
-<!-- → [TABLE: Comparison of the three estimation approaches — columns: method, computational complexity, exact vs. approximate, feature dependency handling, best use case. Rows: Exact Shapley (exponential, exact, marginal distribution, tiny feature sets only), KernelSHAP (linear in M, approximate, marginal distribution, any model), Permutation Method (linear in M, approximate, marginal distribution, any model, better variance than KernelSHAP), TreeSHAP (polynomial in tree structure, exact, two variants, tree-based models). Figure 6.7] -->
+| Method | Computational complexity | Exact vs. approximate | Feature dependency handling | Best use case |
+|---|---|---|---|---|
+| **Exact Shapley** | Exponential in $M$ | Exact | Marginal distribution | Tiny feature sets only — research demonstrations |
+| **KernelSHAP** | Linear in $M$ (with sampling) | Approximate | Marginal distribution | Any model — model-agnostic baseline |
+| **Permutation Method** | Linear in $M$ | Approximate | Marginal distribution | Any model — better variance than KernelSHAP at the same cost |
+| **TreeSHAP** | Polynomial in tree structure | Exact | Two variants (path-dependent / interventional) | Tree-based models (XGBoost, random forests, LightGBM) |
 
 ### The correlated feature problem
 
@@ -211,7 +227,11 @@ Counterfactuals have their own troubles. Multiple counterfactuals are usually po
 
 I want to be fair to counterfactuals. Of the three families, this one engages Pearl's Rung 2 directly, and that matters. It moves the explanation type from "feature attribution in the model's internal accounting" to "intervention prediction in the model's behavior space." That is a more decision-relevant frame. It is still bounded by the model's understanding of the world, but it asks a question closer to the question the practitioner has.
 
-<!-- → [TABLE: Three explanation families compared — columns: family, example output, Pearl rung, what it tells you, what it doesn't tell you, primary failure mode. Rows: SHAP/Shapley (feature attribution), LIME (local linear approximation), Counterfactual (intervention prediction). The table makes the Rung 1 / Rung 2 boundary visible across all three. Figure 6.10] -->
+| Family | Example output | Pearl rung | What it tells you | What it doesn't tell you | Primary failure mode |
+|---|---|---|---|---|---|
+| **SHAP / Shapley** | "Income contributed +0.18 to this prediction" | Rung 1 | The additive contribution to *this* prediction, given the model | The causal effect of income on the outcome | Misread as causal — a Rung 1 attribution treated as a Rung 2 claim |
+| **LIME** | A small linear surrogate that approximates the model around this input | Rung 1 | A locally linear summary of model behavior in a neighborhood | The model's actual computation; nonlinearity outside the neighborhood | Fragile to choice of neighborhood and perturbation strategy |
+| **Counterfactual** | "If income were $5,000 higher, the prediction would flip to approve" | Rung 2 | What the *model* would predict under an intervention on its inputs | What the *world* would do under that intervention; whether the intervention is feasible | Treated as a causal statement about reality rather than the model |
 
 ---
 
@@ -231,7 +251,12 @@ This distinction matters because regulatory and procurement language often deman
 
 If you take one operational thing from this section, take that. When somebody tells you their system is explainable, ask: explainable to whom? An attribution that the developer can read is not the same artifact as a reason the affected person can use. Explanation is not a property of the system alone. It is a property of the system *and* the audience.
 
-<!-- → [TABLE: Transparency, explainability, and interpretability compared — columns: term, what it's a property of, binary or graded, can exist without the others, what it doesn't guarantee. A fourth row labeled "common failure mode": a system that is transparent, explainable, and interpretable to the developer — and none of those things to the patient or loan applicant reading the output. Figure 6.11] -->
+| Term | A property of… | Binary or graded | Can exist without the others | What it doesn't guarantee |
+|---|---|---|---|---|
+| **Transparency** | The system as code/architecture | Binary in principle, graded in practice | Yes — open weights without explanation tooling | That any human can act on what they read |
+| **Explainability** | An output, given a method | Graded | Yes — closed model with post-hoc explanations | That the explanation describes the actual computation |
+| **Interpretability** | A model whose decisions humans can directly follow | Graded | Yes — a clearly interpretable model with no public weights | That the interpretation is correct in deployment |
+| **Common failure mode** | A system that is transparent, explainable, and interpretable to the *developer* — and none of those things to the patient or loan applicant reading the output | — | — | — |
 
 ---
 
@@ -437,20 +462,23 @@ End with: a one-paragraph note for the casebook on the EXPLANATION RISK class �
 
 ## 🕰️ AI Wayback Machine
 
-The ideas in this chapter didn't appear from nowhere. **Cynthia Rudin** has spent her career arguing that post-hoc "explanation" of black-box models is not the same thing as explanation — and that the alternative, interpretable models, has been undersold. Here's a prompt to find out more — and then make it better.
+The ideas in this chapter didn't appear from nowhere. **Hans Reichenbach** drew the distinction the chapter rests on — between the *context of discovery* (how a model arrived at an output) and the *context of justification* (the reasons that would, post hoc, defend it) — in *Experience and Prediction* (1938). A post-hoc explanation of a black-box model is in the second category dressed up as the first. Reichenbach's argument is that the dressing-up is not innocent: a justification that did not actually drive the conclusion is not the same intellectual object as the process that did, and treating them as the same is how communities convince themselves they understand what they only know how to defend.
+
+![Hans Reichenbach, c. 1940s. AI-generated portrait based on a public domain photograph (Wikimedia Commons).](images/hans-reichenbach.jpg)
+*Hans Reichenbach, c. 1940s. AI-generated portrait based on a public domain photograph.*
 
 **Run this:**
 
 ```
-Who is Cynthia Rudin, and how does her argument for interpretable models — over post-hoc explanation of black boxes — connect to distinguishing genuine explanation from the appearance of explanation? Keep it to three paragraphs. End with the single most surprising thing about her career or ideas.
+Who was Hans Reichenbach, and how does his distinction between the *context of discovery* and the *context of justification* connect to distinguishing genuine model explanation from a post-hoc rationalization that did not actually drive the model's output? Keep it to three paragraphs. End with the single most surprising thing about his career or ideas.
 ```
 
-→ Search **"Cynthia Rudin"** on Wikipedia after you run this. See what the model got right, got wrong, or left out.
+→ Search **"Hans Reichenbach"** on Wikipedia after you run this. See what the model got right, got wrong, or left out.
 
 **Now make the prompt better.** Try one of these:
 
-- Ask it to explain the difference between a SHAP plot and a model that is interpretable by construction, in plain language
-- Ask it to compare Rudin's recidivism-model work to the appearance-of-explanation problem in this chapter
-- Add a constraint: "Answer as if you're writing the case for interpretability to a skeptical product manager"
+- Ask it to explain *context of discovery vs. context of justification* in plain language, as if you've never read philosophy of science
+- Ask it to compare Reichenbach's distinction to the gap between SHAP attributions and the actual computation a deep network ran
+- Add a constraint: "Answer as if you're writing the warning label on a post-hoc explanation tool"
 
 What changes? What gets better? What gets worse?

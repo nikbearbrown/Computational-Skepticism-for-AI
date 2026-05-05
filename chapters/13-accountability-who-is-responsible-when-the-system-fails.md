@@ -96,7 +96,26 @@ Each capacity tells a version of the same story. Where AI is strong — pattern 
 
 The accountability apparatus is built from both kinds of capacity. The specification, the audit trail, the recourse mechanism, the independent review, the sanctions — each draws on the second kind. The *Irreducibly Human* taxonomy organizes this observation into a structure you can use.
 
-<!-- → [TABLE: Cognitive capacities mapped to AI status and accountability implication. Rows: learning, memory (semantic vs. episodic), emotion (three definitions), pattern recognition, navigation (metric vs. cognitive mapping), planning (tree-search vs. hierarchical), self-awareness (mirror vs. metacognitive), metacognition, language, collective intelligence. Columns: AI capability status with brief justification, what the capacity requires that AI lacks, accountability implication. The table is the companion-volume argument in condensed form — each row shows one capacity, both where AI extends human reach and where it cannot. Caption: "Both answers are informative. Under one definition, AI qualifies. Under another, it doesn't. The accountability question is which definition the regime requires."] -->
+| Capacity | AI capability status | What the capacity requires that AI lacks | Accountability implication |
+|---|---|---|---|
+| **Learning** | Superhuman within distribution | Causal-world model that survives the deployment context | AI as instrument; supervisor named for distribution match |
+| **Memory — semantic** | Superhuman | — | Strength; AI can be cited as a source of recall |
+| **Memory — episodic** | Weak; sessions are stateless without explicit context | A continuous self-narrative across encounters | Cannot bear accountability that requires personal continuity |
+| **Emotion (functional)** | Simulates; does not feel | Phenomenal valence | Cannot bear accountability that requires the capacity to *care* |
+| **Emotion (moral salience)** | Absent | The capacity for moral seriousness | Cannot bear sanctions that depend on shame, regret, or responsibility |
+| **Emotion (interpersonal repair)** | Absent | Capacity to apologize meaningfully | Cannot perform the recourse function of accountability |
+| **Pattern recognition** | Superhuman within distribution | — | Strength |
+| **Navigation — metric** | Strong | — | Strength |
+| **Navigation — cognitive mapping** | Weak | World-model with intervention support | Can mislead under shifted topology |
+| **Planning — tree-search** | Superhuman in bounded games | — | Strength |
+| **Planning — hierarchical, real-world** | Poor | Goal-context inference under ambiguity | Cannot be the planner of record for high-stakes deployment |
+| **Self-awareness — mirror** | Absent (no body) | Embodied perception | Out of scope |
+| **Self-awareness — metacognitive** | Weak; calibrated reports of own uncertainty are unreliable | Stable self-model | Cannot self-certify reliability |
+| **Metacognition** | Weak-to-absent | Reflection on one's own reasoning that updates that reasoning | Cannot perform independent review of itself |
+| **Language** | Superhuman in form; weak in grounded reference | World-grounded semantics | Output requires a human grounding step |
+| **Collective intelligence** | Absent by definition (single artifact) | Membership in a community that holds members accountable | Cannot belong to a community of practice |
+
+*Both answers are informative. Under one definition, AI qualifies. Under another, it doesn't. The accountability question is which definition the regime requires.*
 
 ### The seven-tier taxonomy
 
@@ -116,7 +135,17 @@ The taxonomy organizes human intelligence into seven tiers, sorted by AI capabil
 
 **Tier 7 — Existential and Wisdom.** Practical wisdom. Requires stakes, the possibility of loss, a life that can be poorly lived. An algorithm has no stakes. It cannot commit because it cannot lose. This is the tier where accountability reaches its bedrock: the human who must stand behind a validation, who can lose something when it is wrong, is operating at Tier 7 in a way no AI system can.
 
-<!-- → [TABLE: The seven tiers mapped to AI capability. Columns: tier number and label, brief definition, AI capability status (superhuman / weak-emerging / simulates-doesn't-feel / poor / weak-to-absent / absent-by-definition / absent-no-stakes), and educational implication. Caption: "Read this not as an academic classification but as a triage. Where machines are strongest, training humans to compete directly is now malpractice."] -->
+| Tier | Label | Brief definition | AI capability status | Educational implication |
+|---|---|---|---|---|
+| **1** | Mechanical execution | Apply a procedure to well-defined input | Superhuman | Training humans to compete here is malpractice |
+| **2** | Pattern recognition on structured data | Detect a pattern in a defined feature space | Superhuman within distribution | Train pattern *audit* (when does it fail?) instead of pattern detection |
+| **3** | Domain-specific judgment under ambiguity | Apply expertise where the right answer is uncertain | Weak-emerging | Train the judgment; use AI for first pass |
+| **4** | Cross-domain reasoning under stakes | Connect representations across fields when consequences differ | Simulates; does not feel | Train the human; AI cannot bear the stakes |
+| **5** | Moral seriousness | Take responsibility for the right thing to do | Poor (no phenomenal stake) | Train the human; AI is an instrument, not an agent |
+| **6** | Accountability under public scrutiny | Account for the decision to a public | Weak-to-absent | Train the human; AI cannot be examined by a community of practice |
+| **7** | Wisdom across a career | Integrate decades of contextual learning into present judgment | Absent — no biographical continuity | Train the human; this is the durable comparative advantage |
+
+*Read this not as an academic classification but as a triage. Where machines are strongest, training humans to compete directly is now malpractice.*
 
 ### The Gödel argument
 
@@ -162,7 +191,15 @@ Each accountability target has different leverage. The utilitarian calculation p
 
 Two frameworks. Different bases. Same topology. Responsibility distributes, and the distribution is the finding.
 
-<!-- → [TABLE: Figure 13.3 — The two frameworks applied to the mail-server case. Rows: each responsible party (non-owner, agent, owner, framework developers, model provider). Columns: Kantian basis (capacity to act otherwise, duty imposed, relative magnitude) / utilitarian basis (leverage of accountability, downstream effects on engineering practice, whether the accountability target can actually change the conditions for future failures). Caption: "Two frameworks, different bases, same topology. The distribution is the finding."] -->
+| Party | Kantian basis (capacity to act otherwise; duty imposed; relative magnitude) | Utilitarian basis (leverage of accountability; downstream effects; ability to change conditions) |
+|---|---|---|
+| **Non-owner (instructing user)** | Could have not issued the instruction; duty: non-misuse; magnitude: low | Holding them accountable changes only their behavior; small leverage on systemic conditions |
+| **Agent (the AI)** | No capacity to act otherwise in the morally relevant sense; no duty can be imposed; magnitude: zero | Holding the agent accountable produces no behavioral change in the agent or in future deployments |
+| **Owner (deploying user)** | Could have constrained the deployment; duty: oversight; magnitude: high | High leverage — owners change deployment configurations after incidents |
+| **Framework developers** | Could have shipped safer defaults; duty: secure-by-default tooling; magnitude: high | Highest leverage on systemic conditions — defaults propagate to thousands of deployments |
+| **Model provider** | Could have disclosed the failure mode publicly; duty: capability honesty; magnitude: medium-high | Medium leverage on systemic conditions; disclosure shapes downstream choice |
+
+*Two frameworks, different bases, same topology. The distribution is the finding.*
 
 ---
 
@@ -180,7 +217,15 @@ The **independent review requirement** is Tier 4 by definition. The logical argu
 
 The **sanctions requirement** is Tier 7. Sanctions are consequential only when the party sanctioned has stakes — something to lose. An AI system does not lose its job when it produces a flawed output. A plausibility auditor does. A deploying organization does. The model provider whose trained system produced the conditions for the failure does, if the regulatory regime imposes consequences. The stakes are what give the accountability machinery its force. Remove the possibility of consequence and you have a descriptive system, not a prescriptive one. Tier 7 is not a philosophical add-on to accountability. It is the load-bearing tier — the tier without which the rest of the apparatus has no teeth.
 
-<!-- → [TABLE: Figure 13.4 — The five accountability requirements mapped to cognitive tiers. Rows: each requirement (specifications, audit trail, recourse, independent review, sanctions). Columns: which tier the requirement depends on, what specifically that tier provides, why AI operating at Tier 1 cannot supply it, and what a human must do instead. Caption: "The accountability apparatus requires Tiers 4 through 7 at every stage. AI systems operate primarily at Tier 1. This is the structural argument for human oversight, not the contingent one."] -->
+| Requirement | Which tier it depends on | What that tier specifically provides | Why AI at Tier 1 cannot supply it | What a human must do instead |
+|---|---|---|---|---|
+| **Specifications** | Tier 4 (cross-domain reasoning) | Translate context into testable criteria | Tier-1 systems do not understand the context; they pattern-match within it | A named human writes the spec, signs it, owns it |
+| **Audit trail** | Tier 6 (accountability to a public) | Log the chain in a form a community can examine | Tier-1 logs are mechanical; they do not anticipate the questions a public will ask | A human curates the log to be inspectable |
+| **Recourse** | Tier 5 (moral seriousness) | Recognize a wronged party and offer a meaningful response | Tier-1 systems cannot bear moral seriousness | A human delivers recourse; the system facilitates the channel |
+| **Independent review** | Tier 7 (wisdom across a career) | Integrate the deployment context with decades of contextual learning | Tier-1 systems lack biographical continuity | A human reviewer with relevant career experience signs off |
+| **Sanctions** | Tier 5 (moral seriousness) + Tier 6 (public accountability) | Make consequences felt; deter future misconduct | Tier-1 systems cannot be sanctioned in any morally meaningful sense | A human and an institution bear the sanction |
+
+*The accountability apparatus requires Tiers 4 through 7 at every stage. AI systems operate primarily at Tier 1. This is the structural argument for human oversight, not the contingent one.*
 
 ---
 
@@ -200,7 +245,15 @@ With the cognitive grounding in place, let me work through the five requirements
 
 Specifications, audit trails, recourse, independent review, sanctions. A deployment with all five has a working accountability framework. A deployment missing any of them has gaps that fail in predictable ways. Most deployed AI systems are missing two or more.
 
-<!-- → [TABLE: Figure 13.5 — The five accountability requirements as a deployment audit checklist. Columns: requirement, what it consists of, failure mode if absent, how to verify it is present, which cognitive tier it primarily depends on. Designed as a reusable audit instrument.] -->
+| Requirement | What it consists of | Failure mode if absent | How to verify it is present | Tier dependency |
+|---|---|---|---|---|
+| **Specifications** | Written task definition, input/output contracts, named acceptance criteria, signed by an accountable human | The deployment runs against unstated criteria; "the model said so" is the audit response | A reviewer can read the spec and predict what counts as success | Tier 4 |
+| **Audit trail** | Per-action log: inputs, outputs, tool calls, decisions, with timestamps and reviewers | Post-incident review reconstructs nothing | Pull a random recent incident; can the chain be reconstructed in under an hour? | Tier 6 |
+| **Recourse** | A documented channel for affected parties to contest, appeal, or repair | Affected parties have nowhere to go; complaints route to "support" with no resolution path | An external party can read the channel description and use it | Tier 5 |
+| **Independent review** | A reviewer outside the deployment team with authority to halt or revise | The deployment team marks its own homework | Named reviewer; documented review cadence; visible halt authority | Tier 7 |
+| **Sanctions** | A consequence regime — internal (employment, license) and external (regulator, civil) — that attaches to the named accountable human | Failures distribute across the team; no one bears the cost | Pull the policy; can a specific named role lose something specific for a specific failure? | Tiers 5 + 6 |
+
+*Designed as a reusable audit instrument. A regime that cannot tick all five boxes is a regime in which AI accountability is a slogan, not a practice.*
 
 ---
 
@@ -216,7 +269,16 @@ The U.S. NIST AI Risk Management Framework provides a structured approach to AI 
 
 The specific regimes will change. *The structural requirements will not change*, because they are the operational machinery accountability requires regardless of which regime imposes it. Build to that standard. Let the regime catch up.
 
-<!-- → [TABLE: Regulatory frameworks mapped to the five accountability requirements. Rows: EU AI Act (high-risk), NIST AI RMF, FDA AI/ML guidance, CFPB algorithmic credit guidance, EEOC AI employment guidance. Columns: which of the five requirements each regime explicitly imposes, which it implies, and which it leaves unaddressed. Final row: "structural requirements" — marking the requirements that every regime converges on regardless of sector. Student uses this to audit a specific deployment against the most relevant regime and identify which requirements fall outside the regime's reach.] -->
+| Regime | Specifications | Audit trail | Recourse | Independent review | Sanctions |
+|---|---|---|---|---|---|
+| **EU AI Act (high-risk)** | **Explicit** — risk-management & data-governance docs required | **Explicit** — logging mandated for high-risk systems | **Explicit** — right to explanation + complaint channels | **Explicit** — conformity assessment by notified body | **Explicit** — fines up to 7% of global turnover |
+| **NIST AI RMF** | **Implied** — "Map" and "Measure" functions | **Implied** — "Manage" function | Implied — stakeholder engagement | Implied — voluntary | **Unaddressed** — voluntary framework |
+| **FDA AI/ML guidance** | **Explicit** — predetermined change control plan, intended use | **Explicit** — real-world performance monitoring | **Explicit** — adverse-event reporting | **Explicit** — FDA review | **Explicit** — recall, market withdrawal |
+| **CFPB algorithmic credit guidance** | **Explicit** — adverse-action notice requirements | **Implied** — model documentation | **Explicit** — adverse-action explanation | Implied — supervisory exam | **Explicit** — UDAAP enforcement |
+| **EEOC AI employment guidance** | **Implied** — non-discrimination obligations | Implied — selection-procedure records | **Explicit** — Title VII complaint channel | **Implied** — agency investigation | **Explicit** — Title VII enforcement |
+| **Structural requirements** | All regimes: written specifications | All regimes: some form of trail | All regimes (high-stakes): a recourse channel | Variable | Variable |
+
+*Use this row by row to audit a deployment against the most relevant regime, then check the structural-requirements row for what every regime converges on regardless of sector.*
 
 ---
 
@@ -276,7 +338,11 @@ For **high-stakes, irreversible outputs** — drug candidates, structural engine
 
 The surgical analogy is apt. Nobody argues that the availability of AI-assisted surgical guidance means surgeons are optional. The surgeon does not become optional when the assistance becomes more capable. The surgeon's judgment — the Tier 2, Tier 4, and Tier 7 work — is what makes the output accountable. The AI assistance raises the capability ceiling. The human accountability structure is what makes exercising that capacity responsible.
 
-<!-- → [TABLE: Stakes-organized framework for human oversight. Three rows: low-stakes/reversible, moderate-stakes/partially-recoverable, high-stakes/irreversible. Columns: examples, appropriate oversight intensity, which cognitive tiers the human must engage, what "human in the loop" means at this tier (not just procedural presence), and what accountability failure looks like when humans are present but not engaging the required tier.] -->
+| Stakes | Examples | Appropriate oversight intensity | Tiers the human must engage | What "human in the loop" means here | Failure mode when humans are present but not engaging the required tier |
+|---|---|---|---|---|---|
+| **Low / reversible** | Draft generation, EDA, formatting | Spot-check (sample of outputs) | Tier 1–2 (procedural review) | Periodic sampling; quick rejection of obvious errors | Human becomes a rubber stamp; sampling cadence drifts to zero |
+| **Moderate / partially recoverable** | Customer-facing summaries, internal recommendations, content moderation at scale | Per-batch review or threshold-triggered review | Tiers 2–4 (interpretive judgment under ambiguity) | Reviewer reads each flagged case; can override with a written reason | Reviewer rubber-stamps; override rate drops without explanation |
+| **High / irreversible** | Medical decisions, legal filings, financial transactions, safety-critical control | Per-decision review with named accountable human | Tiers 4–7 (cross-domain judgment + accountability) | Named reviewer signs off; recourse channel live; sanctions attach to the named role | Reviewer signs off without engagement; "the model said so" is the answer to the audit |
 
 ---
 
@@ -458,20 +524,23 @@ End with: a one-paragraph claim about whether MY agent's deployment can support 
 
 ## 🕰️ AI Wayback Machine
 
-The ideas in this chapter didn't appear from nowhere. **Diane Vaughan** wrote the definitive sociology of how a catastrophic system failure can happen with no single villain — her concept "normalization of deviance" describes how accountability disappears one accommodation at a time. Here's a prompt to find out more — and then make it better.
+The ideas in this chapter didn't appear from nowhere. **John Dewey** spent the 1920s working out — most fully in *The Public and Its Problems* (1927) — what accountability requires when a harm is produced by an extended chain of indirect consequences that no single actor intended or even fully understood. His answer, briefly: a *public* forms whenever the indirect consequences of joint action are recognized and made traceable; a public that has not yet recognized the chain cannot hold anyone accountable; and the work of recognizing the chain is itself prior to the work of assigning responsibility. The chapter's argument that accountability for AI failures is a problem of *making the chain visible* before it is a problem of assigning blame is Dewey's argument, applied a century later.
+
+![John Dewey, c. 1920s. AI-generated portrait based on a public domain photograph (Wikimedia Commons).](images/john-dewey.jpg)
+*John Dewey, c. 1920s. AI-generated portrait based on a public domain photograph.*
 
 **Run this:**
 
 ```
-Who is Diane Vaughan, and how does her "normalization of deviance" — drawn from the Challenger disaster — connect to who is responsible when an AI system fails after a history of "small" accommodations? Keep it to three paragraphs. End with the single most surprising thing about her career or ideas.
+Who was John Dewey, and how does his account of *the public* — formed by tracing the indirect consequences of joint action — connect to the question of who is responsible when an AI system fails after a long, distributed chain of design and deployment decisions? Keep it to three paragraphs. End with the single most surprising thing about his career or ideas.
 ```
 
-→ Search **"Diane Vaughan"** on Wikipedia after you run this. See what the model got right, got wrong, or left out.
+→ Search **"John Dewey"** on Wikipedia after you run this. See what the model got right, got wrong, or left out.
 
 **Now make the prompt better.** Try one of these:
 
-- Ask it to explain "normalization of deviance" in plain language, as if you've never read organizational sociology
-- Ask it to compare Vaughan's Challenger account to a hypothetical AI failure with no single visible bad decision
-- Add a constraint: "Answer as if you're writing the opening of an accountability chapter"
+- Ask it to explain *indirect consequences as the unit of accountability* in plain language, as if you've never read pragmatist philosophy
+- Ask it to compare Dewey's *public* to the multi-stakeholder community that ought to be accountable for an AI deployment's downstream harms
+- Add a constraint: "Answer as if you're writing the accountability map for a post-incident review"
 
 What changes? What gets better? What gets worse?

@@ -76,7 +76,15 @@ Before drawing anything, know what kind of data each column contains. This matte
 
 This classification is not always obvious. A column called `zip_code` looks numeric but is categorical nominal — arithmetic on zip codes is meaningless. A column called `score` may be continuous, ordinal, or a calculated composite depending on how it was produced. Read the schema documentation before classifying.
 
-<!-- → [TABLE: Five-column reference table — Data Type | Examples | Natural Summary Statistics | Visualization Default | Key Questions to Ask. Row 1: Continuous numeric | salary, temperature, model confidence score | mean, median, std, min/max, percentiles | histogram (30 bins), box plot | Is the distribution skewed? Are there outliers? Does the range make physical sense? Row 2: Discrete numeric | number of visits, floor count | frequency table, mode | bar chart (treat as categorical if range < ~20 distinct values) | Are there impossible values? Gaps in the range? Row 3: Categorical nominal | city, product category, blood type | frequency, mode, entropy | bar chart sorted by frequency descending | Rare categories? Misspellings suggesting dirty data? Unexpected values? Row 4: Categorical ordinal | survey rating, education level, income bracket | frequency, mode | bar chart sorted by natural order | Is ordering preserved in the encoding? Are any levels absent? Row 5: Temporal | date, timestamp | min, max, range, count-by-period | line chart (record count over time) | Gaps in coverage? Seasonality? Sudden distribution changes? Caption: "Before drawing a single plot, classify every column. The correct visualization depends entirely on the data type — and the most dangerous classification error is treating a categorical column as numeric."] -->
+| Data Type | Examples | Natural Summary Statistics | Visualization Default | Key Questions to Ask |
+|---|---|---|---|---|
+| **Continuous numeric** | salary, temperature, model confidence score | mean, median, std, min/max, percentiles | histogram (30 bins), box plot | Is the distribution skewed? Are there outliers? Does the range make physical sense? |
+| **Discrete numeric** | number of visits, floor count | frequency table, mode | bar chart (treat as categorical if range < ~20 distinct values) | Are there impossible values? Gaps in the range? |
+| **Categorical nominal** | city, product category, blood type | frequency, mode, entropy | bar chart sorted by frequency descending | Rare categories? Misspellings suggesting dirty data? Unexpected values? |
+| **Categorical ordinal** | survey rating, education level, income bracket | frequency, mode | bar chart sorted by natural order | Is ordering preserved in the encoding? Are any levels absent? |
+| **Temporal** | date, timestamp | min, max, range, count-by-period | line chart (record count over time) | Gaps in coverage? Seasonality? Sudden distribution changes? |
+
+*Before drawing a single plot, classify every column. The correct visualization depends entirely on the data type — and the most dangerous classification error is treating a categorical column as numeric.*
 
 ### Step 1 — Get the shape of the dataset
 
@@ -244,7 +252,16 @@ The last question is the one that connects the procedural pass to the interrogat
 
 Once you start asking these questions, a list of structural failures begins to emerge — failures that almost never get surfaced by procedural EDA, and almost always show up in deployment.
 
-<!-- → [TABLE: Six-row reference table — Failure Mode | What it is | Why procedural EDA misses it | Example deployment consequence. Row 1: Sampling assumption | Training data drawn from a more accessible subpopulation than the deployment target | EDA only sees what is present; it cannot compare the present data to the absent target population | Model performs well on easy-to-reach customers, degrades on the long tail it was never trained on. Row 2: Time-window assumption | Training data covers a historical period that no longer reflects the deployment environment | EDA tools have no knowledge of what was true outside the dataset's time range | Model trained on 2019 data deployed in 2022 confidently predicts patterns that have shifted. Row 3: Label assumption | The label column measures an operational proxy, not the underlying construct of interest | EDA can show a label's distribution but cannot show the gap between the label and the construct | Re-arrest rate predicts re-arrest, not crime; click-through rate predicts clicks, not interest. Row 4: Missing not at random (MNAR) | Values are missing because of the value itself | The missingness and the data appear independent from within the dataset — the pattern only becomes visible by reasoning about why someone would not report | Income missingness concentrated in high earners; survival data missing the patients who died; both produce biased models. Row 5: Feature-engineering assumption | An input column is a calculated composite from an upstream model or analyst, not raw measurement | The column looks like data and has no missing values; its provenance is invisible unless documented | customer_lifetime_value encodes someone's old model's assumptions; when those assumptions break, so does the new model trained on them. Row 6: Access/boundary assumption | The effective data universe extends beyond the schema — through references, links, or embedded content | EDA validates the records that are present; it cannot follow references to data outside the schema | An agent given access to an email corpus implicitly has access to everything the emails reference or quote. Caption: "The six failures. Each has a structural reason it evades EDA. Memorizing the list matters less than being able to ask, for each column: why is this value here, and what is it not telling me?"] -->
+| Failure Mode | What it is | Why procedural EDA misses it | Example deployment consequence |
+|---|---|---|---|
+| **Sampling assumption** | Training data drawn from a more accessible subpopulation than the deployment target | EDA only sees what is present; it cannot compare the present data to the absent target population | Model performs well on easy-to-reach customers, degrades on the long tail it was never trained on |
+| **Time-window assumption** | Training data covers a historical period that no longer reflects the deployment environment | EDA tools have no knowledge of what was true outside the dataset's time range | Model trained on 2019 data, deployed in 2022, confidently predicts patterns that have shifted |
+| **Label assumption** | The label column measures an operational proxy, not the underlying construct of interest | EDA can show a label's distribution but cannot show the gap between the label and the construct | Re-arrest rate predicts re-arrest, not crime; click-through rate predicts clicks, not interest |
+| **Missing not at random (MNAR)** | Values are missing because of the value itself | The missingness and the data appear independent from within the dataset; the pattern only becomes visible by reasoning about why someone would not report | Income missingness concentrated in high earners; survival data missing the patients who died; both produce biased models |
+| **Feature-engineering assumption** | An input column is a calculated composite from an upstream model or analyst, not raw measurement | The column looks like data and has no missing values; its provenance is invisible unless documented | `customer_lifetime_value` encodes someone's old model's assumptions; when those assumptions break, so does the new model trained on them |
+| **Access/boundary assumption** | The effective data universe extends beyond the schema — through references, links, or embedded content | EDA validates the records that are present; it cannot follow references to data outside the schema | An agent given access to an email corpus implicitly has access to everything the emails reference or quote |
+
+*The six failures. Each has a structural reason it evades EDA. Memorizing the list matters less than being able to ask, for each column: why is this value here, and what is it not telling me?*
 
 There is the **sampling assumption**. Was this sample drawn from the population the model is going to be deployed against? Often, no. The sample is *available* data — meaning the data that was easiest to collect, which means it skews toward the easy-to-reach end of every distribution it was drawn from. You train on convenience samples and deploy against the world. The world is wider than the convenience sample, and you find this out slowly.
 
@@ -312,7 +329,13 @@ Now, you may be wondering: can I have an AI do some of this? You can, and you sh
 
 The procedural work is evidence of competence. The interrogation is evidence of understanding. The two are not the same, and only one of them is what makes the deployment safe.
 
-<!-- → [TABLE: Three-column delegation decision table — Category | What belongs here | Why. Row 1: Delegate freely | Shape/dtype inspection, summary statistics (.describe()), missingness counts and matrix, univariate histograms and bar charts, outlier flagging via IQR or Z-score, correlation heatmap, pair plots, temporal record counts | Well-defined operations; output is determinate; AI errors are immediately visible when you look at the result. Row 2: Verify before trusting | Interpretation of why a value is missing, claim that a distribution is "normal for this domain," narrative explanation of a detected anomaly, suggested imputation strategy | Requires domain knowledge the AI does not have; errors are not obviously visible in the output — they sound plausible. Row 3: Do not delegate | Epistemic-frame reconstruction (steps 1 and 3–6), prediction-lock and gap analysis, access-boundary scoping, row-tracing to source systems | The output of these steps is your engagement with the data — not the document it produces. A fluent AI-generated epistemic frame contains no information, because the AI started from the same documentation you did. Caption: "The line is not about AI capability — it is about what the work produces. Mechanical outputs have determinate right answers the AI can reach. The interrogation produces understanding that only comes from you confronting the data yourself."] -->
+| Category | What belongs here | Why |
+|---|---|---|
+| **Delegate freely** | Shape/dtype inspection, summary statistics (`.describe()`), missingness counts and matrix, univariate histograms and bar charts, outlier flagging via IQR or z-score, correlation heatmap, pair plots, temporal record counts | Well-defined operations; output is determinate; AI errors are immediately visible when you look at the result |
+| **Verify before trusting** | Interpretation of why a value is missing, claim that a distribution is "normal for this domain," narrative explanation of a detected anomaly, suggested imputation strategy | Requires domain knowledge the AI does not have; errors are not obviously visible in the output — they sound plausible |
+| **Do not delegate** | Epistemic-frame reconstruction (steps 1 and 3–6), prediction-lock and gap analysis, access-boundary scoping, row-tracing to source systems | The output of these steps is your engagement with the data, not the document it produces. A fluent AI-generated epistemic frame contains no information, because the AI started from the same documentation you did |
+
+*The line is not about AI capability — it is about what the work produces. Mechanical outputs have determinate right answers the AI can reach. The interrogation produces understanding that only comes from you confronting the data yourself.*
 
 ---
 
@@ -500,6 +523,9 @@ If I have access to the agent's system prompt or retrieval corpus, ALSO walk thr
 
 The ideas in this chapter didn't appear from nowhere. **Suzanne Briet** was asking what counts as evidence and how an object becomes a document — including her famous example of an antelope in a zoo — decades before anyone worried about how a dataset selects, frames, and silences. Here's a prompt to find out more — and then make it better.
 
+![Suzanne Briet, c. 1950s. AI-generated portrait based on a public domain photograph (Wikimedia Commons).](images/suzanne-briet.jpg)
+*Suzanne Briet, c. 1950s. AI-generated portrait based on a public domain photograph.*
+
 **Run this:**
 
 ```
@@ -515,3 +541,4 @@ Who was Suzanne Briet, and how does her claim that documents are made by social 
 - Add a constraint: "Answer as if you're writing a chapter epigraph for a textbook on data validation"
 
 What changes? What gets better? What gets worse?
+

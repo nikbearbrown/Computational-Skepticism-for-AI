@@ -58,7 +58,11 @@ The procedure for getting from the first to the second is unromantic. You write 
 
 This is documentation work. It is not glamorous. It is the difference between a pipeline that survives adoption review and one that does not.
 
-<!-- → [TABLE: Side-by-side comparison of untestable vs. testable handoff conditions. Three pairs of examples across different pipeline types (loan scoring, medical triage, content moderation). Columns: domain / untestable version / testable version / what interpretation was pinned down. Students use this as a template for the rewrite exercise. Figure 10.1] -->
+| Domain | Untestable version | Testable version | What interpretation got pinned down |
+|---|---|---|---|
+| **Loan scoring** | "The model is fair across borrowers." | "FPR equalized to within 2 pp across the four protected-class groups, on the audit sample drawn from Q3 2025." | *Fair* = equal FPR; *across borrowers* = the four named groups; *within* = tolerance specified |
+| **Medical triage** | "The model handles edge cases responsibly." | "On the held-out 200-case rare-condition set, sensitivity ≥ 0.95 and any false negative is escalated to clinician review within 30 min." | *Edge cases* = a named set; *responsibly* = a metric and an escalation contract |
+| **Content moderation** | "The model respects context." | "On the 500-case context-flip set (same text, different source community), the moderation decision changes ≤ 2% of the time." | *Context* = the source community; *respects* = decision invariance under that change, with a tolerance |
 
 ---
 
@@ -78,7 +82,13 @@ There are five supervisory capacities I introduced in Chapter 1, and this is the
 
 Each of these is a job in a pipeline, with a documented operational form. The first team in the opening had no documented operational forms. The second team had all of them.
 
-<!-- → [TABLE: The five supervisory capacities as pipeline jobs — columns: capacity name / operational form in a pipeline / the artifact that documents it / failure mode if absent. Students should be able to audit a pipeline against this table. Figure 10.2] -->
+| Capacity | Operational form in a pipeline | Artifact that documents it | Failure mode if absent |
+|---|---|---|---|
+| **Plausibility Auditing** | Independent check of model output against domain ground truth at each step | Plausibility audit log per output batch | Confidently wrong outputs ship; failures only surface downstream |
+| **Problem Formulation** | Pre-deployment scoping doc that names the question, the data scope, and the failure modes anticipated | Scoping doc + deviation log | Pipeline solves the wrong problem fluently |
+| **Tool Orchestration** | A per-step tool inventory: tools allowed, tools forbidden, budgets, rate limits | Tool inventory + per-action log | Resource exhaustion; tool misuse; uncontrolled side effects |
+| **Interpretive Judgment** | Domain reviewer note on every high-stakes output, with disposition | Review log with named reviewers | Ambiguous outputs proceed unchallenged; "the model said so" becomes the audit response |
+| **Executive Integration** | Decision protocol when capacities conflict — who decides, on what evidence, with what sign-off | Signed decision log | Failures distribute across the team with no accountable human |
 
 ---
 
@@ -100,7 +110,13 @@ The fifth question is *audit trail clarity*. Does the AI's action leave a trail 
 
 The five questions sort sub-tasks into three buckets: appropriate for AI execution, human-only, and hybrid (AI-assisted with human verification at specified handoff conditions). The output of the assessment is not a recommendation per se. It is a *documented justification for the delegation choice* that becomes part of the pipeline documentation.
 
-<!-- → [TABLE: The Boondoggle Score as a decision worksheet — rows: the five questions (verification cost, stakes, distribution match, reversibility, audit trail clarity). Columns: question / what low risk looks like / what high risk looks like / which delegation bucket a high-risk answer pushes toward. Designed as a fillable worksheet for each sub-task. Figure 10.3] -->
+| Question | What low risk looks like | What high risk looks like | Where high risk pushes the delegation |
+|---|---|---|---|
+| **Verification cost** | Output is checkable in seconds; the right answer is obvious by inspection | Verification requires a domain expert + ≥ 30 min per item | Toward verify-before-trust or do-not-delegate |
+| **Stakes** | Wrong answers waste time but harm no one outside the team | Wrong answers reach external parties, regulators, or vulnerable users | Toward do-not-delegate without independent review |
+| **Distribution match** | Inputs match the AI's training distribution; failures are visible | Inputs are tail cases or out-of-distribution by construction | Toward verify-before-trust with explicit OOD checks |
+| **Reversibility** | Outputs are drafts that can be discarded | Outputs trigger irreversible action (a write, a wire, a publication) | Toward do-not-delegate without a hard human-approval gate |
+| **Audit trail clarity** | Every step is logged with inputs, outputs, and timestamps | The chain of decisions is opaque or scattered across systems | Toward do-not-delegate until logging is in place |
 
 ---
 
@@ -121,7 +137,18 @@ Items 1–4 are standard engineering documentation. Items 5–8 are the supervis
 
 The test for completeness: can an engineer who did not build the pipeline read the map and determine, for any given case, whether each step was executed correctly? If not, one of the eight items is missing or untestable.
 
-<!-- → [TABLE: Delegation map eight-item structure — two columns: item name and "what 'missing' looks like in practice." Rows for items 1–8. Items 5–8 each have a brief note explaining why they are the supervisory additions and what a pipeline loses when each is absent. Designed as a checklist for reviewing any pipeline map. Figure 10.4] -->
+| Item | What 'missing' looks like in practice |
+|---|---|
+| 1. **Task definition** | The handoff specification is vague; two reviewers reading it would disagree about what the AI is supposed to do |
+| 2. **Input contract** | The inputs are unscoped; the AI receives data of types or sources not anticipated at design time |
+| 3. **Output contract** | The expected output shape, format, and acceptance criteria are not written down |
+| 4. **Tool inventory** | No record of which tools the AI may call; no budget caps or rate limits |
+| 5. **Plausibility check** *(supervisory addition)* | No independent check that the output corresponds to the world it represents — a pipeline loses the ability to catch confidently wrong outputs |
+| 6. **Failure routing** *(supervisory addition)* | No declared escalation path — failures distribute across the team with no one accountable |
+| 7. **Audit trail** *(supervisory addition)* | The chain of inputs, decisions, and outputs cannot be reconstructed after the fact — post-incident review becomes impossible |
+| 8. **Sign-off authority** *(supervisory addition)* | No named human is the accountable decision-maker — the pipeline runs but no one can be held to its outputs |
+
+*Items 5–8 are what distinguishes a supervised pipeline from a delegated one. A pipeline missing any of items 1–4 is broken. A pipeline missing any of items 5–8 is unsupervised — even if it appears to be working.*
 
 ---
 
@@ -206,7 +233,13 @@ After reviewing the /v1 summary, I commit to three principles:
 
 **Why principles are a human step.** Gru can generate plausible-sounding principles from the problem summary. It cannot determine which trade-offs are right for this deployment. The "citation fidelity over fluency" principle rules out a large class of AI behavior that users of general-purpose summarizers accept routinely. That ruling-out is a values choice. It encodes my judgment that researchers are better served by honest gaps than confident hallucinations. I have to make that judgment. Gru cannot make it for me, because making it requires knowing what harms researchers in my target domain — and that knowledge is not in the prompt.
 
-<!-- → [TABLE: Architecture principles for the Paper Summarizer — columns: principle name, design commitment, one decision that honors it, one decision that violates it, failure state if ignored. Figure 10.6] -->
+| Principle | Design commitment | One decision that honors it | One decision that violates it | Failure state if ignored |
+|---|---|---|---|---|
+| **Provenance preservation** | Every claim in the output is traceable to a span in the input paper | Each generated sentence carries a citation key linked to a source span | Output mixes paraphrase with synthesis without citation keys | Reviewer cannot tell which claims are summarized vs. fabricated |
+| **Bounded autonomy** | The pipeline cannot reach data outside the input PDF | Tools are scoped to the file path; no web fetch | A "supplementary lookup" tool added without scope review | Hallucinated citations from outside the corpus |
+| **Independent verification** | A second pass checks the first pass | A separate plausibility-audit step runs against the source spans | The summarization model also self-verifies in the same call | Errors that the model cannot catch about itself ship downstream |
+| **Disclosure as default** | Every step the AI did is visible to the reader | Per-step AI Use Disclosure block in the output | The disclosure is opt-in or buried in a footer | Readers cannot calibrate trust in the output |
+| **Reversible defaults** | The pipeline produces drafts, not final commitments | Output is a markdown draft, not an autopublished post | Output is auto-pushed to a public surface | A bad summary ships before review |
 
 ### Step 4 — Core user flows with /v3
 
@@ -501,7 +534,16 @@ For the Paper Summarizer, the Disclosure for a single processed paper would read
 
 For the Disclosure to function as a supervisory log rather than a compliance checkbox, it has to be four things: granular (per step), honest (documenting corrections and gaps, not just smooth handoffs), time-stamped, and tied to evidence. The Methods correction in Step 3 is not embarrassing. It is the data point that tells you the pipeline caught a domain-critical qualification that would have misled a downstream reader. That is the system working. The Disclosure makes it visible.
 
-<!-- → [TABLE: AI Use Disclosure format for one step — rows matching the Paper Summarizer Step 3 example. Columns: field name / what goes here / what "missing" or "vague" looks like. Bottom row annotated: "The correction is not embarrassing. It is the data that proves the pipeline is working." Designed as a per-step form template. Figure 10.10] -->
+| Field | What goes here | What 'missing' or 'vague' looks like |
+|---|---|---|
+| **Step name** | Specific step identifier (e.g., "Step 3 — extract methods section") | "AI helped" |
+| **Tool used** | Named model + version + temperature/sampling settings | "An LLM" |
+| **Input** | Exact input passed to the tool, with provenance link | "Some text from the paper" |
+| **Output** | Exact output received | A polished paragraph with no diff visible |
+| **Verification done** | The named check applied to the output, by whom, with disposition | "Reviewed" |
+| **Correction made (if any)** | The specific change, the reason, and the source span the correction relied on | (Field omitted) |
+
+*The correction is not embarrassing. It is the data that proves the pipeline is working.*
 
 ---
 
@@ -675,20 +717,23 @@ Plus a one-paragraph note on the deployment's TRUST CALIBRATION failure mode: is
 
 ## 🕰️ AI Wayback Machine
 
-The ideas in this chapter didn't appear from nowhere. **Lisanne Bainbridge** named the central paradox of supervising automated systems — the more reliably the machine runs, the rarer and harder the human's job becomes — in 1983, decades before the question got asked again about AI. Here's a prompt to find out more — and then make it better.
+The ideas in this chapter didn't appear from nowhere. **Donald Broadbent** ran the Applied Psychology Unit at Cambridge from 1958 to 1974 and produced the foundational work — *Perception and Communication* (1958), *Decision and Stress* (1971) — on how human attention degrades under monotony, low signal rate, and the structural conditions that supervisory roles tend to produce. The paradox of the well-running automated system is, in Broadbent's vocabulary, a vigilance problem: the rare event the supervisor is supposed to catch is rare specifically because the system runs well, and the supervisor's attentional capacity for that rare event has been quietly eroded by the monotony of the long stretches in between.
+
+![Donald Broadbent, c. 1960s. AI-generated portrait based on a public domain photograph (Wikimedia Commons).](images/donald-broadbent.jpg)
+*Donald Broadbent, c. 1960s. AI-generated portrait based on a public domain photograph.*
 
 **Run this:**
 
 ```
-Who was Lisanne Bainbridge, and how does her "Ironies of Automation" connect to the supervisory role a person actually has when they're delegating to an AI tool that mostly works? Keep it to three paragraphs. End with the single most surprising thing about her career or ideas.
+Who was Donald Broadbent, and how does his work on *vigilance and attention under low-signal conditions* connect to the supervisory role a person actually has when they're delegating to an AI tool that mostly works — and whose rare failures are the ones the supervisor is supposed to catch? Keep it to three paragraphs. End with the single most surprising thing about his career or ideas.
 ```
 
-→ Search **"Lisanne Bainbridge"** on Wikipedia after you run this. See what the model got right, got wrong, or left out.
+→ Search **"Donald Broadbent"** on Wikipedia after you run this. See what the model got right, got wrong, or left out.
 
 **Now make the prompt better.** Try one of these:
 
-- Ask it to explain the central irony of automation in plain language, as if you've never thought about what supervision actually requires
-- Ask it to compare Bainbridge's 1983 industrial-process examples to delegating to a modern AI assistant
-- Add a constraint: "Answer as if you're writing a sidebar in a chapter on delegation and trust"
+- Ask it to explain *vigilance decrement* in plain language, as if you've never read attention research
+- Ask it to compare Broadbent's filter model of attention to the supervisor of a 99.5%-correct AI system
+- Add a constraint: "Answer as if you're writing the staffing rationale for a human-in-the-loop deployment"
 
 What changes? What gets better? What gets worse?

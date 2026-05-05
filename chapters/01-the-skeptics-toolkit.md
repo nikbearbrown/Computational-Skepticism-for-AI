@@ -348,20 +348,23 @@ End with a one-paragraph "System Dossier" I can paste into my Claude Project's s
 
 ## 🕰️ AI Wayback Machine
 
-The ideas in this chapter didn't appear from nowhere. **Sandra Harding** has spent decades arguing that real skepticism has to ask who built the tool, whose questions it was built for, and what got designed out — long before "AI bias" was a phrase anyone recognized. Here's a prompt to find out more — and then make it better.
+The ideas in this chapter didn't appear from nowhere. **Karl Popper** spent the 1930s working out which kinds of claims a scientific community can argue about productively and which it cannot — *demarcation* — and his answer (a claim is scientific only if it forbids some observation it could be checked against) is the spine of the toolkit you are about to use. The instruments in this chapter — falsifiability, prediction-lock before observation, the willingness to name what would change your mind — are Popper's instruments, applied to AI systems whose outputs the community has not yet learned to argue about productively.
+
+![Karl Popper, c. 1950s. AI-generated portrait based on a public domain photograph (Wikimedia Commons).](images/karl-popper.jpg)
+*Karl Popper, c. 1950s. AI-generated portrait based on a public domain photograph.*
 
 **Run this:**
 
 ```
-Who is Sandra Harding, and how does her concept of "strong objectivity" connect to what a skeptic's toolkit for AI should actually contain? Keep it to three paragraphs. End with the single most surprising thing about her career or ideas.
+Who was Karl Popper, and how does his demarcation criterion — that a scientific claim must forbid some observation that could refute it — connect to what a skeptic's toolkit for AI should actually contain? Keep it to three paragraphs. End with the single most surprising thing about his career or ideas.
 ```
 
-→ Search **"Sandra Harding"** on Wikipedia after you run this. See what the model got right, got wrong, or left out.
+→ Search **"Karl Popper"** on Wikipedia after you run this. See what the model got right, got wrong, or left out.
 
 **Now make the prompt better.** Try one of these:
 
-- Ask it to explain "standpoint theory" in plain language, as if you've never read philosophy of science
-- Ask it to compare Harding's "strong objectivity" to a checklist a working AI auditor could use
-- Add a constraint: "Answer as if you're writing the opening of a textbook on the skeptic's toolkit"
+- Ask it to explain *falsifiability* in plain language, as if you've never read philosophy of science
+- Ask it to compare Popper's demarcation move to the prediction-lock move this chapter teaches
+- Add a constraint: "Answer as if you're writing the rationale for the first move in a validator's toolkit"
 
 What changes? What gets better? What gets worse?

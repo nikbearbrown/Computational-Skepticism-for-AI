@@ -202,7 +202,19 @@ Confirmation bias compounds with publication bias when a team designs a study to
 
 This is why the leverage analysis procedure in the later section asks you to draw the *full* causal graph. A single graph can show all the active bias types, their entry points, and whether their paths are independent or overlapping. Overlapping paths mean that blocking one without blocking the other leaves the bias carrying through.
 
-<!-- → [TABLE: Bias type interaction matrix. Rows and columns both list the ten bias types. Each cell answers: "If type A is present, does it make type B more likely, less likely, or independent?" Fill in known compound patterns: selection bias × historical bias = amplifying (more data from discriminatory period); observer bias × data coding bias = amplifying (annotator priors become categorical rules); confirmation bias × publication bias = amplifying (study designed to confirm + only positive results published). Empty or "independent" cells for pairs without known interactions. Purpose: student uses this to anticipate which types to check for when one type is already confirmed.] -->
+| Bias pair | Interaction | Mechanism |
+|---|---|---|
+| Selection × Historical | **amplifying** | More data drawn from a discriminatory period reinforces historical signal |
+| Observer × Data-coding | **amplifying** | Annotator priors become categorical rules baked into the labels |
+| Confirmation × Publication | **amplifying** | Studies designed to confirm + only positive results published = compounded distortion |
+| Sampling × Measurement | **amplifying** | A non-representative sample combined with a noisy proxy yields error in two directions at once |
+| Aggregation × Subgroup-mask | **amplifying** | A pooled metric hides a subgroup the aggregation was designed to summarize over |
+| Evaluation × Deployment | **amplifying** | Test-set composition unlike deployment population produces overconfident generalization |
+| Annotation × Class-imbalance | **amplifying** | Rare-class boundary is exactly where annotator disagreement is highest |
+| Linkage × Re-identification | **amplifying** | Joining two anonymous tables reveals identity through unique field combinations |
+| All other pairs | **independent / unknown** | No documented compound pattern; check each in isolation |
+
+*If one bias type is confirmed in your pipeline, check the row pairs marked* amplifying *first.*
 
 ---
 
@@ -236,7 +248,14 @@ But there is something even deeper in the COMPAS case. The data being analyzed w
 
 This is what I mean by reading the dataset like a historian. The deepest dataset bugs are not data-quality issues in the QA sense. They are mismatches between what the data is and what the modeler thinks it is. The modeler thinks they are predicting recidivism. They are actually predicting re-arrest given recidivism given policing given everything that shapes both. A model trained on that data, deployed without that frame, makes the unevenness invisible by laundering it through an algorithm.
 
-<!-- → [TABLE: Fairness impossibility. Three rows: fairness criterion, formal definition, what it requires. Row 1: calibration parity — equal PPV across groups. Row 2: equal FPR — equal false positive rates. Row 3: equal FNR — equal false negative rates. Final row: "All three simultaneously" → "Only achievable when base rates are equal." Student should be able to diagnose which criterion any given audit is using.] -->
+| Fairness criterion | Formal definition | What it requires |
+|---|---|---|
+| **Calibration parity** | $P(Y=1 \mid \hat{Y}=s, A=a)$ equal across groups $a$ at every score $s$ | A score of 0.7 means the same thing for every group |
+| **Equal FPR** | $P(\hat{Y}=1 \mid Y=0, A=a)$ equal across groups | The cost of being wrongly flagged is shared equally |
+| **Equal FNR** | $P(\hat{Y}=0 \mid Y=1, A=a)$ equal across groups | The cost of being missed is shared equally |
+| **All three simultaneously** | All of the above hold jointly | *Only achievable when base rates are equal across groups.* |
+
+*Pick the audit criterion that fits the harm structure of the deployment. The impossibility theorem rules out picking all three.*
 
 ---
 
@@ -262,7 +281,14 @@ These two can come apart in ways that matter. A model can show no observed dispa
 
 Most deployed bias-mitigation pipelines work on Rung 1. They adjust the conditional distributions until the metric reads the way the engineer wants. This is sometimes useful. It is rarely sufficient, because the question of whether the bias is *caused* by the variable in question is a Rung 2 question, and Rung 1 cannot answer it.
 
-<!-- → [TABLE: Rung 1 vs Rung 2 — same fairness claim at two rungs. Three columns: the fairness question, Rung 1 formulation (observational), Rung 2 formulation (interventional). Four rows covering: loan denial by race; model error rates by group; recidivism risk score; hiring outcome. For each row the student sees the Rung 1 metric that gets reported and the Rung 2 question it cannot answer. Drives home why equal Rung 1 metrics don't certify fairness and why a Rung 1 disparity doesn't always mean causal discrimination.] -->
+| Fairness question | Rung 1 formulation (observational) | Rung 2 formulation (interventional) |
+|---|---|---|
+| **Loan denial by race** | Is the denial rate equal across racial groups in the data? | If we *intervened* to change race while holding all other features fixed, would the denial rate change? |
+| **Model error rates by group** | Are FPR and FNR equal across groups in the test set? | If we changed group membership while holding the underlying outcome fixed, would the error rate change? |
+| **Recidivism risk score** | Are score distributions equal across groups, conditional on outcome? | If we intervened on the protected attribute, would the score for the same individual change? |
+| **Hiring outcome** | Is the hire rate proportional across applicant groups? | If two applicants were identical except for the protected attribute, would the hiring decision differ? |
+
+*Equal Rung 1 metrics do not certify causal fairness. A Rung 1 disparity does not always mean causal discrimination. The two rungs answer different questions.*
 
 ---
 
@@ -491,20 +517,23 @@ End with: a one-page "Bias & Leverage Brief" for my casebook. Include the DAG, t
 
 ## 🕰️ AI Wayback Machine
 
-The ideas in this chapter didn't appear from nowhere. **Latanya Sweeney** ran controlled experiments showing how everyday algorithms encode racial bias — and identified the leakage points decades before "algorithmic accountability" was a research field. Here's a prompt to find out more — and then make it better.
+The ideas in this chapter didn't appear from nowhere. **Hannah Arendt** spent the postwar decades arguing — most famously in *Eichmann in Jerusalem* (1963) — that systemic harm is rarely the work of monstrous individuals. It is the predictable output of a system whose roles, rules, and routines diffuse responsibility across so many actors that no single one feels accountable for the result. The chapter's question — *where bias enters and who is responsible* — is Arendt's question, restated for a pipeline whose participants include data brokers, annotators, modelers, deployers, and a model that is not, itself, a moral agent.
+
+![Hannah Arendt, c. 1950s. AI-generated portrait based on a public domain photograph (Wikimedia Commons).](images/hannah-arendt.jpg)
+*Hannah Arendt, c. 1950s. AI-generated portrait based on a public domain photograph.*
 
 **Run this:**
 
 ```
-Who is Latanya Sweeney, and how do her studies on data re-identification and discriminatory online ads connect to the question of where bias enters an AI pipeline and who bears responsibility for it? Keep it to three paragraphs. End with the single most surprising thing about her career or ideas.
+Who was Hannah Arendt, and how does her account of *the banality of evil* — that systemic harm is produced by the diffuse, role-bound action of many people none of whom would do it alone — connect to the question of where bias enters an AI pipeline and who bears responsibility for it? Keep it to three paragraphs. End with the single most surprising thing about her career or ideas.
 ```
 
-→ Search **"Latanya Sweeney"** on Wikipedia after you run this. See what the model got right, got wrong, or left out.
+→ Search **"Hannah Arendt"** on Wikipedia after you run this. See what the model got right, got wrong, or left out.
 
 **Now make the prompt better.** Try one of these:
 
-- Ask it to explain "k-anonymity" in plain language, as if you've never read a privacy paper
-- Ask it to compare Sweeney's name-based ad-bias study to a bias audit you could run on a deployed AI system today
-- Add a constraint: "Answer as if you're writing an opening case for a chapter on where bias enters"
+- Ask it to explain *the banality of evil* in plain language, as if you've never read postwar political theory
+- Ask it to compare Arendt's analysis of role-bound action to a multi-actor ML pipeline (data brokers, annotators, modelers, deployers)
+- Add a constraint: "Answer as if you're writing the accountability section of a model card"
 
 What changes? What gets better? What gets worse?

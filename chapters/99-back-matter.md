@@ -269,3 +269,4 @@ Wittgenstein, Ludwig. *Philosophical Investigations*. Translated by G. E. M. Ans
 ## Index
 
 *Omitted for online release. For print editions, compile after all other content is final using dedicated indexing software or a professional indexer. Key terms suitable for indexing include: adversarial examples, agentic systems, audit trail, base rate, calibration, causal inference, COMPAS, counterfactual, data validation, delegation map, desirable difficulties, distribution shift, equalized odds, explainability, fairness impossibility theorem, falsifiability, fluency trap, Frictional method, governance counterfactual, handoff condition, heavy-tailed distributions, induction, interpretability, label bias, LIME, Pearl's ladder, plausibility auditing, posterior probability, prior probability, robustness, SHAP, structural bias, supervisory capacities, transparency, trust calibration, verb taxonomy.*
+

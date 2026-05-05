@@ -157,7 +157,15 @@ This case establishes the concept of *effective data scope* — the scope of dat
 
 **Validation lens:** Data validation — specifically, the epistemic-artifact question from Chapter 3 applied to data access. What data does the agent have access to? What does it *claim* to access? What does it *actually* access in response to an indirect request?
 
-<!-- → [TABLE: Effective data scope audit template. Rows: each data source the agent has access to (email, file system, calendar, etc.). Columns: (1) documented access scope; (2) effective access scope — what can be extracted through indirect requests; (3) disclosure conditions — what requests trigger disclosure; (4) authorization check — is there one? This template, filled for the deployment, is what would have caught Cases #2 and #3 before deployment.] -->
+| Data source | Documented access scope | Effective access scope (what can be extracted indirectly) | Disclosure conditions (which requests trigger disclosure) | Authorization check present? |
+|---|---|---|---|---|
+| **Email** | Inbox + sent folder for the agent's account | Anything quoted in any email; any address mentioned; any attachment referenced; the social graph implied by recipients | Direct read; quoted content in a reply; meta-questions about senders or topics | ☐ Yes ☐ No |
+| **File system** | Project directory | Anything linked from a project file; anything referenced by path string in a doc; entire user home if a parent reference exists | Direct read; reference resolution; symlink traversal | ☐ Yes ☐ No |
+| **Calendar** | Event list for the agent's account | Attendee names; meeting titles that quote private context; recurring-event metadata | Direct read; summary requests; participant queries | ☐ Yes ☐ No |
+| **CRM / ticketing** | Records visible to the agent's role | Records linked to from those records; cross-tenant data if the schema joins | Direct read; relationship traversal; aggregation queries | ☐ Yes ☐ No |
+| **Web fetch** | URLs explicitly allowed | Anything reachable from those URLs by hyperlink; redirects out of the allowlist | Each fetch + each followed link | ☐ Yes ☐ No |
+
+*Filled before deployment, this template would have caught Cases #2 and #3 — the "documented" scope was a small fraction of the effective scope.*
 
 ### Case #4: Waste of Resources (Looping)
 
@@ -275,7 +283,15 @@ The *Agents of Chaos* study draws an explicit distinction that is critical for v
 
 **Why this distinction matters for validation.** If you treat a fundamental failure as contingent, you will propose a fix that addresses the surface expression of the failure without touching the structural cause. The engineer who patches the email-deletion gap in Case #1 without gating irreversible actions on independent state verification has addressed the specific tool gap while leaving the underlying self-model deficit fully open. The next case will look different and produce the same failure.
 
-<!-- → [TABLE: Fundamental vs. contingent failures. Three columns: failure type, cases, and whether engineering alone can address it. Rows: (1) missing tool (Case #1 email deletion — contingent); (2) prompt injection via external files (Cases #8, #10 — fundamental — the architecture cannot distinguish instructions from data); (3) observability modeling (Case #1 public posting — fundamental — requires agent-level audience-boundary representation); (4) resource constraint awareness (Cases #4, #5 — contingent with the right guardrails); (5) autonomy-competence gap (Cases #1, #4, #5 — fundamental — may require architectural change). Student uses this table to route proposed fixes to the right category.] -->
+| Failure type | Cases | Engineering alone can address it? |
+|---|---|---|
+| **Missing tool** | Case #1 (email deletion mid-task) | Yes — *contingent*. Add the tool; the failure goes away |
+| **Prompt injection via external files** | Cases #8, #10 | No — *fundamental*. The architecture cannot reliably distinguish instructions from data when both arrive in the same input stream |
+| **Observability modeling** | Case #1 (public posting) | No — *fundamental*. The agent needs an audience-boundary representation it does not currently have |
+| **Resource constraint awareness** | Cases #4, #5 | Yes (with the right guardrails) — *contingent*. Budget caps and rate limits work when explicitly wired in |
+| **Autonomy-competence gap** | Cases #1, #4, #5 | No — *fundamental*. May require architectural change; better prompting does not close it |
+
+*Use this routing before proposing a fix. A patch on a fundamental failure ships the failure mode in a slightly different form.*
 
 ---
 
@@ -348,7 +364,15 @@ The specific responsibility questions the study raises:
 
 *The policy gap.* The study notes that NIST's AI Agent Standards Initiative, announced February 2026, identifies agent identity, authorization, and security as priority areas for standardization. The failures documented — unauthorized compliance, identity spoofing, cross-agent propagation — are precisely what such standards need to prevent. Whether current architectures can support such standards is an open question. What is not open is that deploying agents without answering these questions is a choice, and the choice has consequences.
 
-<!-- → [TABLE: Responsibility mapping template. Rows: each actor in the deployment (owner, non-owner, model provider, framework developer, deploying organization). Columns: what they can control, what failure modes fall within their responsibility, what failure modes are outside their control, what monitoring they are responsible for. This template, filled before deployment, is the responsibility documentation the study calls for.] -->
+| Actor | What they can control | Failure modes within their responsibility | Failure modes outside their control | Monitoring they are responsible for |
+|---|---|---|---|---|
+| **Owner (deploying user)** | The deployment configuration, the supervisory checks, the escalation rules | Misuse, missing oversight, ignoring escalation signals | Model-provider regressions, framework defaults | Daily review of agent actions, weekly outcome audit |
+| **Non-owner (third-party user)** | The instructions issued, the data shared with the agent | Instruction-induced misuse | Owner's failure to constrain | Their own session activity log |
+| **Model provider** | Model weights, system-level guardrails, capability claims | Refusal to acknowledge known failure modes; capability over-promise | Owner's deployment configuration | Public capability bulletin, regression disclosure |
+| **Framework developer** | Tooling defaults, sandbox boundaries, observability hooks | Insecure defaults, missing audit primitives | Specific deployments built on the framework | Security advisories, default-config audits |
+| **Deploying organization** | Procurement, governance, training, post-incident review | Selecting a deployment without an audit; failing to investigate incidents | Individual user error within a properly designed deployment | Incident-response process, accountability map |
+
+*Filled before deployment, this template is the responsibility documentation a regulator or post-incident review would expect.*
 
 ---
 
@@ -382,7 +406,13 @@ Agentic AI is the chapter where the supervisory framework from Chapter 1 shows i
 
 The supervisory role for agents is not primarily technical. It is interpretive, integrative, and judgment-heavy. The supervisor's job is to read what the agent did, in context, and decide what it means. The reading requires the lenses; the deciding requires the integration. Neither is automatable. The technology becoming more capable makes the supervisory work *more* important, not less.
 
-<!-- → [TABLE: Five Supervisory Capacities mapped to the eleven cases. Rows: the five capacities (Plausibility Auditing, Problem Formulation, Tool Orchestration, Interpretive Judgment, Executive Integration). Columns: definition, the cases where the capacity's failure is the primary failure mechanism, the specific question the capacity asks in an agentic context, and what the audit trail should show. Example cells: Plausibility Auditing → Case #1 (reported state vs. actual state divergence) → "Does the agent's completion report match independent world-state observation?" → "Independent state check log entry after each irreversible action." Student uses this as a validation checklist — one row per supervisory capacity, filled out for a specific deployment.] -->
+| Capacity | Definition | Cases where its failure is the primary mechanism | Question the capacity asks | What the audit trail should show |
+|---|---|---|---|---|
+| **Plausibility Auditing** | Checking whether a fluent, structurally valid output corresponds to the world it represents | Case #1 (reported state vs. actual state divergence), Case #6 | "Does the agent's completion report match independent world-state observation?" | An independent state check log entry after each irreversible action |
+| **Problem Formulation** | Specifying *what the right task is* before delegating it | Cases #2, #3 (effective scope larger than documented scope) | "Did we specify the constraints that the deployment context actually imposes?" | A pre-deployment scoping document; a deviation log when reality exceeds the scope |
+| **Tool Orchestration** | Selecting and sequencing the right tools for the right step | Cases #4, #5 (resource exhaustion through poor tool choice) | "Are the tools available, the tools used, and the tools forbidden each documented and bounded?" | A per-action tool log with rate limits and budget caps visible |
+| **Interpretive Judgment** | Applying domain knowledge to evaluate ambiguous outputs | Cases #7, #9 (output plausible but wrong in this domain) | "Is this output correct given what only the practitioner knows about this case?" | A reviewer note on each high-stakes output, with disposition reasoning |
+| **Executive Integration** | Tying all four capacities together in the moment of decision | Cases #8, #10, #11 (composite failures spanning multiple capacities) | "When the four capacities pull in different directions, what does the supervisor decide and why?" | A decision log with the capacity weights named, signed by an accountable human |
 
 ---
 
@@ -586,20 +616,23 @@ Save everything to my casebook folder. Mention which Chapter 4 prediction-locks 
 
 ## 🕰️ AI Wayback Machine
 
-The ideas in this chapter didn't appear from nowhere. **Lucy Suchman** spent the late 1980s embedded with the AI labs that were building plan-based agents and arguing that the agents would fail in real situations because human action is situated, not pre-computed. Here's a prompt to find out more — and then make it better.
+The ideas in this chapter didn't appear from nowhere. **Maurice Merleau-Ponty** wrote *Phenomenology of Perception* (1945) to argue that purposive action is not the execution of a pre-computed plan; it is a moment-by-moment adjustment carried out by a body that is already inside the situation, sensing it, responding to it, revising what it is doing. An agent that has no body in the situation — that has only the plan, only the tool calls, only the next-token prediction — fails the way the chapter's case studies fail: not in the plan but in the gap between the plan and the situation the plan did not anticipate.
+
+![Maurice Merleau-Ponty, c. 1950s. AI-generated portrait based on a public domain photograph (Wikimedia Commons).](images/maurice-merleau-ponty.jpg)
+*Maurice Merleau-Ponty, c. 1950s. AI-generated portrait based on a public domain photograph.*
 
 **Run this:**
 
 ```
-Who is Lucy Suchman, and how does her argument in "Plans and Situated Actions" connect to why agentic AI systems misbehave when deployed outside the conditions their designers imagined? Keep it to three paragraphs. End with the single most surprising thing about her career or ideas.
+Who was Maurice Merleau-Ponty, and how does his account of *embodied, situated action* — that purposive behavior is moment-by-moment adjustment, not the execution of a pre-computed plan — connect to why agentic AI systems misbehave when deployed outside the conditions their designers imagined? Keep it to three paragraphs. End with the single most surprising thing about his career or ideas.
 ```
 
-→ Search **"Lucy Suchman"** on Wikipedia after you run this. See what the model got right, got wrong, or left out.
+→ Search **"Maurice Merleau-Ponty"** on Wikipedia after you run this. See what the model got right, got wrong, or left out.
 
 **Now make the prompt better.** Try one of these:
 
-- Ask it to explain "situated action" in plain language, as if you've never read an anthropology of work
-- Ask it to compare Suchman's PARC-era plan critiques to a recent agent-misbehavior case from the press
-- Add a constraint: "Answer as if you're writing a case study for a chapter on validating agentic AI"
+- Ask it to explain *situated action* in plain language, as if you've never read phenomenology
+- Ask it to compare Merleau-Ponty's account of bodily presence to the absence of bodily presence in a tool-calling agent
+- Add a constraint: "Answer as if you're writing a pre-deployment review of a customer-service agent's failure modes"
 
 What changes? What gets better? What gets worse?

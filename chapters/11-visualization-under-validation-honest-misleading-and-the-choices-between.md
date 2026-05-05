@@ -236,7 +236,13 @@ The rules are best learned from failures. Three cases, all real, all instructive
 
 **Lesson:** evidence-grade visualization shows what would have to be true for the conclusion to be wrong, not just what supports the conclusion.
 
-<!-- → [TABLE: Three cases summary. Rows: Challenger 1986, El País Catalonia 2014, Snow's cholera map 1854. Columns: what went wrong (or right), which catalog item(s) apply, the lesson in one sentence, what the honest version would have required. The counter-case row is deliberately formatted differently — green background or positive marker — to distinguish it from the failure cases. Caption: "Two failures and one success. The success shows that evidence-grade visualization has been possible for 170 years. The failures show that possibility is not the same as practice."] -->
+| Case | What went wrong (or right) | Catalog item(s) that apply | Lesson in one sentence | What the honest version would have required |
+|---|---|---|---|---|
+| **Challenger 1986** | Engineers' temperature-failure plot omitted the cold-temperature region where the joint had not been tested; the chart shown to managers was therefore consistent with safe launch | Y-axis truncation; selective inclusion; missing-data invisible | A chart that excludes the region of doubt becomes a chart that endorses the decision | Display the full data range — including the region with no data — and label it explicitly as such |
+| **El País Catalonia 2014** | A poll-result chart used a y-axis truncated to amplify a 5-point lead into a visual landslide; the impression was political, the data was not | Y-axis truncation; misleading scale | The data did not support the visual claim; the scale chose the conclusion | A zero-anchored axis or a labeled break, with the magnitude shown honestly |
+| ✓ **Snow's cholera map 1854** | Mapping deaths to street addresses revealed a spatial cluster centered on the Broad Street pump — visually pinning a hypothesis the death tables alone could not | Spatial reference; matched scale; unambiguous symbol | The right visualization made the right hypothesis immediately legible | (Already met the standard) |
+
+*Two failures and one success. The success shows that evidence-grade visualization has been possible for 170 years. The failures show that possibility is not the same as practice.*
 
 ---
 
@@ -473,6 +479,9 @@ Finally — the LIVING DECK move — add a provisionality note to Dashboard A. S
 
 The ideas in this chapter didn't appear from nowhere. **W. E. B. Du Bois** designed some of the most original data visualizations in history for the 1900 Paris Exposition — explicit, deliberate choices about what to show and how, with the politics of each choice fully visible. Here's a prompt to find out more — and then make it better.
 
+![W. E. B. Du Bois, c. 1900. AI-generated portrait based on a public domain photograph (Wikimedia Commons).](images/w-e-b-du-bois.jpg)
+*W. E. B. Du Bois, c. 1900. AI-generated portrait based on a public domain photograph.*
+
 **Run this:**
 
 ```
@@ -488,3 +497,4 @@ Who was W. E. B. Du Bois, and how do his 1900 Paris Exposition visualizations co
 - Add a constraint: "Answer as if you're writing the opening case for a chapter on visualization under validation"
 
 What changes? What gets better? What gets worse?
+

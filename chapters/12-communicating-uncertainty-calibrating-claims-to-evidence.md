@@ -53,7 +53,18 @@ A working hierarchy. Each verb implies a specific epistemic posture toward the e
 
 The taxonomy is not exhaustive — *characterize*, *report*, *describe*, *quantify*, *establish* each occupy specific niches — but it covers most of the useful range. The exercise, every time you draft something, is to read your draft sentence by sentence and ask whether the verb you used matches the evidence the sentence is built on.
 
-<!-- → [TABLE: Verb taxonomy reference card — columns: verb, epistemic posture, minimum evidence required, correct use example, common misuse. Eight rows: hypothesize through prove. Footer note: "Most engineering writing sits between observe and find. Most engineering writing uses conclude. The gap is the problem." Figure 12.1] -->
+| Verb | Epistemic posture | Minimum evidence required | Correct use example | Common misuse |
+|---|---|---|---|---|
+| **Hypothesize** | Tentative; pre-evidence | A defensible reason to consider the claim | "We hypothesize that calibration degrades on the rare-disease subgroup" | Used as a softener for a claim already supported by data |
+| **Observe** | Direct; descriptive | A measurement and the measurement procedure | "We observe ECE = 0.04 on the global test set" | Used to soften a causal claim ("we observe the model causes…") |
+| **Find** | Direct; established by the analysis | The analysis result, the comparison, the n | "We find subgroup ECE exceeds global ECE by 2.3× on the elderly cohort" | Used for a one-shot anecdote |
+| **Suggest** | Cautious inference | Evidence consistent with the inference; alternatives not ruled out | "These results suggest miscalibration concentrates in the elderly subgroup" | Used in place of *find* when the evidence already supports the stronger verb |
+| **Indicate** | Stronger inference; multiple lines of evidence | Convergent results from independent analyses | "Cross-site replication indicates the subgroup pattern is not site-specific" | Used as a synonym for *suggest* |
+| **Demonstrate** | Established; replicated | Reproducible result, named replication, no live alternative | "We demonstrate that the subgroup gap persists under three calibration methods" | Used for a single-study finding |
+| **Conclude** | Action-warrant; takes a position | A conclusion that survives the alternatives the team has named and tested | "We conclude the deployment cannot ship without subgroup-specific recalibration" | Used as a paragraph-ending stylistic flourish |
+| **Prove** | Decisive; mathematically or by formal verification | A proof, formal or empirical with a closed-form alternative space | "We prove the bound holds for all inputs in the certified region" | Used in any non-formal engineering setting |
+
+*Most engineering writing sits between* observe *and* find. *Most engineering writing uses* conclude. *The gap is the problem.*
 
 This is unromantic editing. There is no inspiration in it. You are downgrading verbs because the evidence does not warrant the original verb, and the prose loses some of the punch you put into it. I want to tell you that this is also the most operationally important single skill in technical communication of validation findings. The careful engineer's writing reads, at first, as quieter than the careless engineer's. It also survives reading.
 
@@ -156,7 +167,16 @@ $$\text{ECE}_g = \sum_{m=1}^{M} \frac{|B_m^g|}{N_g} \left| \text{acc}(B_m^g) - \
 
 and report both the global $\text{ECE}$ and the full distribution of $\{\text{ECE}_g\}$. If the maximum subgroup $\text{ECE}$ is substantially higher than the global $\text{ECE}$, the aggregate metric is concealing a real problem.
 
-<!-- → [TABLE: Subgroup calibration reporting template — columns: subgroup name, N (count), base rate, global ECE (reference), subgroup ECE, subgroup MCE, flag (Y/N if subgroup ECE > 2× global). Example rows filled in with plausible values for a medical deployment. Bottom row: "Global" row showing aggregate values. Caption: "This table, completed for every deployment, makes the aggregate-mask failure mode visible before it reaches patients." Figure 12.5] -->
+| Subgroup | N | Base rate | Global ECE (reference) | Subgroup ECE | Subgroup MCE | Flag (Y if subgroup ECE > 2× global) |
+|---|---|---|---|---|---|---|
+| **Adult, ages 18–64** | 8,420 | 0.034 | 0.018 | 0.019 | 0.041 | N |
+| **Pediatric, ages 0–17** | 1,210 | 0.012 | 0.018 | 0.029 | 0.062 | **Y** |
+| **Elderly, ages 65+** | 2,850 | 0.078 | 0.018 | 0.044 | 0.091 | **Y** |
+| **Pregnancy-related** | 380 | 0.022 | 0.018 | 0.071 | 0.118 | **Y** |
+| **Rare-disease cases** | 95 | 0.420 | 0.018 | 0.103 | 0.176 | **Y** |
+| **Global (aggregate)** | 12,955 | 0.041 | — | 0.018 | 0.039 | — |
+
+*This table, completed for every deployment, makes the aggregate-mask failure mode visible before it reaches patients.*
 
 ### Temperature scaling: the fix and its limits
 
@@ -201,7 +221,16 @@ The table that closes the analysis:
 
 This table is not decoration. I use it to write Layer 2. Every calibration claim in a validation report should be traceable to a row in this table, and the verb in the prose should match the row.
 
-<!-- → [TABLE: Calibration evidence ladder — full version with six rows. Columns: evidence level, warranted verb, what is established, what remains uncertain, what evidence would move to the next row. The last column makes the ladder actionable: it specifies what the team would need to do to justify a stronger verb. Caption: "The verb follows from the evidence. The table makes the derivation explicit and the upgrade path visible." Figure 12.7] -->
+| Evidence level | Warranted verb | What is established | What remains uncertain | What evidence would move to the next row |
+|---|---|---|---|---|
+| **L0 — internal-only ECE** | hypothesize | The model's reliability diagram has been examined on the training set | Generalization, subgroup behavior, deployment shift | Held-out evaluation on a non-training split |
+| **L1 — held-out test ECE** | observe | Calibration on a held-out split from the same source | Subgroup variation, distribution shift | Subgroup decomposition |
+| **L2 — subgroup ECE** | find | Subgroup-specific calibration patterns identified | Generalization across sites, across time | External replication |
+| **L3 — replicated subgroup ECE** | suggest | Pattern holds across at least one independent site or cohort | Causal mechanism; deployment-context behavior | Stress-test under named distribution shift |
+| **L4 — replicated under stress** | indicate | Pattern survives a named distribution shift | Whether the deployment population matches the validated population | A monitored deployment with calibration tracking |
+| **L5 — validated in deployment** | demonstrate | Calibration holds under live deployment conditions | The next regime; novel subpopulations not in the validation set | (Subsequent regimes require fresh validation) |
+
+*The verb follows from the evidence. The table makes the derivation explicit and the upgrade path visible.*
 
 ### The conformal prediction guarantee — and what it costs
 
@@ -235,7 +264,13 @@ Calibration metrics measure what was observed in the evaluation set. They do not
 
 These are not failures of calibration metrics. They are the scope boundary of what calibration metrics measure. The supervisory work continues past the metric, into the construct, the deployment context, and the validation design. The metric is necessary. It is not sufficient.
 
-<!-- → [TABLE: What calibration metrics cannot see — three rows: (1) construct validity failure, (2) calibration without usefulness, (3) distribution shift. Columns: what the failure looks like, why standard metrics miss it, what would catch it instead. Caption: "The metric is honest about the evaluation. The evaluation may not be representative of the deployment. These are different problems." Figure 12.9] -->
+| Failure mode | What it looks like | Why standard metrics miss it | What would catch it instead |
+|---|---|---|---|
+| **Construct validity failure** | Calibration is excellent on the label, but the label measures the wrong thing for the deployment question | ECE / MCE assume the label is the construct; they cannot diagnose the gap between proxy and target | Construct review with a domain expert; explicit label-to-construct mapping in the model card |
+| **Calibration without usefulness** | Probabilities are well-calibrated but cluster near the base rate; the model cannot rank cases | Calibration metrics treat all probability values equivalently; they don't reward discrimination | AUROC or precision-recall; decision-curve analysis |
+| **Distribution shift** | Calibration was good in evaluation but the deployment population has shifted | Static evaluation cannot see live-population drift | Deployment-time calibration monitoring with drift alarms |
+
+*The metric is honest about the evaluation. The evaluation may not be representative of the deployment. These are different problems.*
 
 ---
 
@@ -502,20 +537,23 @@ Output:
 
 ## 🕰️ AI Wayback Machine
 
-The ideas in this chapter didn't appear from nowhere. **Naomi Oreskes** has spent decades documenting how scientific uncertainty gets strategically miscommunicated — and what calibrating a public claim to actual evidence looks like, including when the calibration is uncomfortable. Here's a prompt to find out more — and then make it better.
+The ideas in this chapter didn't appear from nowhere. **Florence Nightingale** spent the 1850s building — and the 1860s defending — the first sustained public-policy argument that combined explicit statistical evidence with deliberately legible visual communication. Her *coxcomb* polar-area diagrams of Crimean mortality were not decoration; they were the calibrated visual translation of an uncertain estimate into a claim a Parliament could read at the right level of confidence and act on. The chapter's argument — that communicating uncertainty honestly is itself a craft, distinct from running the analysis — is Nightingale's working method, applied to AI outputs whose audiences are usually less statistically literate than the Parliament she addressed.
+
+![Florence Nightingale, c. 1860s. AI-generated portrait based on a public domain photograph (Wikimedia Commons).](images/florence-nightingale.jpg)
+*Florence Nightingale, c. 1860s. AI-generated portrait based on a public domain photograph.*
 
 **Run this:**
 
 ```
-Who is Naomi Oreskes, and how does her work on the strategic miscommunication of scientific uncertainty connect to honestly communicating an AI system's confidence to a non-technical audience? Keep it to three paragraphs. End with the single most surprising thing about her career or ideas.
+Who was Florence Nightingale, and how does her use of statistical visualization to communicate uncertain estimates to non-statistical audiences (Parliament, the War Office) connect to the craft of honestly communicating an AI system's confidence to a non-technical audience? Keep it to three paragraphs. End with the single most surprising thing about her career or ideas.
 ```
 
-→ Search **"Naomi Oreskes"** on Wikipedia after you run this. See what the model got right, got wrong, or left out.
+→ Search **"Florence Nightingale"** on Wikipedia after you run this. See what the model got right, got wrong, or left out.
 
 **Now make the prompt better.** Try one of these:
 
-- Ask it to explain "manufactured doubt" in plain language, as if you've never read about the tobacco-and-climate playbook
-- Ask it to compare an Oreskes case to a real product-launch claim about an AI system's reliability
-- Add a constraint: "Answer as if you're writing the case for honest uncertainty in a chapter for AI practitioners"
+- Ask it to explain why *visual* statistical communication can be either honest or misleading, in plain language
+- Ask it to compare Nightingale's coxcomb diagrams to the visualization choices in this chapter for an AI confidence interval
+- Add a constraint: "Answer as if you're writing the public-facing summary of a model's uncertainty for a non-technical executive"
 
 What changes? What gets better? What gets worse?
