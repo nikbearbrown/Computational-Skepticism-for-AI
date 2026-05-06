@@ -220,9 +220,9 @@ This is not a complete list. Tufte and Cairo each have longer ones, and both are
 
 ---
 
-## Three cases that teach the catalog
+## Four cases that teach the catalog
 
-The rules are best learned from failures. Three cases, all real, all instructive.
+The rules are best learned from failures. Four cases, all real, all instructive.
 
 **Challenger, January 1986.** Engineers had thirteen charts showing O-ring erosion data. The data contained a pattern — erosion was worse at lower launch temperatures — but it was not displayed in a way that made the pattern visible. Charts mixed qualitative text with quantitative displays, did not show the temperature-erosion relationship in a single visualization, and emphasized reassuring findings without presenting the overall risk profile. The chart that should have made the causal chain legible — cold temperature → harder rubber → longer seating time → blow-by → failure — was never drawn. The evidence existed. The visualization did not make it visible to a decision-maker under pressure. Management approved the launch. Seven astronauts died. \[Verify: Tufte, *Visual and Statistical Thinking: Displays of Evidence for Making Decisions*.\]
 
@@ -232,6 +232,10 @@ The rules are best learned from failures. Three cases, all real, all instructive
 
 **Lesson:** when uncertainty exceeds effect size, the chart is a story about noise. The honest story is "tie." Either visualize the confidence intervals so their overlap is obvious, or replace the chart with a sentence.
 
+**Reuters, Florida Stand Your Ground, 2014.** A line chart showed firearm-related murders in Florida from 1990 to 2012, with the state's 2005 Stand Your Ground law marked as the inflection point. At first glance the chart appeared to show murders rising through the 1990s, leveling off, and then dropping precipitously after 2005 — apparently strong visual evidence that the law worked as advertised. The y-axis was inverted. Zero was at the top of the chart and high values were at the bottom, so the post-2005 *spike* in firearm murders rendered visually as a *decline*. Bergstrom and West, in *Calling Bullshit* (2020), use this as the canonical case for axis-flip deception: the data is accurate, the chart label is technically correct, the reader takes away the opposite of what the data shows. The mechanism is not in the catalog above as a named item — it is a relative of "scale trickery" but operates differently. Truncation amplifies a real effect. Inversion reverses one. The two are different deceptions. Both are available to anyone building an AI metric dashboard, where the orientation of "error rate" versus "accuracy" can be flipped without changing a single number in the underlying CSV. \[Verify: Bergstrom & West 2020, *Calling Bullshit*, ch. 7; the original chart was a Reuters news graphic.\]
+
+**Lesson:** the orientation of the axis is itself a structural argument about which direction is "good." When the axis runs against convention, the chart can communicate the inverse of the data while remaining technically accurate. Honest practice: zero at the bottom for quantities where larger values mean more, with the direction-of-better stated explicitly in the title or caption.
+
 **Snow's cholera map, 1854. (Counter-case.)** The reason this case is famous is that the map did three things simultaneously: showed spatial clustering of deaths, marked the Broad Street pump as the spatial center, and *included all other pumps for comparison*. The third move is what made it evidence rather than illustration. Snow let the reader rule out alternative explanations by making the comparisons visible inside the chart. The other pumps were not mentioned — they were shown. The visualization did the work.
 
 **Lesson:** evidence-grade visualization shows what would have to be true for the conclusion to be wrong, not just what supports the conclusion.
@@ -240,9 +244,10 @@ The rules are best learned from failures. Three cases, all real, all instructive
 |---|---|---|---|---|
 | **Challenger 1986** | Engineers' temperature-failure plot omitted the cold-temperature region where the joint had not been tested; the chart shown to managers was therefore consistent with safe launch | Y-axis truncation; selective inclusion; missing-data invisible | A chart that excludes the region of doubt becomes a chart that endorses the decision | Display the full data range — including the region with no data — and label it explicitly as such |
 | **El País Catalonia 2014** | A poll-result chart used a y-axis truncated to amplify a 5-point lead into a visual landslide; the impression was political, the data was not | Y-axis truncation; misleading scale | The data did not support the visual claim; the scale chose the conclusion | A zero-anchored axis or a labeled break, with the magnitude shown honestly |
+| **Reuters Florida 2014** | A firearm-murder line chart with an inverted y-axis (zero at top) rendered a post–Stand Your Ground spike as a visual decline; the reader took away the opposite of what the data showed | Axis inversion (relative of "scale trickery"); convention violation | An inverted axis can communicate the inverse of the data while remaining technically accurate | Conventional orientation (zero at bottom for "more is more"), with the direction-of-better stated explicitly in the title |
 | ✓ **Snow's cholera map 1854** | Mapping deaths to street addresses revealed a spatial cluster centered on the Broad Street pump — visually pinning a hypothesis the death tables alone could not | Spatial reference; matched scale; unambiguous symbol | The right visualization made the right hypothesis immediately legible | (Already met the standard) |
 
-*Two failures and one success. The success shows that evidence-grade visualization has been possible for 170 years. The failures show that possibility is not the same as practice.*
+*Three failures and one success. The success shows that evidence-grade visualization has been possible for 170 years. The failures show that possibility is not the same as practice.*
 
 ---
 

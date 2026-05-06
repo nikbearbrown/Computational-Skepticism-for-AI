@@ -75,6 +75,12 @@ You have met this limit before, in different clothes. It was Hume's induction pr
 
 The engineering practice: *the supervisor specifies the deployment distribution, monitors for distribution shift, and is prepared to override or reject the system's outputs when the deployment is operating in a region the data does not cover.*
 
+Nassim Taleb gave the data-world gap a sharper shape than most engineering treatments do, and the framing is worth importing. In *The Black Swan* (2007), Taleb distinguished two kinds of data-generating worlds. *Mediocristan* is the world where outliers do not dominate the average — human heights, exam scores, the time it takes to walk to work. Sample one more observation in Mediocristan and the running statistics barely move. *Extremistan* is the world where outliers do dominate — wealth, financial returns, casualty counts in war, downloads of an app, fatalities from a single deployment failure. One observation can be larger than every prior observation combined. The two worlds require different epistemic stances. Mediocristan rewards averaging. Extremistan punishes it.
+
+Taleb's "turkey problem" makes this concrete in a way the abstract distribution-shift literature rarely does. A turkey is fed every day for one thousand days. Every day, the available evidence supports the model that the human cares about the turkey's welfare. By the metrics that matter to the turkey — caloric intake, shelter, predator absence — confidence in the model rises monotonically. On the morning of day 1,001, the model fails catastrophically. The training distribution was Mediocristan-shaped (a smooth daily routine); the actual world contained a Black Swan event (Thanksgiving) that no amount of in-distribution data could anticipate.
+
+Apply this to AI validation directly. A system tested on ten thousand routine cases with 99.7% accuracy may still be a turkey. The relevant question is not what the accuracy is on the cases the system has seen — it is whether the cases the system has not seen are drawn from a Mediocristan distribution (where high accuracy on the seen cases predicts high accuracy on the unseen ones) or an Extremistan distribution (where the rare events dominate the consequence and the model has no claim on them). The supervisor's job is to know which world the deployment lives in. Most high-stakes deployments live in Extremistan, even when the routine traffic looks like Mediocristan.
+
 ---
 
 ## Turing and Searle — what each argument settles, what each does not
